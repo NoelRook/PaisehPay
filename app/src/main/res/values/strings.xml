@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">PaisehPay_Iris</string>
+    <string name="first_fragment_label">PaisehPay_Iris</string>
+    <string name="second_fragment_label">PaisehPay_Iris</string>
+    //Signin page
+    <string name="app_icon">Insert App icon here</string>
+    <string name="login_text">Login</string>
+    <string name="forget_password_text">Forget Password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="sign_up_prompt">Don\'\t have an account?</string>
+    <string name="sign_up_text">Sign up</string>
+    <string name="login_prompt1">Email</string>
+    <string name="login_prompt2">Password</string>
+    <string name="wrong_login_details">Username or password incorrect, please re-enter.</string>
+
+    //signup page
+    <string name="welcome">Welcome!</string>
+    <string name="accidentally_sign_up">If you already have an account with us, sign in here</string>
+    <string name="new_username">Enter a unique username</string>
+    <string name="new_email">Enter your email address</string>
+    <string name="new_password">Enter a unique password</string>
+    <string name="new_password_reenter">Re-enter your password</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+
+    //change password
+    <string name="change_password">Change Password</string>
+    <string name="enter_email">Enter your email address</string>
+    <string name="change_password_prompt">We sent a 4 digit reset code to your email account:  </string>
+    <string name="invalid_email">The email you have entered does not exist within our database. Alternatively, create a new account</string>
+    <string name="no_code_prompt">Did not receive your code?</string>
+    <string name="resend_code_button">Resend code</string>
+    <string name="enter_number_1">Enter first digit</string>
+    <string name="enter_number_2">Enter second digit</string>
+    <string name="enter_number_3">Enter third digit</string>
+    <string name="enter_number_4">Enter fourth digit</string>
+    <string name="blank"></string>
+    <string name="password_dont_match">Passwords do not match, please try again</string>
+    <string name="password_match">Passwords changed!</string>
+
+    //homepage
+
+
+
+
+</resources>
