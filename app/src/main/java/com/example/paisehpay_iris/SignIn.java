@@ -78,7 +78,7 @@ public class SignIn extends AppCompatActivity {
         loginButton = loginLayout.findViewById(R.id.login_button);
         loginButton.setOnClickListener(view -> {
             if (usernameString.equals(usernameString) & passwordString.equals(passwordString)) { //change when got db
-                Intent intent = new Intent(SignIn.this, HomePage.class);
+                Intent intent = new Intent(SignIn.this, MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();

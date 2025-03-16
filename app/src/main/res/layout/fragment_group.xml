@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background_light_mode"
+    tools:context=".GroupFragment">
+
+    <TextView
+        android:id="@+id/groups_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "@string/user_groups"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/textViewBigLightMode"/>
+
+    <EditText
+        android:id="@+id/search_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:autofillHints="name"
+        android:hint="@string/search_group"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/groups_header"
+
+        style="@style/editTextFontLightMode"/>
+
+    <Button
+        android:id="@+id/create_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_group"
+        app:layout_constraintTop_toBottomOf="@id/search_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/join_group"
+        style="@style/ButtonLightMode"/>
+
+    <Button
+        android:id="@+id/join_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/join_group"
+        app:layout_constraintTop_toBottomOf="@id/search_group"
+        app:layout_constraintStart_toEndOf="@id/create_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ButtonDarkMode"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

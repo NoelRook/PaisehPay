@@ -15,6 +15,7 @@ public class SignUp extends AppCompatActivity {
 
     ConstraintLayout signupLayout;
     Button signInButton;
+    Button signUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +28,10 @@ public class SignUp extends AppCompatActivity {
             return insets;
         });
 
-        //sign up button to lead to sign up page
+
         signupLayout = findViewById(R.id.sign_up_layout);
+
+        //accidentally sign up button, return to sign in page
         signInButton = signupLayout.findViewById(R.id.accidentally_sign_up_button);
         signInButton.setOnClickListener(view -> {
             Intent intent = new Intent(SignUp.this, SignIn.class);
@@ -44,7 +47,14 @@ public class SignUp extends AppCompatActivity {
         //4. stuff info in db
         //5. when all gd, change text on sign up button to say 'you have successfully signed up!' then intent after a time delay
 
-
+        //sign up button lead to sign in page
+        signUpButton = signupLayout.findViewById(R.id.sign_up_button);
+        signUpButton.setOnClickListener(view -> {
+            Intent intent = new Intent(SignUp.this, SignIn.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+            finish();
+        });
 
 
     }

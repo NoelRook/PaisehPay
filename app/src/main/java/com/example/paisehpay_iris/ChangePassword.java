@@ -47,6 +47,7 @@ public class ChangePassword extends AppCompatActivity {
 
         //set change password prompt
         changePasswordLayout = findViewById(R.id.change_password_layout);
+
         String emailDatabase = "xyz@gmail.com"; //will get from db
         emailText = changePasswordLayout.findViewById(R.id.email_input);
         changePasswordText = changePasswordLayout.findViewById(R.id.change_password_prompt);
@@ -71,32 +72,24 @@ public class ChangePassword extends AppCompatActivity {
         //else prompt user to create a new text
 
         //checks for email changed after user taps or keys in text in textview
-        emailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) { //there should be a better way to write this
-                if (!hasFocus){
-                    String emailString = emailText.getText().toString().trim();
-                    if (emailString.equals(emailString) & !emailString.equals(R.string.blank)){ //will change with db
-                        changePasswordText.setText(getText(R.string.change_password_prompt)+ emailString); //some formatting issues
-                        digit1Text.setVisibility(View.VISIBLE);
-                        digit2Text.setVisibility(View.VISIBLE);
-                        digit3Text.setVisibility(View.VISIBLE);
-                        digit4Text.setVisibility(View.VISIBLE);
-                        resendCodeButton.setVisibility(View.VISIBLE);
-                    } else {
-                        changePasswordText.setText(R.string.invalid_email);
-                    }
+        emailText.setOnFocusChangeListener((view, hasFocus) -> { //there should be a better way to write this
+            if (!hasFocus){
+                String emailString = emailText.getText().toString().trim();
+                if (emailString.equals(emailString) & !emailString.equals(R.string.blank)){ //will change with db
+                    changePasswordText.setText(getText(R.string.change_password_prompt)+ emailString); //some formatting issues
+                    digit1Text.setVisibility(View.VISIBLE);
+                    digit2Text.setVisibility(View.VISIBLE);
+                    digit3Text.setVisibility(View.VISIBLE);
+                    digit4Text.setVisibility(View.VISIBLE);
+                    resendCodeButton.setVisibility(View.VISIBLE);
+                } else {
+                    changePasswordText.setText(R.string.invalid_email);
                 }
             }
         });
 
         //if user finishes keying in email, they will naturally tap outside the box and it will then process the text
-        changePasswordLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                emailText.clearFocus();
-            }
-        });
+        changePasswordLayout.setOnClickListener(view -> emailText.clearFocus());
 
         //process last button input
         digit4Text.addTextChangedListener(new TextWatcher() {
@@ -119,23 +112,20 @@ public class ChangePassword extends AppCompatActivity {
             }
         });
 
-        passwordReenterText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus){
-                    String passwordInput = passwordText.getText().toString();
-                    String passwordReinput = passwordReenterText.getText().toString();
-                    if (checkPasswordCorrect(passwordInput,passwordReinput)) {
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                            Intent intent = new Intent(ChangePassword.this, SignIn.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-                            finish();
-                        }, 2000); // 3 seconds delay
-
-                    };
+        passwordReenterText.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus){
+                String passwordInput = passwordText.getText().toString();
+                String passwordReinput = passwordReenterText.getText().toString();
+                if (checkPasswordCorrect(passwordInput,passwordReinput)) {
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        Intent intent = new Intent(ChangePassword.this, SignIn.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                        finish();
+                    }, 2000); // 3 seconds delay
 
                 }
+
             }
         });
 

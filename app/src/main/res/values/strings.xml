@@ -36,13 +36,84 @@
     <string name="enter_number_2">Enter second digit</string>
     <string name="enter_number_3">Enter third digit</string>
     <string name="enter_number_4">Enter fourth digit</string>
-    <string name="blank"></string>
+    <string name="blank">  </string>
     <string name="password_dont_match">Passwords do not match, please try again</string>
     <string name="password_match">Passwords changed!</string>
 
-    //homepage
+    //menu
+    <string name="home">Home</string>
+    <string name="groups">Groups</string>
+    <string name="add">Add Expense</string>
+    <string name="friends">Friends</string>
+    <string name="user">Profile</string>
+
+    //home fragment
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_user">Hello username!</string>
+    <string name="owe">You owe</string>
+    <string name="owed">You are owed</string>
+    <string name="owe_amount">$ XXX</string>
+    <string name="owed_amount">$ YYY</string>
+    <string name="more_details">Tap to view more details</string>
+    <string name="transaction_details">Notifications History</string>
+    <string name="money_today">Today</string>
+    <string name="money_week">Last week</string>
+    <string name="money_month">Last month</string>
+    <string name="money_year">Last year</string>
+
+    //group fragment
+    <string name="user_groups">Your groups</string>
+    <string name="create_group">Create Group</string>
+    <string name="join_group">Join Group</string>
+    <string name="search_group">Search for a group</string>
+
+    //notifications fragment
+    <string name="group_name">Insert group name here</string>
+    <string name="expense_name">Insert expense name here</string>
+    <string name="action_returned">you paid xxx yyy</string>
+    <string name="action_reminder">xxx nudged you to return yyy</string>
+
+    //toolbar
+    <string name="back_arrow">Back</string>
+    <string name="toolbar_title">Toolbar title</string>
 
 
+    //money owe
+    <string name="you_owe_who">Who do you owe?</string>
+    <string name="latest">Latest</string>
+    <string name="earliest">Earliest</string>
+    <string name="amount">Amount</string>
+
+
+    //money owed
+
+
+    //dummy string array for notifications
+    <string-array name="dummy_owe_group_name_list">
+        <item>Pass Fail</item>
+        <item>CSD Term 4</item>
+        <item>SUTD Family</item>
+        <item>Hass Global Film Week 8 Presentation</item>
+        <item>Hanyang Summer Programme</item>
+        <item>SUTD Class of 2027</item>
+        <item>Cat Appreciation Team</item>
+        <item>12.5 ROOT ECP</item>
+        <item>B59L7 floor chat</item>
+        <item>SOS24 Peeps Yurr</item>
+    </string-array>
+
+    <string-array name="dummy_owe_description_list">
+        <item>Herby nudges you to pay $2.50</item>
+        <item>You paid Wen Kai $14</item>
+        <item>You paid Michelle </item>
+        <item>Kushi nudges you to pay $1500</item>
+        <item>You paid Rey $19.90</item>
+        <item>You paid Jin $4.30</item>
+        <item>Wei Yang nudges you to pay $65.00</item>
+        <item>You paid Kushi $10.00</item>
+        <item>You paid Sean $5.60</item>
+        <item>Kushi nudges you to pay $30.00</item>
+    </string-array>
 
 
 </resources>

@@ -32,6 +32,9 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    packaging {
+        resources.excludes.add("META-INF/androidx.localbroadcastmanager_localbroadcastmanager.version")
+    }
 }
 
 dependencies {

@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/layout_border"
+        android:background="@drawable/layout_border_light_mode"
         app:layout_constraintBottom_toBottomOf="parent">
 
 
@@ -39,17 +39,15 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/default_font"
-            android:padding="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/text_border"
             app:layout_constraintTop_toTopOf="@id/login_layout"
             app:layout_constraintStart_toStartOf="@id/login_layout"
             app:layout_constraintEnd_toEndOf="@id/login_layout"
-            app:layout_constraintBottom_toTopOf="@id/password_input"/>
+            app:layout_constraintBottom_toTopOf="@id/password_input"
+            style="@style/editTextFontDarkMode"/>
 
         <EditText
             android:id="@+id/password_input"
@@ -59,13 +57,11 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/default_font"
-            android:padding="15dp"
             android:layout_margin="10dp"
-            android:background="@drawable/text_border"
             app:layout_constraintStart_toStartOf="@id/login_layout"
             app:layout_constraintEnd_toEndOf="@id/login_layout"
-            app:layout_constraintBottom_toTopOf="@id/remember_me_check_box"/>
+            app:layout_constraintBottom_toTopOf="@id/remember_me_check_box"
+            style="@style/editTextFontDarkMode"/>
 
 
         <Button
@@ -74,20 +70,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="20dp"
-            android:fontFamily="@font/chicken_quiche"
             android:text="@string/login_text"
-            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/sign_up_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/forget_password_button"
-            app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintVertical_bias="0.0"
+            style ="@style/ButtonDarkMode"/>
 
         <CheckBox
             android:id="@+id/remember_me_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/white"
+            android:buttonTint="@color/text_colour_dark_mode"
             app:layout_constraintTop_toBottomOf="@id/password_input"
             app:layout_constraintStart_toStartOf="@id/password_input"
             />
@@ -96,41 +91,36 @@
             android:id="@+id/remember_me_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:fontFamily="@font/chicken_quiche"
             android:gravity="center"
             android:text="@string/remember_me"
-            android:textColor="@color/white"
+            android:fontFamily="@font/chicken_quiche"
             app:layout_constraintBottom_toTopOf="@id/login_button"
             app:layout_constraintStart_toEndOf="@id/remember_me_check_box"
             app:layout_constraintTop_toBottomOf="@id/password_input"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.5"
+            style="@style/textViewSmallDarkMode"/>
 
         <Button
             android:id="@+id/forget_password_button"
             android:text="@string/forget_password_text"
-            android:fontFamily="@font/chicken_quiche"
-            android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@id/password_input"
             app:layout_constraintEnd_toEndOf="@id/password_input"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            style="@style/ButtonBordelessDarkMode"/>
 
 
         <Button
             android:id="@+id/sign_up_button"
             android:text="@string/sign_up_prompt"
-            android:fontFamily="@font/chicken_quiche"
-            android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@id/login_button"
             app:layout_constraintStart_toStartOf="@id/login_button"
             app:layout_constraintEnd_toEndOf="@id/password_input"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            style="@style/ButtonBordelessDarkMode"/>
 
 
 
