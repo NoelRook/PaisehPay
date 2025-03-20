@@ -11,29 +11,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
+public class RecycleViewAdapter_Notification extends RecyclerView.Adapter<RecycleViewAdapter_Notification.MyViewHolder> {
 
     Context context;
     ArrayList<Notification> notificationArray;
 
 
-    public RecycleViewAdapter(Context context, ArrayList<Notification> notificationArray){
+    public RecycleViewAdapter_Notification(Context context, ArrayList<Notification> notificationArray){
         this.context = context;
         this.notificationArray = notificationArray;
     }
 
     @NonNull
     @Override
-    public RecycleViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecycleViewAdapter_Notification.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recycler_view_row,parent,false);
+        View view = inflater.inflate(R.layout.notification_recycler_view_row,parent,false);
 
-        return new RecycleViewAdapter.MyViewHolder(view);
+        return new RecycleViewAdapter_Notification.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecycleViewAdapter_Notification.MyViewHolder holder, int position) {
         //assign values to the views
         holder.groupText.setText(notificationArray.get(position).getGroupName());
         holder.notificationText.setText(notificationArray.get(position).getNotificationString());

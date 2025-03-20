@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="500dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/layout_border_light_mode"
+    tools:context=".DialogFragment">
+
+    <TextView
+        android:id="@+id/who_owes_you"
+        style="@style/textViewMediumDarkMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/you_owe_who"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/owe_filter_spinner"
+        app:layout_constraintTop_toTopOf="@id/owe_filter_spinner"
+        app:layout_constraintBottom_toBottomOf="@id/owe_filter_spinner"/>
+
+    <Spinner
+        android:id="@+id/owe_filter_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_margin="20sp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/who_owes_you"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:theme="@style/SpinnerMediumDarkMode"/>
+
+    <TextView
+        android:id="@+id/person"
+        style="@style/textViewSmallDarkMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/person"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/group"
+        app:layout_constraintTop_toBottomOf="@id/owe_filter_spinner"/>
+
+    <TextView
+        android:id="@+id/group"
+        style="@style/textViewSmallDarkMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/group"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/person"
+        app:layout_constraintEnd_toStartOf="@id/amount"
+        app:layout_constraintTop_toBottomOf="@id/owe_filter_spinner"/>
+
+    <TextView
+        android:id="@+id/amount"
+        style="@style/textViewSmallDarkMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/amount"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/owe_filter_spinner"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/owe_recycle"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/layout_border_highlight3_mode"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/amount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

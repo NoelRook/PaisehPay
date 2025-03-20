@@ -3,10 +3,10 @@
 
     <item android:title="@string/home"
         android:icon="@drawable/nav_home"
-        android:id="@+id/home" />
-    <item android:title="@string/groups"
+        android:id="@+id/home"/>
+    <item android:title="@string/notifications"
         android:icon="@drawable/nav_groups"
-        android:id="@+id/groups"/>
+        android:id="@+id/notification" />
     <item android:title="@string/add"
         android:icon="@drawable/nav_add"
         android:id="@+id/add"/>

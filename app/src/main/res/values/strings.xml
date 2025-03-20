@@ -41,35 +41,37 @@
     <string name="password_match">Passwords changed!</string>
 
     //menu
+    <string name="notifications">Notifications</string>
     <string name="home">Home</string>
-    <string name="groups">Groups</string>
     <string name="add">Add Expense</string>
     <string name="friends">Friends</string>
     <string name="user">Profile</string>
+    <string name="scan">Scan Receipt</string>
 
     //home fragment
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_user">Hello username!</string>
+    <string name="personal_summary">Here\'s a summary of your expenditure</string>
+    <string name="today">Today, 20 March 2025</string>
     <string name="owe">You owe</string>
     <string name="owed">You are owed</string>
     <string name="owe_amount">$ XXX</string>
     <string name="owed_amount">$ YYY</string>
-    <string name="more_details">Tap to view more details</string>
-    <string name="transaction_details">Notifications History</string>
-    <string name="money_today">Today</string>
-    <string name="money_week">Last week</string>
-    <string name="money_month">Last month</string>
-    <string name="money_year">Last year</string>
-
-    //group fragment
+    <string name="more_details">More details</string>
+    <string name="group_name">Group Name</string>
+    <string name="group_created">Created 12/12/2024</string>
+    <string name="group_owed">You are owed $120.25</string>
+    <string name="group_owe">You owe $43.70</string>
+    <string name="group_homepage">Group Homepage</string>
+    <string name="person">Person</string>
+    <string name="group">Group</string>
     <string name="user_groups">Your groups</string>
     <string name="create_group">Create Group</string>
     <string name="join_group">Join Group</string>
-    <string name="search_group">Search for a group</string>
 
     //notifications fragment
-    <string name="group_name">Insert group name here</string>
     <string name="expense_name">Insert expense name here</string>
+    <string name="transaction_details">Your Expenses</string>
     <string name="action_returned">you paid xxx yyy</string>
     <string name="action_reminder">xxx nudged you to return yyy</string>
 
@@ -84,8 +86,33 @@
     <string name="earliest">Earliest</string>
     <string name="amount">Amount</string>
 
+    //group homepage
+    <string name="expense_summary">Expense Summary</string>
+    <string name="settled_with">You are settled with</string>
+    <string name="group_settings">Group Settings</string>
+    <string name="transaction_history">Transaction History</string>
+    <string name="add_category">Add category</string>
+    <string name="overall">Overall</string>
+    <string name="food">Food</string>
+    <string name="transport">Transport</string>
+    <string name="shopping">Shopping</string>
+    <string name="utilities">Utilities</string>
+    <string name="rent">Rent</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="health">Health</string>
+    <string name="you_lent">You lent</string>
+    <string name="you_borrowed">You borrowed</string>
+    <string name="not_involved">Not involved</string>
 
-    //money owed
+    <string name="people_owe">Sean $12.50 \nJing Kang $15.80</string>
+    <string name="people_owed">Kushi $100.00 \nFaustina $12.70</string>
+    <string name="people_settled">Megan $0.00 \nWen Kai $0.00</string>
+
+
+
+
+
+
 
 
     //dummy string array for notifications
@@ -102,6 +129,32 @@
         <item>SOS24 Peeps Yurr</item>
     </string-array>
 
+    <string-array name="dummy_owe_person_name_list">
+        <item>Kushi</item>
+        <item>Iris</item>
+        <item>Sean</item>
+        <item>Wei Yang</item>
+        <item>Qi Han</item>
+        <item>Rey</item>
+        <item>Dora</item>
+        <item>Jin</item>
+        <item>Michelle</item>
+        <item>Megan</item>
+    </string-array>
+
+    <string-array name="dummy_owe_amount_list">
+        <item>$10</item>
+        <item>$2</item>
+        <item>$3.50</item>
+        <item>$100.20</item>
+        <item>$88.90</item>
+        <item>$4.50</item>
+        <item>$0.10</item>
+        <item>$9.90</item>
+        <item>$1.39</item>
+        <item>$1.60</item>
+    </string-array>
+
     <string-array name="dummy_owe_description_list">
         <item>Herby nudges you to pay $2.50</item>
         <item>You paid Wen Kai $14</item>
@@ -114,6 +167,38 @@
         <item>You paid Sean $5.60</item>
         <item>Kushi nudges you to pay $30.00</item>
     </string-array>
+
+
+    //manual scanner
+    <string name="manual_input">Manual Input</string>
+    <string name="scan_receipt">Scan Receipt</string>
+
+    //receipt overview
+    <string name="receipt_details">Receipt Details</string>
+    <string name="expense_name_input">Input the name of expense</string>
+    <string name="expense_date">12.37 Wednesday 12/03/2025</string>
+    <string name="filter_by">Filter By</string>
+    <string name="number">Number</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_price">Price</string>
+    <string name="total">Grand Total</string>
+    <string name="sub_total">Sub Total</string>
+    <string name="with_gst">Add 9% GST</string>
+    <string name="add_people">Add people and split bill</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 
 </resources>

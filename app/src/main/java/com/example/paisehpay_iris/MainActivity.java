@@ -2,6 +2,7 @@ package com.example.paisehpay_iris;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,29 +44,40 @@ public class MainActivity extends AppCompatActivity {
 
         //if navigating between fragments using the bottom navigation view
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+
             int itemId = item.getItemId();
 
             if (itemId == R.id.home) {
                 replaceFragment(new HomeFragment());
-            } else if (itemId == R.id.groups) {
-                replaceFragment(new GroupFragment());
+            } else if (itemId == R.id.notification) {
+                replaceFragment(new NotificationFragment());
             } else if (itemId == R.id.add) {
-                replaceFragment(new AddFragment());
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.constraint_layout);
+
+                // Show Bottom Sheet **only if** AddFragment is NOT already open
+                if (!(currentFragment instanceof AddFragment)) {
+                    ModalBottomSheet bottomSheet = new ModalBottomSheet();
+                    bottomSheet.show(getSupportFragmentManager(), "ScanSelectionBottomSheet");
+                }
+                return false; // Prevents reselecting Add in the bottom nav
+
             } else if (itemId == R.id.friends) {
                 replaceFragment(new FriendsFragment());
             } else if (itemId == R.id.profile) {
                 replaceFragment(new ProfileFragment());
             }
+
+
             return true;
         });
 
     }
     //replace fragment if navigating from bottom navigation page
-    private void replaceFragment(Fragment fragment) {
+    protected void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.constraint_layout, fragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitNow(); //bloody fucking fucking hell
     }
 
     //load specific fragment from activity
@@ -76,13 +88,14 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentName.equals("ProfileFragment")) {
             fragment = new ProfileFragment();
             fragmentId = R.id.profile;
-        } else if (fragmentName.equals("GroupFragment")) {
-            fragment = new GroupFragment();
-            fragmentId = R.id.groups;
+        } else if (fragmentName.equals("NotificationFragment")) {
+            fragment = new NotificationFragment();
+            fragmentId = R.id.notification;
         } else if (fragmentName.equals("AddFragment")) {
             fragment = new AddFragment();
             fragmentId = R.id.add;
-        } else if (fragmentName.equals("FriendsFragment")) {
+        }
+        else if (fragmentName.equals("FriendsFragment")) {
             fragment = new FriendsFragment();
             fragmentId = R.id.friends;
         }
@@ -92,4 +105,6 @@ public class MainActivity extends AppCompatActivity {
             binding.bottomNavigationView.setSelectedItemId(fragmentId);
         }
     }
+
+
 }

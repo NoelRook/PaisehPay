@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:textSize="20sp"
     android:fontFamily="@font/chicken_quiche"
-    android:textColor="@color/text_colour_light_mode"
+    android:textColor="@color/text_colour_dark_mode"
     android:clickable="false"
     android:focusable="false">
 

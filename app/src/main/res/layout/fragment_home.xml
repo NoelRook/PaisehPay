@@ -4,18 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background_light_mode"
+    android:background="@color/background_dark_mode"
     tools:context=".HomeFragment">
 
+
     <TextView
-        android:id="@+id/hello_user"
+        android:id="@+id/welcome_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_user"
+        android:text= "@string/hello_user"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/textViewBigLightMode"/>
+        style="@style/textViewBigDarkMode"/>
+
+    <TextView
+        android:id="@+id/summary_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "@string/personal_summary"
+        app:layout_constraintTop_toBottomOf="@id/welcome_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/textViewSmallDarkMode"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/owe_layout"
@@ -25,17 +36,30 @@
         android:layout_marginVertical="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hello_user"
+        app:layout_constraintTop_toBottomOf="@id/summary_message"
         android:background="@drawable/layout_border_highlight1_mode">
+
+        <TextView
+            android:id="@+id/today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/today"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/owe_layout"
+            app:layout_constraintBottom_toTopOf="@id/owe"
+            style="@style/textViewMediumLightMode"/>
 
         <TextView
             android:id="@+id/owe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/owe"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/owe_layout"
-            style="@style/textViewBigLightMode"/>
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@id/today"
+            app:layout_constraintTop_toBottomOf="@id/today"
+            style="@style/textViewMediumLightMode"/>
 
         <TextView
             android:id="@+id/money_owe"
@@ -43,43 +67,30 @@
             android:layout_height="wrap_content"
             android:text="@string/owe_amount"
             app:layout_constraintTop_toBottomOf="@id/owe"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/today"
             style="@style/textViewBigLightMode"/>
 
         <Button
             android:id="@+id/owe_more_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:text="@string/more_details"
             app:layout_constraintTop_toBottomOf="@id/owe"
-            app:layout_constraintStart_toEndOf="@id/money_owe"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/ButtonLightMode"/>
 
+            style="@style/ButtonBordelessLightMode"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/owed_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/owe_layout"
-        android:background="@drawable/layout_border_highlight3_mode">
 
         <TextView
             android:id="@+id/owed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/owed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/owed_layout"
-            style="@style/textViewBigLightMode"/>
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@id/today"
+            app:layout_constraintTop_toBottomOf="@id/money_owe"
+            style="@style/textViewMediumLightMode"/>
 
         <TextView
             android:id="@+id/money_owed"
@@ -87,40 +98,367 @@
             android:layout_height="wrap_content"
             android:text="@string/owed_amount"
             app:layout_constraintTop_toBottomOf="@id/owed"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/today"
             style="@style/textViewBigLightMode"/>
 
         <Button
             android:id="@+id/owed_more_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:text="@string/more_details"
             app:layout_constraintTop_toBottomOf="@id/owed"
-            app:layout_constraintStart_toEndOf="@id/money_owed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/ButtonLightMode"/>
+            style="@style/ButtonBordelessLightMode"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
+
+
     <TextView
-        android:id="@+id/notification_history"
+        android:id="@+id/groups_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/transaction_details"
         android:layout_marginVertical="20dp"
-        style="@style/textViewMediumLightMode"
-        app:layout_constraintStart_toStartOf="@id/owed_layout"
-        app:layout_constraintTop_toBottomOf="@id/owed_layout"/>
+        android:text= "@string/user_groups"
+        app:layout_constraintTop_toTopOf="@id/create_group"
+        app:layout_constraintBottom_toBottomOf="@id/create_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/create_group"
+        style="@style/textViewMediumDarkMode"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_view_notifications"
+
+    <Button
+        android:id="@+id/create_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:text="@string/create_group"
+        app:layout_constraintTop_toBottomOf="@id/owe_layout"
+        app:layout_constraintStart_toEndOf="@id/groups_header"
+        app:layout_constraintEnd_toStartOf="@id/join_group"
+        style="@style/ButtonLightMode"/>
+
+    <Button
+        android:id="@+id/join_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:text="@string/join_group"
+        app:layout_constraintTop_toBottomOf="@id/owe_layout"
+        app:layout_constraintStart_toEndOf="@id/create_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ButtonDarkMode"/>
+    
+    <ScrollView
+        android:id="@+id/groups_grid"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/background_light_mode"
-        app:layout_constraintTop_toBottomOf="@id/notification_history"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/join_group"
+        app:layout_constraintBottom_toBottomOf="parent">
+        
+
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:rowCount="2"
+            android:columnCount="2"
+            android:columnOrderPreserved="false">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_border_dark_mode">
+
+                    <TextView
+                        android:id="@+id/group_name2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_name"
+                        android:padding="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        style="@style/textViewMediumLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_created2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_created"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_name2"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_status2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_owed"
+                        android:layout_marginBottom="5dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_created2"
+                        app:layout_constraintBottom_toTopOf="@id/group_homepage2"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <Button
+                        android:id="@+id/group_homepage2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_homepage"
+                        style="@style/ButtonLightMode"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_status2"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_border_dark_mode">
+
+                    <TextView
+                        android:id="@+id/group_name3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_name"
+                        android:padding="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        style="@style/textViewMediumLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_created3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_created"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_name3"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_status3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_owed"
+                        android:layout_marginBottom="5dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_created3"
+                        app:layout_constraintBottom_toTopOf="@id/group_homepage3"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <Button
+                        android:id="@+id/group_homepage3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_homepage"
+                        style="@style/ButtonLightMode"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_status3"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_border_dark_mode">
+
+                    <TextView
+                        android:id="@+id/group_name4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_name"
+                        android:padding="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        style="@style/textViewMediumLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_created4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_created"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_name4"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_status4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_owed"
+                        android:layout_marginBottom="5dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_created4"
+                        app:layout_constraintBottom_toTopOf="@id/group_homepage4"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <Button
+                        android:id="@+id/group_homepage4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_homepage"
+                        style="@style/ButtonLightMode"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_status4"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_border_dark_mode">
+
+                    <TextView
+                        android:id="@+id/group_name5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_name"
+                        android:padding="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        style="@style/textViewMediumLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_created5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_created"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_name5"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_status5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_owed"
+                        android:layout_marginBottom="5dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_created5"
+                        app:layout_constraintBottom_toTopOf="@id/group_homepage5"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <Button
+                        android:id="@+id/group_homepage5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_homepage"
+                        style="@style/ButtonLightMode"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_status5"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_border_dark_mode">
+
+                    <TextView
+                        android:id="@+id/group_name6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_name"
+                        android:padding="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        style="@style/textViewMediumLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_created6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_created"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_name6"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <TextView
+                        android:id="@+id/group_status6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_owed"
+                        android:layout_marginBottom="5dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_created6"
+                        app:layout_constraintBottom_toTopOf="@id/group_homepage6"
+                        style="@style/textViewSmallLightMode"/>
+
+                    <Button
+                        android:id="@+id/group_homepage6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_homepage"
+                        style="@style/ButtonLightMode"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/group_status6"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+        </GridLayout>
+    </ScrollView>
 
 
 
