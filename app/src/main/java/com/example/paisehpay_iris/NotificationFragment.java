@@ -15,11 +15,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class NotificationFragment extends Fragment {
+    //notification fragment when u bottom nav bar notification page
 
-    Button oweDetailsButton;
-    Button owedDetailsButton;
-    TextView owedAmountText;
-    TextView oweAmountText;
     RecyclerView notificationView;
 
     ArrayList<Notification> notificationArray = new ArrayList<>();
@@ -53,12 +50,14 @@ public class NotificationFragment extends Fragment {
     }
 
     private void showNotificationList() {
-        String[] groupList = getResources().getStringArray(R.array.dummy_owe_group_name_list);
-        String[] notificationList = getResources().getStringArray(R.array.dummy_owe_description_list);
+        String[] groupList = getResources().getStringArray(R.array.dummy_group_name_list);
+        String[] notificationList = getResources().getStringArray(R.array.dummy_notifications_list);
 
         for (int i = 0; i<groupList.length; i++){
             notificationArray.add(new Notification(groupList[i],notificationList[i]));
 
         }
     }
+
+    // <!-- TODO: 1. query from db  -->
 }

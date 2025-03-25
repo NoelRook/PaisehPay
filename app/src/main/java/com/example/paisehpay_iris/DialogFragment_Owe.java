@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class DialogFragment extends androidx.fragment.app.DialogFragment {
+public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment {
+    //the popup that displays when you press owe details on home fragment
 
     Spinner oweFilterSpinner;
     View rootView;
@@ -28,7 +29,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         super.onCreateView(inflater,container,savedInstanceState);
-        rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
+        rootView = inflater.inflate(R.layout.fragment_owe, container, false);
 
         //create spinner
         oweFilterSpinner = rootView.findViewById(R.id.owe_filter_spinner);
@@ -73,14 +74,18 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
     }
 
     private void showOweList() {
-        String[] groupList = getResources().getStringArray(R.array.dummy_owe_group_name_list);
-        String[] personList = getResources().getStringArray(R.array.dummy_owe_person_name_list);
-        String[] amountList = getResources().getStringArray(R.array.dummy_owe_amount_list);
+        String[] groupList = getResources().getStringArray(R.array.dummy_group_name_list);
+        String[] personList = getResources().getStringArray(R.array.dummy_person_name_list);
+        String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
 
         for (int i = 0; i<groupList.length; i++){
             oweArray.add(new Owe(groupList[i],personList[i],amountList[i]));
 
         }
     }
+    // <!-- TODO: 1. write function to store spinner (dropdown box) data  -->
+    // <!-- TODO: 2. filter from db and query data based on user's selected option  -->
+    // <!-- TODO: 3. currently, this dialog fragment is used for both owe and owed. update "who do u owe?" or "who owes you?" -->
+    // <!-- TODO: 4. query owe and owed expenses depending on which button was pressed in the home fragment  -->
 
 }

@@ -12,11 +12,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 public class ReceiptOverview extends AppCompatActivity {
+    //shows receipt details after camera ocr
     ImageView backArrow;
     Button addPeopleButton;
     TextView toolbarTitleText;
+    RecyclerView receiptView;
+    ArrayList<Receipt> receiptArray = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,5 +64,28 @@ public class ReceiptOverview extends AppCompatActivity {
                 finish();
             }
         });
+
+        //show item list
+        receiptView = findViewById(R.id.recycle_view_receipt);
+        showReceiptList();
+        RecycleViewAdapter_Receipt adapter = new RecycleViewAdapter_Receipt(this,receiptArray);
+        receiptView.setAdapter(adapter);
+        receiptView.setLayoutManager(new LinearLayoutManager(this));
+
     }
+
+    private void showReceiptList() {
+        String[] numberList = getResources().getStringArray(R.array.dummy_item_number_list);
+        String[] nameList = getResources().getStringArray(R.array.dummy_item_name_list);
+        String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
+
+
+        for (int i = 0; i<nameList.length; i++){
+            receiptArray.add(new Receipt(numberList[i],nameList[i],amountList[i]));
+
+        }
+    }
+
+    // <!-- TODO: 1. (for iris) remove expense name edit text  -->
+    // <!-- TODO: 2. do ocr json magic, output a list of all items and do math  -->
 }

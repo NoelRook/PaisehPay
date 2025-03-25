@@ -1,4 +1,173 @@
 <resources>
+    //dummy string array for notifications
+    <string-array name="dummy_group_name_list">
+        <item>Pass Fail</item>
+        <item>CSD Term 4</item>
+        <item>SUTD Family</item>
+        <item>Hass Global Film Week 8 Presentation</item>
+        <item>Hanyang Summer Programme</item>
+        <item>SUTD Class of 2027</item>
+        <item>Cat Appreciation Team</item>
+        <item>12.5 ROOT ECP</item>
+        <item>B59L7 floor chat</item>
+        <item>SOS24 Peeps Yurr</item>
+    </string-array>
+
+    <string-array name="dummy_person_name_list">
+        <item>Kushi</item>
+        <item>Iris</item>
+        <item>Sean</item>
+        <item>Wei Yang</item>
+        <item>Qi Han</item>
+        <item>Rey</item>
+        <item>Dora</item>
+        <item>Jin</item>
+        <item>Michelle</item>
+        <item>Megan</item>
+    </string-array>
+
+    <string-array name="dummy_expense_title_list">
+        <item>Snacks from Cheers</item>
+        <item>BBQ Chicken Dinner</item>
+        <item>Grab to Tampines</item>
+        <item>Fairprice Trip</item>
+        <item>Kushi\'s chocolate cake</item>
+        <item>Canteen Meal</item>
+        <item>Date Night Meal</item>
+        <item>Jin\'s alcohol</item>
+        <item>Weekly Laundry</item>
+        <item>Ez-link top up</item>
+    </string-array>
+
+    <string-array name="dummy_expense_date_list">
+        <item>19/2/2025</item>
+        <item>22/1/2025</item>
+        <item>11/11/2024</item>
+        <item>15/7/2024</item>x
+        <item>8/9/2024</item>
+        <item>11/3/2025</item>
+        <item>14/2/2025</item>
+        <item>1/1/2025</item>
+        <item>18/5/2024</item>
+        <item>30/12/2024</item>
+    </string-array>
+
+    <string-array name="dummy_expense_paid_by_list">
+        <item>You paid $20.25</item>
+        <item>Megan paid $14.40</item>
+        <item>Jin paid $15.90</item>
+        <item>Wei Yang paid $78.69</item>
+        <item>You paid $45.99</item>
+        <item>You were not involved</item>
+        <item>Sean paid $113.70</item>
+        <item>Michelle paid $32.20</item>
+        <item>Kushi paid $2.00</item>
+        <item>You were not involved</item>
+    </string-array>
+
+    <string-array name="dummy_expense_action_list">
+        <item>You lent</item>
+        <item>You borrowed</item>
+        <item>You borrowed</item>
+        <item>You borrowed</item>
+        <item>You lent </item>
+        <item> </item>
+        <item>You borrowed</item>
+        <item>You borrowed</item>
+        <item>You borrowed</item>
+        <item> </item>
+    </string-array>
+
+    <string-array name="dummy_expense_amount_list">
+        <item>$10</item>
+        <item>$2</item>
+        <item>$3.50</item>
+        <item>$100.20</item>
+        <item>$88.90</item>
+        <item>$4.50</item>
+        <item>$0.10</item>
+        <item>$9.90</item>
+        <item>$1.39</item>
+        <item>$1.60</item>
+    </string-array>
+
+
+    <string-array name="dummy_item_name_list">
+        <item>Chicken</item>
+        <item>Beef</item>
+        <item>Fish</item>
+        <item>Coke</item>
+        <item>Koi</item>
+        <item>Wingstop</item>
+        <item>Veggies</item>
+        <item>Pizza</item>
+        <item>Ice Cream</item>
+        <item>Water</item>
+    </string-array>
+
+    <string-array name="dummy_item_number_list">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+
+
+    <string-array name="dummy_email_list">
+        <item>1001111@sutd.edu.sg</item>
+        <item>1002222@sutd.edu.sg</item>
+        <item>1003333@sutd.edu.sg</item>
+        <item>1004444@sutd.edu.sg</item>
+        <item>1005555@sutd.edu.sg</item>
+        <item>1006666@sutd.edu.sg</item>
+        <item>1007777@sutd.edu.sg</item>
+        <item>1008888@sutd.edu.sg</item>
+        <item>1009999@sutd.edu.sg</item>
+        <item>1000000@sutd.edu.sg</item>
+    </string-array>
+
+    <string-array name="dummy_notifications_list">
+        <item>Herby nudges you to pay $2.50</item>
+        <item>You paid Wen Kai $14</item>
+        <item>You paid Michelle </item>
+        <item>Kushi nudges you to pay $1500</item>
+        <item>You paid Rey $19.90</item>
+        <item>You paid Jin $4.30</item>
+        <item>Wei Yang nudges you to pay $65.00</item>
+        <item>You paid Kushi $10.00</item>
+        <item>You paid Sean $5.60</item>
+        <item>Kushi nudges you to pay $30.00</item>
+    </string-array>
+
+    <array name="category_item_array">
+        <item>@drawable/avatar</item>
+        <item>@drawable/avatar</item>
+        <item>@drawable/avatar</item>
+        <item>@drawable/avatar</item>
+        <item>@drawable/avatar</item>
+        <item>@drawable/avatar</item>
+        <item>@drawable/avatar</item>
+    </array>
+
+    <string-array name="category_name_array">
+        <item>@string/food</item>
+        <item>@string/transport</item>
+        <item>@string/shopping</item>
+        <item>@string/utilities</item>
+        <item>@string/entertainment</item>
+        <item>@string/rent</item>
+        <item>@string/health</item>
+    </string-array>
+
+
+
     <!-- Reply Preference -->
     <string-array name="reply_entries">
         <item>Reply</item>

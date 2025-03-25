@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 
 public class ModalBottomSheet extends BottomSheetDialogFragment {
+    //popup from below when u click add expense button on button nav page
 
     Button manualButton;
     Button scanButton;
@@ -58,4 +59,7 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
         dismiss(); // Close Bottom Sheet
     }
 }
+
+// <!-- TODO: 1. if manual scan, skip camera page + reciept overview page and jump straight to expense details page -->
+// <!-- TODO: 2. if auto scan, go to camera page  -->
 

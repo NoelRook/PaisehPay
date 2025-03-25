@@ -13,8 +13,9 @@ import android.widget.Button;
 
 
 public class AddFragment extends Fragment {
+    //this is the fragment that loads when you press the Add Expense Button;
 
-    Button button;
+    Button button; //currently this is the page that is a temporary for the camera
 
     public AddFragment() {
         // Required empty public constructor
@@ -25,6 +26,7 @@ public class AddFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+    //used for computation
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,18 +34,19 @@ public class AddFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_add, container, false);
 
 
-        button = rootView.findViewById(R.id.test_button);
+        //click button lead to reciept overview
+        button = rootView.findViewById(R.id.test_button); //temp button
         button.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), ReceiptOverview.class);
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             getActivity().finish();
         });
-
-
         return rootView;
 
     }
 
+    // <!-- TODO: 1. add camera in, take pic, process pic  -->
+    // <!-- TODO: 2. use shared preferences to save data to auto fill in reciept overview if scanning -->
 
 }

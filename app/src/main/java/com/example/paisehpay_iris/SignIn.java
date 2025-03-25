@@ -106,4 +106,6 @@ public class SignIn extends AppCompatActivity {
             finish();
         });
     }
+
+    // <!-- TODO: 1. function when press login page, check db for credentials  -->
 }

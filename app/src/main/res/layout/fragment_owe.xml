@@ -5,7 +5,7 @@
     android:layout_height="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/layout_border_light_mode"
-    tools:context=".DialogFragment">
+    tools:context=".DialogFragment_Owe">
 
     <TextView
         android:id="@+id/who_owes_you"
@@ -70,6 +70,7 @@
         android:layout_margin="10dp"
         android:background="@drawable/layout_border_highlight3_mode"
         android:visibility="visible"
+        android:contentDescription="@string/expense_amount"
         app:layout_constraintTop_toBottomOf="@id/amount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

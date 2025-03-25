@@ -1,6 +1,7 @@
 package com.example.paisehpay_iris;
 
 public class Owe {
+    //used in recycleview owe/owed in homefragment after pressing view details buttons
     String groupName;
     String person;
     String amount;

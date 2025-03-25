@@ -142,8 +142,7 @@ public class ChangePassword extends AppCompatActivity {
         }
     }
 
-    //missing functions:
-    //1. check code correct (all 4 digits with db) then after that trigger user to key in new password - digit4text.addtextchangedlistener is a substitute for now
+    // <!-- TODO: 1. check code correct (all 4 digits with db) then after that trigger user to key in new password - digit4text.addtextchangedlistener is a substitute for now-->
 
 
 }

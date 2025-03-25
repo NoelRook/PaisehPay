@@ -62,3 +62,5 @@ public class ProfileFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 }
+
+// <!-- TODO: 1. Don't touch, still WIP  -->

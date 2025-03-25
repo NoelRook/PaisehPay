@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/layout_border_light_mode">
+
+    <ImageView
+        android:id="@+id/category_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:padding="10dp"
+        android:src="@drawable/nav_groups"
+        app:tint="@color/background_light_mode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    
+    <TextView
+        android:id="@+id/expense_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/expense_title"
+        android:layout_marginTop="10dp"
+        style="@style/textViewMediumDarkMode"
+        app:layout_constraintStart_toEndOf="@id/category_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/expense_date"/>
+
+    <TextView
+        android:id="@+id/expense_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/expense_date"
+        style="@style/textViewSmallDarkMode"
+        app:layout_constraintStart_toEndOf="@id/category_icon"
+        app:layout_constraintTop_toBottomOf="@id/expense_title"
+        app:layout_constraintBottom_toTopOf="@id/expense_paid_by"/>
+
+    <TextView
+        android:id="@+id/expense_paid_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/expense_status"
+        android:layout_marginVertical="10dp"
+        style="@style/textViewSmallDarkMode"
+        app:layout_constraintStart_toEndOf="@id/category_icon"
+        app:layout_constraintTop_toBottomOf="@id/expense_date"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/expense_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/you_lent"
+        android:layout_marginEnd="50dp"
+        style="@style/textViewSmallDarkMode"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/expense_amount"/>
+
+    <TextView
+        android:id="@+id/expense_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/expense_amount"
+        style="@style/textViewMediumDarkMode"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintTop_toBottomOf="@id/expense_action"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        
+
+</androidx.constraintlayout.widget.ConstraintLayout>

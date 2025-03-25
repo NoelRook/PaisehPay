@@ -5,6 +5,126 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_dark_mode"
     tools:context=".AddPeople">
 
+    <include
+        android:id="@+id/toolbar"
+        layout= "@layout/toolbar"/>
+
+    <TextView
+        android:id="@+id/expense_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/expense_name"
+        android:layout_margin="10dp"
+        style="@style/textViewMediumDarkMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/add_expense_name"/>
+
+    <EditText
+        android:id="@+id/add_expense_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:autofillHints="name"
+        android:hint="@string/expense_name_text"
+        android:layout_marginVertical="10dp"
+        style="@style/editTextFontDarkMode"
+        app:layout_constraintStart_toStartOf="@id/expense_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/expense_name"
+        app:layout_constraintBottom_toTopOf="@id/expense_category"/>
+
+    <TextView
+        android:id="@+id/expense_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/select_category"
+        style="@style/textViewMediumDarkMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_expense_name"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/layout_border_highlight3_mode"
+        app:layout_constraintTop_toBottomOf="@id/expense_category"
+        app:layout_constraintBottom_toTopOf="@id/select_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/select_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_group"
+        style="@style/textViewMediumDarkMode"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycle_view_category"
+        app:layout_constraintBottom_toTopOf="@id/select_group_button"/>
+
+    <ImageButton
+        android:id="@+id/select_group_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/add_people"
+        android:background="@color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/group_selected"
+        app:layout_constraintTop_toBottomOf="@id/select_group"
+        app:layout_constraintBottom_toTopOf="@id/items"/>
+
+    <TextView
+        android:id="@+id/group_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selected_group"
+        style="@style/textViewMediumDarkMode"
+        android:padding="20dp"
+        android:background="@drawable/layout_border_highlight1_mode"
+        app:layout_constraintStart_toEndOf="@id/select_group_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/select_group_button"
+        app:layout_constraintBottom_toBottomOf="@id/select_group_button"/>
+
+    <TextView
+        android:id="@+id/items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/items"
+        android:layout_margin="10dp"
+        style="@style/textViewMediumDarkMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/select_group_button"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view_items"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/layout_border_light_mode"
+        app:layout_constraintTop_toBottomOf="@id/items"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm"
+        style="@style/ButtonDarkMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycle_view_items"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- TODO: 1. change to scrollview to adapt for device size  -->
+    <!-- TODO: 2. add delete/add item button  -->

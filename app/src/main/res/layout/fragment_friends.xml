@@ -6,10 +6,12 @@
     android:background="@color/purple_200"
     tools:context=".FriendsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
 
 </FrameLayout>
+
+    <!-- TODO: 1. change to scrollview to adapt for device size  -->
+    <!-- TODO: 2. do this page later tired -->

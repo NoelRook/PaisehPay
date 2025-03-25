@@ -49,3 +49,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- TODO: 1. actually no need cardview, constraint layout will do  -->
+    <!-- TODO: 2. redo, ugly as hell  -->

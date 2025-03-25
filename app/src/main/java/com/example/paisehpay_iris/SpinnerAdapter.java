@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 public class SpinnerAdapter extends ArrayAdapter<String> {
+    //adapter for spinner
     private Context context;
     private List<String> items;
     private int selectedPosition = -1; // Store selected item
@@ -83,4 +84,6 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
 
         return convertView;
     }
+
+    // <!-- TODO: 1. get data from the spinner and pass to owe recycle view to update -->
 }

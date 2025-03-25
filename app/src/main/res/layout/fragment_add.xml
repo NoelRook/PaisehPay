@@ -17,10 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- TODO: 1. this is the camera page  -->

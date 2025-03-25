@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.paisehpay_iris.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+    //main activity that loads the bottom nav screen and the 5 fragments
 
     ActivityMainBinding binding;
 
@@ -99,12 +100,13 @@ public class MainActivity extends AppCompatActivity {
             fragment = new FriendsFragment();
             fragmentId = R.id.friends;
         }
-
         if (fragment != null){
             replaceFragment(fragment);
             binding.bottomNavigationView.setSelectedItemId(fragmentId);
         }
     }
+
+
 
 
 }
