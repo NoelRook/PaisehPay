@@ -87,6 +87,7 @@
             android:id="@+id/email_input"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:enabled="true"
             android:inputType="textEmailAddress"
             android:autofillHints="username"
             android:hint="@string/new_email"

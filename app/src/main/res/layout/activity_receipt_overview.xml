@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/expense_date_time"
             android:layout_marginTop="15dp"
-            app:layout_constraintTop_toTop="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="@id/summary_layout"
             app:layout_constraintEnd_toEndOf="@id/summary_layout"
             app:layout_constraintBottom_toTopOf="@id/item_name"

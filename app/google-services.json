@@ -1,0 +1,144 @@
+{
+  "project_info": {
+    "project_number": "718072370639",
+    "firebase_url": "https://splitwiseplus-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "splitwiseplus",
+    "storage_bucket": "splitwiseplus.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718072370639:android:601fc2275885bde09deeba",
+        "android_client_info": {
+          "package_name": "com.example.anothercameratester"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwy3n8G7aXXRLDl3_M4s-JR8iWo6ZYQ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718072370639:android:c9ba54b0914a4ef39deeba",
+        "android_client_info": {
+          "package_name": "com.example.cameramltesting"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwy3n8G7aXXRLDl3_M4s-JR8iWo6ZYQ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718072370639:android:64ea423b32ea79189deeba",
+        "android_client_info": {
+          "package_name": "com.example.dbtester"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwy3n8G7aXXRLDl3_M4s-JR8iWo6ZYQ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718072370639:android:7db9895a3cb0ff699deeba",
+        "android_client_info": {
+          "package_name": "com.example.firebasetester"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwy3n8G7aXXRLDl3_M4s-JR8iWo6ZYQ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718072370639:android:6e3b7cfe610f482d9deeba",
+        "android_client_info": {
+          "package_name": "com.example.paisehpay_iris"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwy3n8G7aXXRLDl3_M4s-JR8iWo6ZYQ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718072370639:android:560cc21d54cc269b9deeba",
+        "android_client_info": {
+          "package_name": "com.example.splitwise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwy3n8G7aXXRLDl3_M4s-JR8iWo6ZYQ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718072370639:android:3a1fc9a082293ae59deeba",
+        "android_client_info": {
+          "package_name": "com.example.splitwisedb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwy3n8G7aXXRLDl3_M4s-JR8iWo6ZYQ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

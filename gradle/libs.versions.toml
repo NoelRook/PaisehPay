@@ -1,5 +1,5 @@
 [versions]
-agp = "8.9.0"
+agp = "8.7.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -14,6 +14,9 @@ design = "28.0.0"
 xcameraCore = " 1.3.0-rc01"
 xcameraExtensions = " ScameraxVersion"
 preference = "1.2.0"
+firebase-bom = "32.7.0"
+google-services = "4.4.2"
+firebaseDatabase = "21.0.0"
 
 [libraries]
 androidx-xcamera-extensions = { module = "androidx. camera: camera-extensions", version.ref = "xcameraExtensions" }
@@ -34,7 +37,12 @@ design = { group = "com.android.support", name = "design", version.ref = "design
 xcamera-camera2 = { module = "androidx. camera: camera-camera2", version.ref = "xcameraCore" }
 xcamera-core = { module = "androidx. camera: camera-core", version.ref = "xcameraCore" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 
