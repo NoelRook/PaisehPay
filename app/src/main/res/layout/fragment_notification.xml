@@ -11,7 +11,7 @@
         android:id="@+id/notification_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/transaction_details"
+        android:text="@string/notifications"
         android:layout_marginVertical="20dp"
         style="@style/textViewMediumDarkMode"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,4 +30,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-    <!-- TODO: 1. change to scrollview to adapt for device size  -->

@@ -79,6 +79,7 @@
     <string name="transaction_details">Your Expenses</string>
     <string name="action_returned">you paid xxx yyy</string>
     <string name="action_reminder">xxx nudged you to return yyy</string>
+    <string name="nudge">Nudge</string>
 
     //toolbar
     <string name="back_arrow">Back</string>
@@ -147,6 +148,7 @@
     <string name="sub_total">Sub Total</string>
     <string name="with_gst">Add 9% GST</string>
     <string name="add_people_text">Add people and split bill</string>
+    <string name="redo_ocr">Redo scan</string>
 
     //expense details
     <string name="add_people">Add People</string>
