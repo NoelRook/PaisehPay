@@ -12,210 +12,224 @@
         android:id="@+id/toolbar"
         layout= "@layout/toolbar"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/summary_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toTopOf="@id/expense_details_layout">
-
-
-        <TextView
-            android:id="@+id/expense_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/expense_date_time"
-            android:layout_marginTop="15dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="@id/summary_layout"
-            app:layout_constraintEnd_toEndOf="@id/summary_layout"
-            app:layout_constraintBottom_toTopOf="@id/item_name"
-            style="@style/textViewMediumDarkMode" />
-
-        <TextView
-            android:id="@+id/item_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/number"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/expense_date"
-            app:layout_constraintStart_toStartOf="@id/summary_layout"
-            app:layout_constraintEnd_toStartOf="@id/item_name"
-            app:layout_constraintBottom_toBottomOf="@id/summary_layout"
-            style="@style/textViewSmallDarkMode" />
-
-        <TextView
-            android:id="@+id/item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/item_name"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/expense_date"
-            app:layout_constraintStart_toEndOf="@id/item_number"
-            app:layout_constraintEnd_toStartOf="@id/item_price"
-            app:layout_constraintBottom_toBottomOf="@id/summary_layout"
-            style="@style/textViewSmallDarkMode" />
-
-        <TextView
-            android:id="@+id/item_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/item_price"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/expense_date"
-            app:layout_constraintStart_toEndOf="@id/item_name"
-            app:layout_constraintEnd_toEndOf="@id/summary_layout"
-            app:layout_constraintBottom_toBottomOf="@id/summary_layout"
-            style="@style/textViewSmallDarkMode"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/expense_details_layout"
-        android:layout_width="350dp"
-        android:layout_height="220dp"
-        android:background="@drawable/layout_border_highlight1_mode"
-        android:layout_marginVertical="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_layout"
-        app:layout_constraintBottom_toTopOf="@id/total_layout">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycle_view_receipt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/total_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/layout_border_light_mode"
-        android:padding="10dp"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginVertical="10dp"
-        app:layout_constraintStart_toStartOf="@id/expense_details_layout"
-        app:layout_constraintEnd_toEndOf="@id/expense_details_layout"
-        app:layout_constraintTop_toBottomOf="@id/expense_details_layout"
-        app:layout_constraintBottom_toTopOf="@id/final_total">
-
-        <TextView
-            android:id="@+id/sub_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sub_total"
-            app:layout_constraintStart_toStartOf="@id/total_layout"
-            app:layout_constraintEnd_toStartOf="@id/sub_total_amount"
-            app:layout_constraintTop_toTopOf="@id/total_layout"
-            app:layout_constraintBottom_toTopOf="@id/gst_total"
-            style="@style/textViewMediumDarkMode" />
-
-        <TextView
-            android:id="@+id/gst_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/with_gst"
-            app:layout_constraintStart_toStartOf="@id/total_layout"
-            app:layout_constraintEnd_toStartOf="@id/gst_total_amount"
-            app:layout_constraintTop_toBottomOf="@id/sub_total"
-            app:layout_constraintBottom_toBottomOf="@id/total_layout"
-            style="@style/textViewMediumDarkMode" />
-
-        <TextView
-            android:id="@+id/sub_total_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/owe_amount"
-            app:layout_constraintStart_toEndOf="@id/sub_total"
-            app:layout_constraintEnd_toEndOf="@id/total_layout"
-            app:layout_constraintTop_toTopOf="@id/total_layout"
-            app:layout_constraintBottom_toTopOf="@id/gst_total_amount"
-            style="@style/textViewSmallDarkMode" />
-
-        <TextView
-            android:id="@+id/gst_total_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/owed_amount"
-            app:layout_constraintStart_toEndOf="@id/gst_total"
-            app:layout_constraintEnd_toEndOf="@id/total_layout"
-            app:layout_constraintTop_toBottomOf="@id/sub_total_amount"
-            app:layout_constraintBottom_toBottomOf="@id/total_layout"
-            style="@style/textViewSmallDarkMode" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/final_total"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp"
-        android:background="@drawable/layout_border_highlight4_mode"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/total_layout"
-        app:layout_constraintBottom_toTopOf="@id/add_to_split">
-
-        <TextView
-            android:id="@+id/grand_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/total"
-            android:padding="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/grand_total_amount"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            style="@style/textViewMediumDarkMode"/>
-
-        <TextView
-            android:id="@+id/grand_total_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/owed_amount"
-            android:padding="20dp"
-            app:layout_constraintStart_toEndOf="@id/grand_total"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/textViewMediumDarkMode" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/add_to_split"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_people_text"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/add_icon"
-        app:layout_constraintTop_toBottomOf="@id/final_total"
+        android:layout_height="match_parent"
+        android:layout_marginTop="62dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/ButtonDarkMode"/>
-
-    <ImageView
-        android:id="@+id/add_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/add_people"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_to_split"
-        app:layout_constraintTop_toTopOf="@id/add_to_split"
-        app:layout_constraintBottom_toBottomOf="@id/add_to_split" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/expense_date"
+                    style="@style/textViewMediumDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/expense_date_time"
+                    app:layout_constraintBottom_toTopOf="@id/item_name"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/item_number"
+                    style="@style/textViewSmallDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/number"
+                    android:layout_marginStart="30dp"
+                    app:layout_constraintBottom_toBottomOf="@id/item_name"
+                    app:layout_constraintStart_toStartOf="@id/expense_details_layout"
+                    app:layout_constraintTop_toTopOf="@id/item_name" />
+
+                <TextView
+                    android:id="@+id/item_name"
+                    style="@style/textViewSmallDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item_name"
+                    app:layout_constraintBottom_toTopOf="@id/expense_details_layout"
+                    app:layout_constraintEnd_toEndOf="@id/expense_details_layout"
+                    app:layout_constraintStart_toStartOf="@id/expense_details_layout"
+                    app:layout_constraintTop_toBottomOf="@id/expense_date" />
+
+                <TextView
+                    android:id="@+id/item_price"
+                    style="@style/textViewSmallDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item_price"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintBottom_toBottomOf="@id/item_name"
+                    app:layout_constraintEnd_toEndOf="@id/expense_details_layout"
+                    app:layout_constraintTop_toTopOf="@id/item_name" />
 
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/expense_details_layout"
+                android:layout_width="350dp"
+                android:layout_height="400dp"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/layout_border_highlight1_mode"
+                app:layout_constraintBottom_toTopOf="@id/redo_ocr_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/item_name">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_view_receipt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/redo_ocr_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/redo_ocr"
+                style="@style/ButtonLightMode"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/expense_details_layout"
+                app:layout_constraintBottom_toTopOf="@id/total_layout"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/total_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/layout_border_light_mode"
+                android:padding="10dp"
+                app:layout_constraintBottom_toTopOf="@id/final_total"
+                app:layout_constraintEnd_toEndOf="@id/expense_details_layout"
+                app:layout_constraintStart_toStartOf="@id/expense_details_layout"
+                app:layout_constraintTop_toBottomOf="@id/redo_ocr_button">
+
+                <TextView
+                    android:id="@+id/sub_total"
+                    style="@style/textViewMediumDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sub_total"
+                    app:layout_constraintBottom_toTopOf="@id/gst_total"
+                    app:layout_constraintEnd_toStartOf="@id/sub_total_amount"
+                    app:layout_constraintStart_toStartOf="@id/total_layout"
+                    app:layout_constraintTop_toTopOf="@id/total_layout" />
+
+                <TextView
+                    android:id="@+id/gst_total"
+                    style="@style/textViewMediumDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/with_gst"
+                    app:layout_constraintBottom_toBottomOf="@id/total_layout"
+                    app:layout_constraintEnd_toStartOf="@id/gst_total_amount"
+                    app:layout_constraintStart_toStartOf="@id/total_layout"
+                    app:layout_constraintTop_toBottomOf="@id/sub_total" />
+
+                <TextView
+                    android:id="@+id/sub_total_amount"
+                    style="@style/textViewSmallDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/owe_amount"
+                    app:layout_constraintBottom_toTopOf="@id/gst_total_amount"
+                    app:layout_constraintEnd_toEndOf="@id/total_layout"
+                    app:layout_constraintStart_toEndOf="@id/sub_total"
+                    app:layout_constraintTop_toTopOf="@id/total_layout" />
+
+                <TextView
+                    android:id="@+id/gst_total_amount"
+                    style="@style/textViewSmallDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/owed_amount"
+                    app:layout_constraintBottom_toBottomOf="@id/total_layout"
+                    app:layout_constraintEnd_toEndOf="@id/total_layout"
+                    app:layout_constraintStart_toEndOf="@id/gst_total"
+                    app:layout_constraintTop_toBottomOf="@id/sub_total_amount" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/final_total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:background="@drawable/layout_border_highlight4_mode"
+                app:layout_constraintBottom_toTopOf="@id/add_to_split"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/total_layout">
+
+                <TextView
+                    android:id="@+id/grand_total"
+                    style="@style/textViewMediumDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:text="@string/total"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/grand_total_amount"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/grand_total_amount"
+                    style="@style/textViewMediumDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:text="@string/owed_amount"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/grand_total"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/add_to_split"
+                style="@style/ButtonDarkMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_people_text"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/add_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/final_total" />
+
+            <ImageView
+                android:id="@+id/add_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add_people"
+                app:layout_constraintBottom_toBottomOf="@id/add_to_split"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/add_to_split"
+                app:layout_constraintTop_toTopOf="@id/add_to_split" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- TODO: 1. change to scrollview to adapt for device size  -->
-    <!-- TODO: 2.fix the layout i tired, put number, price, item outside  -->

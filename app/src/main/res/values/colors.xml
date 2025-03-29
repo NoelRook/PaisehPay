@@ -23,9 +23,7 @@
 
     <color name="highlight_1">#C7AAD3</color>
     <color name="highlight_2">#8B6D94</color>
-    <color name="highlight_3">#D75F9B</color>
-    <color name="highlight_4">#EF067A</color>
+    <color name="highlight_3">#336699</color>
+    <color name="highlight_4">#62929E</color>
 
 </resources>
-
-    <!-- TODO: 1. change some of the colours especially the highlights  -->
