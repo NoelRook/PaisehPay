@@ -109,7 +109,7 @@
     <style name="ButtonLightMode">
         <item name="android:backgroundTint">@color/highlight_3</item>
         <item name="android:fontFamily">@font/chicken_quiche</item>
-        <item name="android:textColor">@color/text_colour_light_mode</item>
+        <item name="android:textColor">@color/text_colour_dark_mode</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textAlignment">center</item>
     </style>

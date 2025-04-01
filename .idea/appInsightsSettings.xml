@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.paisehpay_iris" />
+                  <option name="mobileSdkAppId" value="1:718072370639:android:6e3b7cfe610f482d9deeba" />
+                  <option name="projectId" value="splitwiseplus" />
+                  <option name="projectNumber" value="718072370639" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
