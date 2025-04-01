@@ -3,7 +3,6 @@ package com.example.paisehpay.databaseHandler;
 import com.example.paisehpay.blueprints.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -11,29 +10,48 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class FirebaseAdapter {
+public class UserAdapter extends BaseDatabase  {
     private DatabaseReference userRef;
     private  static final String USER_TABLE = "Users";
 
-    public FirebaseAdapter(){
+    public UserAdapter(){
+        super(USER_TABLE);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         userRef = database.getReference(USER_TABLE);
     }
 
-    public interface UserListCallback{
-        void onUserListLoaded(List<User> users);
-        void onError(DatabaseError error);
-    }
 
-    public interface OperationCallback{
-        void onSuccess();
-        void onError(DatabaseError error);
-    }
+    @Override
+    public void create(User user, final OperationCallback callback) {
+        if (user == null) {
+            callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot empty")));
+            return;
+        }
 
+        String userId = userRef.push().getKey();
+        if (userId == null) {
+            callback.onError(DatabaseError.fromException(new Exception("Failed to generate user ID")));
+            return;
+        }
+
+        userRef.child(userId).setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>(){
+                    @Override
+                    public void onComplete(Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onError(DatabaseError.fromException(task.getException()));
+                        }
+                    }
+                });
+    }
     // Get all users
-    public void getUsers(final UserListCallback callback) {
+    @Override
+    public void get(final ListCallback callback) {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -45,7 +63,7 @@ public class FirebaseAdapter {
                         users.add(user);
                     }
                 }
-                callback.onUserListLoaded(users);
+                callback.onListLoaded(Collections.singletonList(users));
             }
 
             @Override
@@ -56,7 +74,8 @@ public class FirebaseAdapter {
     }
 
     // Update a user
-    public void updateUser(String userId, User user, final OperationCallback callback) {
+    @Override
+    public void update(String userId, User user, final OperationCallback callback) {
         if (userId == null || userId.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;
@@ -76,38 +95,14 @@ public class FirebaseAdapter {
     }
 
     // Delete a user
-    public void deleteUser(String userId, final OperationCallback callback) {
+    @Override
+    public void delete(String userId, final OperationCallback callback) {
         if (userId == null || userId.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;
         }
 
         userRef.child(userId).removeValue()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            callback.onSuccess();
-                        } else {
-                            callback.onError(DatabaseError.fromException(task.getException()));
-                        }
-                    }
-                });
-    }
-    // Create a new user
-    public void createUser(User user, final OperationCallback callback) {
-        if (user == null) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot empty")));
-            return;
-        }
-
-        String userId = userRef.push().getKey();
-        if (userId == null) {
-            callback.onError(DatabaseError.fromException(new Exception("Failed to generate user ID")));
-            return;
-        }
-
-        userRef.child(userId).setValue(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(Task<Void> task) {

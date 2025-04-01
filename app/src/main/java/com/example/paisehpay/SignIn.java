@@ -19,7 +19,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.FirebaseAdapter;
+import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.List;
@@ -116,16 +117,15 @@ public class SignIn extends AppCompatActivity {
         //JK testing get all users
         // the reason this is here is because i have not figured out how to start unit testing for database yet. to do in future build
         // pls do not @ me
-        FirebaseAdapter adapter = new FirebaseAdapter();
-        adapter.getUsers(new FirebaseAdapter.UserListCallback() {
+        UserAdapter adapter = new UserAdapter();
+        adapter.get(new BaseDatabase.ListCallback<User>() {
             @Override
-            public void onUserListLoaded(List<User> users) {
+            public void onListLoaded(List<User> users) {
                 // Handle the list of users
                 for (User user : users) {
                     Log.d("User", user.getUsername() + " - " + user.getEmail());
                 }
             }
-
             @Override
             public void onError(DatabaseError error) {
                 // Handle error
