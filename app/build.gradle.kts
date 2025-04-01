@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.paisehpay_iris"
+    namespace = "com.example.paisehpay"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.paisehpay_iris"
+        applicationId = "com.example.paisehpay"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
