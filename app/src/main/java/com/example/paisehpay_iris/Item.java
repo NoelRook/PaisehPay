@@ -30,4 +30,16 @@ public class Item {
     public String getItemPrice() {
         return itemPrice;
     }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public void setItemPeople(String itemPeople) {
+        this.itemPeople = itemPeople;
+    }
+
+    public void setItemPrice(String itemPrice) {
+        this.itemPrice = itemPrice;
+    }
 }

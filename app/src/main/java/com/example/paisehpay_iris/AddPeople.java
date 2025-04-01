@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class AddPeople extends AppCompatActivity {
+public class AddPeople extends AppCompatActivity implements RecycleViewInterface,DialogFragmentListener{
     //ie the expense overview page
     RecyclerView categoryView;
     ArrayList<Category> categoryArray = new ArrayList<>();
@@ -30,10 +30,10 @@ public class AddPeople extends AppCompatActivity {
     TextView toolbarTitleText;
     ImageView backArrow;
     ImageButton selectGroupButton;
-
     DialogFragment_SelectGroup selectGroupFragment;
-
     Button splitBillButton;
+    TextView selectedGroupText;
+    private RecycleViewAdapter_Item adapter_items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +63,13 @@ public class AddPeople extends AppCompatActivity {
         });
 
 
-        //select group button instantiates popup (dialog fragment) - still broken
+        //select group button instantiates popup
         selectGroupButton = findViewById(R.id.select_group_button);
         selectGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectGroupFragment = new DialogFragment_SelectGroup();
-                selectGroupFragment.show(((AppCompatActivity) view.getContext()).getSupportFragmentManager(), "DialogFragment_SelectGroup");
+                selectGroupFragment = DialogFragment_SelectGroup.newInstance(0,null);
+                selectGroupFragment.show(getSupportFragmentManager(), "DialogFragment_SelectGroup");
 
             }
         });
@@ -96,7 +96,7 @@ public class AddPeople extends AppCompatActivity {
         //show item list
         itemView = findViewById(R.id.recycle_view_items);
         showItemList();
-        RecycleViewAdapter_Item adapter_items = new RecycleViewAdapter_Item(this,itemArray);
+        adapter_items = new RecycleViewAdapter_Item(this,itemArray,this);
         itemView.setAdapter(adapter_items);
         itemView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -105,11 +105,11 @@ public class AddPeople extends AppCompatActivity {
     private void showItemList() {
         String[] nameList = getResources().getStringArray(R.array.dummy_item_name_list);
         String[] priceList = getResources().getStringArray(R.array.dummy_expense_amount_list);
-        String[] peopleList = getResources().getStringArray(R.array.dummy_person_name_list);
+
 
 
         for (int i = 0; i<nameList.length; i++){
-            itemArray.add(new Item(nameList[i],priceList[i],peopleList[i]));
+            itemArray.add(new Item(nameList[i],priceList[i],getResources().getString(R.string.add_people)));
 
         }
     }
@@ -128,6 +128,27 @@ public class AddPeople extends AppCompatActivity {
         categoryList.recycle();
     }
 
+
+    //for the recycleview objects
+    @Override
+    public void onButtonClick(int position) {
+        selectGroupFragment = DialogFragment_SelectGroup.newInstance(1,position);
+        selectGroupFragment.show(getSupportFragmentManager(), "DialogFragment_CreateGroup");
+
+    }
+
+    @Override
+    public void onDataSelected(int position, String selectedNames) {
+        itemArray.get(position).setItemPeople(selectedNames);
+        adapter_items.notifyItemChanged(position);
+    }
+
+
+    public void selectGroup(String groupName){
+        selectedGroupText = findViewById(R.id.group_selected);
+        selectedGroupText.setText(groupName);
+
+    }
 
     //general
     // <!-- TODO: 1. (iris do) put correct images for category in arrays.xml -->

@@ -22,4 +22,3 @@ public class Notification {
 }
 
 
-// <!-- TODO: 1. (iris do) change layout ugly  -->

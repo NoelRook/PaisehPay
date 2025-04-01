@@ -170,6 +170,29 @@
     <string name="you_paid_for">xx owes you $yy for zz</string>
 
 
+    //friends fragment
+    <string name="search_friend">Search for a friend:</string>
+    <string name="your_friends">Your friends!</string>
+    <string name="enter_name">Enter name</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="delete_friend">Delete Friend</string>
+
+    //profile fragment
+    <string name="my_profile">My Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_language">Change Language</string>
+    <string name="user_activity">User Activity</string>
+    <string name="enable_notifications">Enable Notifications</string>
+    <string name="log_out">Log Out</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="privacy">Privacy</string>
+    <string name="phone_test">+65 0000 0000</string>
+
+
+
+
+
+
 
 
     <!-- Preference Titles -->

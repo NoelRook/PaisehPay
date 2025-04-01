@@ -85,7 +85,5 @@ public class ReceiptOverview extends AppCompatActivity {
 
         }
     }
-
-    // <!-- TODO: 1. (for iris) remove expense name edit text  -->
     // <!-- TODO: 2. do ocr json magic, output a list of all items and do math  -->
 }
