@@ -3,25 +3,25 @@ package com.example.paisehpay;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
-<<<<<<< HEAD:app/src/main/java/com/example/paisehpay_iris/DialogFragment_SelectGroup.java
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-=======
->>>>>>> 766875b666fdbf6187785907bbf7ab0edf4671a0:app/src/main/java/com/example/paisehpay/DialogFragment_SelectGroup.java
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD:app/src/main/java/com/example/paisehpay_iris/DialogFragment_SelectGroup.java
 import android.widget.Button;
-=======
->>>>>>> 766875b666fdbf6187785907bbf7ab0edf4671a0:app/src/main/java/com/example/paisehpay/DialogFragment_SelectGroup.java
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.PaisehPay_Iris.DialogFragmentListener;
+import com.example.PaisehPay_Iris.RecycleViewInterface;
+
 import java.util.ArrayList;
 
-public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFragment implements RecycleViewInterface{
+public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFragment implements RecycleViewInterface {
     //popup when u select group during addpeople page
 
     View rootView;

@@ -17,9 +17,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.PaisehPay_Iris.DialogFragmentListener;
+import com.example.PaisehPay_Iris.RecycleViewInterface;
+
 import java.util.ArrayList;
 
-public class AddPeople extends AppCompatActivity implements RecycleViewInterface,DialogFragmentListener{
+public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener {
     //ie the expense overview page
     RecyclerView categoryView;
     ArrayList<Category> categoryArray = new ArrayList<>();

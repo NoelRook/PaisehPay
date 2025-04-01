@@ -17,10 +17,10 @@ public class RecycleViewAdapter_Person extends RecyclerView.Adapter<RecycleViewA
 
     Context context;
     ArrayList<Person> personArray;
-    private final RecycleViewInterface recycleViewInterface;
+    private final com.example.PaisehPay_Iris.RecycleViewInterface recycleViewInterface;
 
 
-    public RecycleViewAdapter_Person(Context context, ArrayList<Person> personArray, RecycleViewInterface recycleViewInterface){
+    public RecycleViewAdapter_Person(Context context, ArrayList<Person> personArray, com.example.PaisehPay_Iris.RecycleViewInterface recycleViewInterface){
         this.context = context;
         this.personArray = personArray;
         this.recycleViewInterface = recycleViewInterface;
@@ -61,7 +61,7 @@ public class RecycleViewAdapter_Person extends RecyclerView.Adapter<RecycleViewA
 
         TextView nameText;
         ImageButton groupButton;
-        public MyViewHolder(@NonNull View itemView,RecycleViewInterface recycleViewInterface) {
+        public MyViewHolder(@NonNull View itemView, com.example.PaisehPay_Iris.RecycleViewInterface recycleViewInterface) {
             super(itemView);
 
            nameText = itemView.findViewById(R.id.person_name);
