@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.PaisehPay_Iris.RecycleViewInterface;
+import com.example.paisehpay.RecycleViewInterface;
 
 import java.util.ArrayList;
 

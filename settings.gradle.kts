@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PaisehPay_Iris"
+rootProject.name = "PaisehPay"
 include(":app")
  

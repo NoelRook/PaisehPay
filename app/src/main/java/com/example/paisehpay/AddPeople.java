@@ -17,8 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.PaisehPay_Iris.DialogFragmentListener;
-import com.example.PaisehPay_Iris.RecycleViewInterface;
+import com.example.paisehpay.DialogFragmentListener;
+import com.example.paisehpay.RecycleViewInterface;
 
 import java.util.ArrayList;
 

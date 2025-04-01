@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">PaisehPay_Iris</string>
-    <string name="first_fragment_label">PaisehPay_Iris</string>
-    <string name="second_fragment_label">PaisehPay_Iris</string>
+    <string name="app_name">PaisehPay</string>
+    <string name="first_fragment_label">PaisehPay</string>
+    <string name="second_fragment_label">PaisehPay</string>
 
 
     //Signin page
