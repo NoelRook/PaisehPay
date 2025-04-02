@@ -1,4 +1,4 @@
-package com.example.paisehpay.dialogFragments;
+package com.example.paisehpay;
 
 import static android.view.View.VISIBLE;
 
@@ -16,11 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
+
 import com.example.paisehpay.activities.AddPeople;
 import com.example.paisehpay.blueprints.Person;
-import com.example.paisehpay.R;
+import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Person;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 
 import java.util.ArrayList;
 
@@ -115,39 +116,33 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
 
     @Override
     public void onButtonClick(int position) {
-        // Toggle selection state
-        boolean isSelected = personArray.get(position).isSelected();
-        personArray.get(position).setSelected(!isSelected);
-
-        // Notify adapter about the change
+        personArray.get(position).setSelected(true);
         personView.getAdapter().notifyItemChanged(position);
 
-        if (!isSelected) { //we allow user to freely undo and redo the select
-            if (query_from == 0) {
-                String selectedGroupName = personArray.get(position).getPersonName();
-                AddPeople addpeoplePage = (AddPeople) getActivity();
-                if (addpeoplePage != null) {
-                    addpeoplePage.selectGroup(selectedGroupName);
-                }
-                new Handler(Looper.getMainLooper()).postDelayed(this::dismiss, 500);
-            } else if (query_from == 1) {
-                confirmButton = rootView.findViewById(R.id.confirm_button);
-                confirmButton.setVisibility(View.VISIBLE);
-                confirmButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        updateSelectedPeopleList();
-                        Log.d("DialogFragment", selectedPeople.toString());
-                        if (listener != null) {
-                            listener.onDataSelected(pos, formatSelectedPeople());
-                        }
-                        dismiss();
-                    }
-                });
+        if (query_from == 0) {
+            String selectedGroupName =  personArray.get(position).getPersonName();
+            AddPeople addpeoplePage = (AddPeople) getActivity();
+            if (addpeoplePage != null){
+                addpeoplePage.selectGroup(selectedGroupName);
             }
+            new Handler(Looper.getMainLooper()).postDelayed(this::dismiss, 500);
+        } else if (query_from == 1){
+            confirmButton = rootView.findViewById(R.id.confirm_button);
+            confirmButton.setVisibility(VISIBLE);
+            confirmButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updateSelectedPeopleList();
+                    Log.d("DialogFragment",selectedPeople.toString());
+                    if (listener != null){
+                        listener.onDataSelected(pos,formatSelectedPeople());
+                    }
+                    dismiss();
+                }
+            });
         }
-    }
 
+    }
 
     private void updateSelectedPeopleList() {
         selectedPeople.clear();
