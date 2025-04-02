@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background_dark_mode"
-    tools:context=".ProfileFragment">
+    android:background="@drawable/background1"
+    tools:context=".mainActivityFragments.ProfileFragment">
 
 
     <TextView

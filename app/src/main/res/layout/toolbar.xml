@@ -4,7 +4,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/layout_border_highlight4_mode">
+    android:background="@color/transparent">
 
     <ImageView
         android:id="@+id/back_arrow"

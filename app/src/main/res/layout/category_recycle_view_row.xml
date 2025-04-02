@@ -8,10 +8,11 @@
 
     <ImageButton
         android:id="@+id/category_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:src="@drawable/avatar"
-        app:tint="@color/text_colour_dark_mode"
+        android:scaleType="fitXY"
+        android:background="@color/transparent"
         android:contentDescription="@string/select_category"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/category_name"
-        style="@style/textViewSmallDarkMode"
+        style="@style/textViewSmallLightMode"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/category_button"

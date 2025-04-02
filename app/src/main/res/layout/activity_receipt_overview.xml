@@ -5,8 +5,8 @@
     android:id="@+id/receipt_overview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark_mode"
-    tools:context=".ReceiptOverview">
+    android:background="@drawable/background1"
+    tools:context=".activities.ReceiptOverview">
 
     <include
         android:id="@+id/toolbar"

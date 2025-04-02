@@ -147,13 +147,13 @@
     </string-array>
 
     <array name="category_item_array">
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
+        <item>@drawable/food</item>
+        <item>@drawable/transport</item>
+        <item>@drawable/shopping</item>
+        <item>@drawable/utilities</item>
+        <item>@drawable/entertainment</item>
+        <item>@drawable/rent</item>
+        <item>@drawable/health</item>
     </array>
 
     <string-array name="category_name_array">

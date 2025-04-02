@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background_dark_mode"
-    tools:context=".FriendsFragment">
+    android:background="@drawable/background1"
+    tools:context=".mainActivityFragments.FriendsFragment">
 
     <TextView
         android:id="@+id/your_friends"
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="580dp"
         android:layout_marginVertical="20dp"
-        android:background="@drawable/layout_border_light_mode"
+        android:background="@drawable/layout_border_transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_friend"

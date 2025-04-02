@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark_mode"
-    tools:context=".AddPeople">
+    android:background="@drawable/background1"
+    tools:context=".activities.AddPeople">
 
     <include
         android:id="@+id/toolbar"
@@ -25,8 +25,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-
 
         <TextView
             android:id="@+id/expense_name"
@@ -68,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:background="@drawable/layout_border_highlight3_mode"
+            android:background="@drawable/layout_border_highlight2_mode"
             app:layout_constraintTop_toBottomOf="@id/expense_category"
             app:layout_constraintBottom_toTopOf="@id/select_group"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,11 +96,13 @@
 
         <TextView
             android:id="@+id/group_selected"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:text="@string/selected_group"
-            style="@style/textViewMediumDarkMode"
-            android:padding="20dp"
+            style="@style/textViewMediumLightMode"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:padding="10dp"
             android:background="@drawable/layout_border_highlight1_mode"
             app:layout_constraintStart_toEndOf="@id/select_group_button"
             app:layout_constraintEnd_toEndOf="parent"
