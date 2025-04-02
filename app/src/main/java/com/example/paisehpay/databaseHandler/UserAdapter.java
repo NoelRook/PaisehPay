@@ -63,7 +63,7 @@ public class UserAdapter extends BaseDatabase  {
                         users.add(user);
                     }
                 }
-                callback.onListLoaded(Collections.singletonList(users));
+                callback.onListLoaded(users);
             }
 
             @Override
