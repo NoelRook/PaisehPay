@@ -5,13 +5,13 @@ public class Group {
 
     String groupName;
     String groupCreatedDate;
-    String groupAmount;
+    String groupAmount = "No expenses recorded yet";
 
-    public Group(String groupName, String groupCreatedDate, String groupAmount){
+    public Group(String groupName, String groupCreatedDate){
         this.groupName = groupName;
         this.groupCreatedDate = groupCreatedDate;
-        this.groupAmount = groupAmount;
     }
+
 
     public String getGroupName() {
         return groupName;
@@ -23,5 +23,9 @@ public class Group {
 
     public String getGroupAmount() {
         return groupAmount;
+    }
+
+    public void setGroupAmount(String groupAmount){
+        this.groupAmount = groupAmount;
     }
 }

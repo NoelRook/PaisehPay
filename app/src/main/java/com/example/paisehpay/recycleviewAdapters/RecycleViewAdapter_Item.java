@@ -45,14 +45,32 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
         holder.nameText.setText(itemArray.get(position).getItemName());
         holder.priceText.setText(itemArray.get(position).getItemPrice());
         holder.peopleText.setText(itemArray.get(position).getItemPeople());
-        holder.itemButton.setOnClickListener(v -> {
-            if (recycleViewInterface != null) {
-                int pos = holder.getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION) {
-                    recycleViewInterface.onButtonClick(pos);
+        if (recycleViewInterface != null){
+            holder.deleteItemButton.setVisibility(View.GONE);
+            holder.itemButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = holder.getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        recycleViewInterface.onButtonClick(pos);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            holder.peopleText.setVisibility(View.GONE);
+            holder.itemButton.setVisibility(View.GONE);
+            holder.deleteItemButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = holder.getAdapterPosition();
+                    if (position >= 0 && position < itemArray.size()) {
+                        itemArray.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, itemArray.size());
+                    }
+                }
+            });
+        }
 
     }
 
@@ -68,8 +86,9 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
         TextView nameText;
         TextView priceText;
         TextView peopleText;
-
         ImageButton itemButton;
+        ImageButton deleteItemButton;
+
         public MyViewHolder(@NonNull View itemView,RecycleViewInterface recycleViewInterface) {
             super(itemView);
 
@@ -77,13 +96,10 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
             priceText = itemView.findViewById(R.id.item_price);
             peopleText =itemView.findViewById(R.id.item_people);
             itemButton = itemView.findViewById(R.id.add_people_button);
+            deleteItemButton = itemView.findViewById(R.id.delete_item);
 
         }
     }
 
-    public void updateItem(int position, String newName){
-        itemArray.get(position).setItemPeople(newName);
-        notifyItemChanged(position);
-    }
 
 }

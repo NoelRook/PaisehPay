@@ -18,19 +18,23 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.paisehpay.DialogFragment_SelectGroup;
+
+import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
+import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
+import com.example.paisehpay.dialogFragments.DialogFragment_AddItem;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 import com.example.paisehpay.blueprints.Category;
-import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.R;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Category;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener {
+public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener<Item> {
     //ie the expense overview page
     RecyclerView categoryView;
     ArrayList<Category> categoryArray = new ArrayList<>();
@@ -97,6 +101,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             }
         });
 
+
         //show category list
         categoryView = findViewById(R.id.recycle_view_category);
         showCategoryList();
@@ -106,26 +111,29 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
         //show item list
         itemView = findViewById(R.id.recycle_view_items);
-        showItemList();
         adapter_items = new RecycleViewAdapter_Item(this,itemArray,this);
         itemView.setAdapter(adapter_items);
         itemView.setLayoutManager(new LinearLayoutManager(this));
+        showItemList();
 
     }
 
+
+
+    //populate item reycleview
     private void showItemList() {
+        //dummy data
         String[] nameList = getResources().getStringArray(R.array.dummy_item_name_list);
         String[] priceList = getResources().getStringArray(R.array.dummy_expense_amount_list);
 
-
-
         for (int i = 0; i<nameList.length; i++){
-            itemArray.add(new Item(nameList[i],priceList[i],getResources().getString(R.string.add_people)));
-
+            itemArray.add(new Item(nameList[i],priceList[i],"add people to item"));
         }
+        adapter_items.notifyDataSetChanged();
     }
 
 
+    //populates category recycleview
     private void showCategoryList() {
         String[] nameList = getResources().getStringArray(R.array.category_name_array);
         TypedArray imageArray = getResources().obtainTypedArray(R.array.category_item_array);
@@ -152,9 +160,17 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     }
 
     @Override
-    public void onDataSelected(int position, String selectedNames) {
-        itemArray.get(position).setItemPeople(selectedNames);
-        adapter_items.notifyItemChanged(position);
+    public void onDataSelected(int position, Item data) {
+
+        if (position>=0){
+            String selectedNames = data.getItemPeople();
+            itemArray.get(position).setItemPeople(selectedNames);
+            adapter_items.notifyItemChanged(position);
+        } //else {
+            //itemArray.add(data);
+            //adapter_items.notifyItemInserted(itemArray.size() - 1);
+        //}
+
     }
 
 
@@ -170,5 +186,4 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
 
     //if manual input
-    // <!-- TODO: 9. if manual, hen items recycleview should be empty, instead displaying text "no items added so far"  -->
 }

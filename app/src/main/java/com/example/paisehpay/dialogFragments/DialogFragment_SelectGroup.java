@@ -1,4 +1,4 @@
-package com.example.paisehpay;
+package com.example.paisehpay.dialogFragments;
 
 import static android.view.View.VISIBLE;
 
@@ -17,9 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.paisehpay.R;
 import com.example.paisehpay.activities.AddPeople;
+import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.Person;
-import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Person;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 
@@ -135,7 +136,8 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
                     updateSelectedPeopleList();
                     Log.d("DialogFragment",selectedPeople.toString());
                     if (listener != null){
-                        listener.onDataSelected(pos,formatSelectedPeople());
+                        Item item = new Item(null,null,formatSelectedPeople());
+                        listener.onDataSelected(pos,item);
                     }
                     dismiss();
                 }

@@ -14,16 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.Group;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFragment{
-    //popup class when u press create group
-    private String dialogTitle;
     TextView titleText;
 
     View rootView;
     EditText groupNameText;
     Button confirmButton;
-    DialogFragmentListener listener;
+     DialogFragmentListener listener;
 
     private static final String DATA_TO_QUERY = "data_to_query";
 
@@ -48,7 +50,8 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
         titleText = rootView.findViewById(R.id.create_group);
 
         if (getArguments() != null) {
-            dialogTitle = getArguments().getString(DATA_TO_QUERY);
+            //popup class when u press create group
+            String dialogTitle = getArguments().getString(DATA_TO_QUERY);
             titleText.setText(dialogTitle);
 
         }
@@ -60,9 +63,12 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
             @Override
             public void onClick(View view) {
                 String groupName = groupNameText.getText().toString().trim();
+                Calendar calendar = Calendar.getInstance();
+                Date currentDate = calendar.getTime();
                 if (listener != null && !groupName.isEmpty() ){
                     Log.d("DialogFragment", "Sending new group: " + groupName);
-                    listener.onDataSelected(-2,groupName);
+                    Group group = new Group(groupName,"created on  " + currentDate.toString());
+                    listener.onDataSelected(-2,group);
                 }
                 dismiss();
 

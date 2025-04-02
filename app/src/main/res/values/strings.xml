@@ -146,7 +146,10 @@
     <string name="item_price">Price</string>
     <string name="total">Grand Total</string>
     <string name="sub_total">Sub Total</string>
-    <string name="with_gst">Add 9% GST</string>
+    <string name="with_gst">9% GST</string>
+    <string name="with_service_charge">10% Service Charge</string>
+    <string name="include_gst">Include GST</string>
+    <string name="include_service_charge">Include Service Charge</string>
     <string name="add_people_text">Add people and split bill</string>
     <string name="redo_ocr">Redo scan</string>
 
@@ -161,6 +164,16 @@
     <string name="items">Items</string>
     <string name="add_item">Add Item</string>
     <string name="select_all">Select All</string>
+
+    //add item fragment
+    <string name="item_name_text">Item Name</string>
+    <string name="item_name_prompt">Enter your item name</string>
+    <string name="item_price_text">Item Price</string>
+    <string name="item_price_prompt">Enter your item price</string>
+
+
+
+
 
 
     //after split bill

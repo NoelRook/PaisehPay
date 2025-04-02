@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/layout_border_light_mode">
+
+    <TextView
+        android:id="@+id/add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_item"
+        style="@style/textViewBigDarkMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/item_name_prompt"/>
+
+    <TextView
+        android:id="@+id/item_name_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item_name_text"
+        style="@style/textViewMediumDarkMode"
+        app:layout_constraintStart_toStartOf="@id/item_name_input"
+        app:layout_constraintTop_toBottomOf="@id/add_item"
+        app:layout_constraintBottom_toTopOf="@id/item_name_input" />
+
+    <EditText
+        android:id="@+id/item_name_input"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/item_name_prompt"
+        android:autofillHints="name"
+        android:inputType="text"
+        style="@style/editTextFontDarkMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_name_prompt"
+        app:layout_constraintBottom_toTopOf="@id/item_price_prompt"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/item_price_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item_price"
+        style="@style/textViewMediumDarkMode"
+        app:layout_constraintStart_toStartOf="@id/item_name_prompt"
+        app:layout_constraintTop_toBottomOf="@id/item_name_input"
+        app:layout_constraintBottom_toTopOf="@id/item_price_prompt"/>
+
+    <EditText
+        android:id="@+id/item_price_input"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/item_price_text"
+        style="@style/editTextFontDarkMode"
+        android:autofillHints="phone"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="@id/item_price_prompt"
+        app:layout_constraintTop_toBottomOf="@id/item_price_prompt"
+        app:layout_constraintBottom_toTopOf="@id/confirm_button"/>
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm"
+        style="@style/ButtonDarkMode"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_price_input"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

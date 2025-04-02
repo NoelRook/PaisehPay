@@ -1,5 +1,7 @@
 package com.example.paisehpay.blueprints;
 
+import com.example.paisehpay.R;
+
 public class Item {
     //used in recycleview of item in each expense (add people pg)
 

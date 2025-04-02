@@ -1,5 +1,5 @@
 package com.example.paisehpay.dialogFragments;
 
-public interface DialogFragmentListener {
-    void onDataSelected(int position, String selectedNames);
+public interface DialogFragmentListener<T> {
+    void onDataSelected(int position, T data);
 }

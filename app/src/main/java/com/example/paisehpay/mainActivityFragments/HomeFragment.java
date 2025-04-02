@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class HomeFragment extends Fragment implements DialogFragmentListener {
+public class HomeFragment extends Fragment implements DialogFragmentListener<Group> {
     //fragment that loads when u press home
     Button oweDetailsButton;
     Button owedDetailsButton;
@@ -104,14 +104,16 @@ public class HomeFragment extends Fragment implements DialogFragmentListener {
     }
 
     private void showGroupList() {
-        String[] nameList = getResources().getStringArray(R.array.dummy_group_name_list);
-        String[] dateList = getResources().getStringArray(R.array.dummy_expense_date_list);
-        String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
+
+        //populated by user create data alr
+        //String[] nameList = getResources().getStringArray(R.array.dummy_group_name_list);
+        //String[] dateList = getResources().getStringArray(R.array.dummy_expense_date_list);
+        //String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
 
 
-        for (int i = 0; i < nameList.length; i++) {
-            groupArray.add(new Group(nameList[i], "Created " + dateList[i], "You are owed " +amountList[i]));
-        }
+        //for (int i = 0; i < nameList.length; i++) {
+        //    groupArray.add(new Group(nameList[i], "Created " + dateList[i]));
+        //}
         adapter.notifyDataSetChanged();
 
     }
@@ -119,15 +121,13 @@ public class HomeFragment extends Fragment implements DialogFragmentListener {
 
     //create group's data is sent back and a new group is created
     @Override
-    public void onDataSelected(int position, String selectedNames) {
-        Log.d("MainActivity", "Received new group: " + selectedNames);
-        Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
-        groupArray.add(new Group(selectedNames, currentDate.toString(),"No expenses recorded"));
-
+    public void onDataSelected(int position, Group data) {
+        Log.d("MainActivity", "Received new group: " + data);
+        groupArray.add(data);
         adapter.notifyItemInserted(groupArray.size() - 1);
 
     }
+
 }
 
 // <!-- TODO: 1. change "hello username" text to user's name  -->

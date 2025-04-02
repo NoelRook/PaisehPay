@@ -1,5 +1,6 @@
 package com.example.paisehpay.activities;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,18 +17,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Receipt;
-import com.example.paisehpay.blueprints.Receipt;
+import com.example.paisehpay.blueprints.Item;
+import com.example.paisehpay.dialogFragments.DialogFragmentListener;
+import com.example.paisehpay.dialogFragments.DialogFragment_AddItem;
+import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
 
 import java.util.ArrayList;
 
-public class ReceiptOverview extends AppCompatActivity {
+public class ReceiptOverview extends AppCompatActivity implements DialogFragmentListener<Item> {
     //shows receipt details after camera ocr
     ImageView backArrow;
     Button addPeopleButton;
     TextView toolbarTitleText;
-    RecyclerView receiptView;
-    ArrayList<Receipt> receiptArray = new ArrayList<>();
+    RecyclerView itemView;
+    ArrayList<Item> itemArray = new ArrayList<>();
+    Button addItemButton;
+    DialogFragment_SelectGroup selectGroupFragment;
+    DialogFragment_AddItem addItemFragment;
+    private RecycleViewAdapter_Item adapter_items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,25 +77,44 @@ public class ReceiptOverview extends AppCompatActivity {
             }
         });
 
+        //press add button add new item to reycleview
+        addItemButton = findViewById(R.id.add_item);
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addItemFragment = new DialogFragment_AddItem();
+                addItemFragment.show(getSupportFragmentManager(),"DialogFragment_AddItem");
+
+            }
+        });
+
         //show item list
-        receiptView = findViewById(R.id.recycle_view_receipt);
-        showReceiptList();
-        RecycleViewAdapter_Receipt adapter = new RecycleViewAdapter_Receipt(this,receiptArray);
-        receiptView.setAdapter(adapter);
-        receiptView.setLayoutManager(new LinearLayoutManager(this));
+        itemView = findViewById(R.id.recycle_view_items);
+        adapter_items = new RecycleViewAdapter_Item(this,itemArray,null);
+        itemView.setAdapter(adapter_items);
+        itemView.setLayoutManager(new LinearLayoutManager(this));
+        showItemList();
 
     }
 
-    private void showReceiptList() {
-        String[] numberList = getResources().getStringArray(R.array.dummy_item_number_list);
-        String[] nameList = getResources().getStringArray(R.array.dummy_item_name_list);
-        String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
+    private void showItemList() {
+        //dummy data
+        //String[] nameList = getResources().getStringArray(R.array.dummy_item_name_list);
+        //String[] priceList = getResources().getStringArray(R.array.dummy_expense_amount_list);
 
-
-        for (int i = 0; i<nameList.length; i++){
-            receiptArray.add(new Receipt(numberList[i],nameList[i],amountList[i]));
-
-        }
+        //for (int i = 0; i<nameList.length; i++){
+        //    itemArray.add(new Item(nameList[i],priceList[i],"add people to item"));
+        //}
+        adapter_items.notifyDataSetChanged();
     }
+
+    @Override
+    public void onDataSelected(int position, Item data) {
+        itemArray.add(data);
+        adapter_items.notifyItemInserted(itemArray.size() - 1);
+
+    }
+
+
     // <!-- TODO: 2. do ocr json magic, output a list of all items and do math  -->
 }
