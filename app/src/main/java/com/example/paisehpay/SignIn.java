@@ -21,7 +21,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.UserAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -39,7 +45,8 @@ public class SignIn extends AppCompatActivity {
     Button signupButton;
     Button changePasswordButton;
 
-
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,9 @@ public class SignIn extends AppCompatActivity {
             return insets;
         });
 
+        // Initialize firebase
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
         // all the animation
@@ -82,7 +92,7 @@ public class SignIn extends AppCompatActivity {
         String passwordStringCorrect = "password"; //take from db
 
         //login button to lead to home page
-        loginButton = loginLayout.findViewById(R.id.login_button);
+        /*loginButton = loginLayout.findViewById(R.id.login_button);
         loginButton.setOnClickListener(view -> {
             if (usernameString.equals(usernameString) & passwordString.equals(passwordString)) { //change when got db
                 Intent intent = new Intent(SignIn.this, MainActivity.class);
@@ -93,6 +103,60 @@ public class SignIn extends AppCompatActivity {
                 Toast.makeText(SignIn.this,R.string.wrong_login_details,Toast.LENGTH_LONG).show();
                 //show warning msg to re-enter details
             }
+        }); */
+        loginButton = loginLayout.findViewById(R.id.login_button);
+        // Login button click listener
+        loginButton.setOnClickListener(view -> {
+            String email = usernameText.getText().toString().trim();
+            String password = passwordText.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(SignIn.this, "Please enter both email and password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Authenticate with Firebase
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            // Sign in success
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                // Check if email is verified (optional)
+                                /*if (!user.isEmailVerified()) {
+                                    Toast.makeText(SignIn.this, "Please verify your email first.", Toast.LENGTH_SHORT).show();
+                                    mAuth.signOut();
+                                    return;
+                                }*/
+
+                                // Get additional user data from Realtime Database
+                                mDatabase.child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        User userData = dataSnapshot.getValue(User.class);
+                                        if (userData != null) {
+                                            // Successful login with user data
+                                            Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                            Log.d("userData", userData.toString());
+                                            //intent.putExtra("USER_DATA", (CharSequence) userData);
+                                            startActivity(intent);
+                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                            finish();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Toast.makeText(SignIn.this, "Failed to load user data.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(SignIn.this, "Authentication failed: " + task.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
         //sign up button to lead to sign up page
@@ -183,4 +247,6 @@ public class SignIn extends AppCompatActivity {
     }
 
     // <!-- TODO: 1. function when press login page, check db for credentials  -->
+
+
 }
