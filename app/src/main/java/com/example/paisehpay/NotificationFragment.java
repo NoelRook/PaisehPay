@@ -1,17 +1,16 @@
 package com.example.paisehpay;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
@@ -26,12 +25,10 @@ import java.util.concurrent.Executors;
 public class NotificationFragment extends Fragment {
     //notification fragment when u bottom nav bar notification page
 
-    RecyclerView notificationView;
-
-    ArrayList<Notification> notificationArray = new ArrayList<>();
-
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    RecyclerView notificationView;
+    ArrayList<Notification> notificationArray = new ArrayList<>();
 
     public NotificationFragment() {
         // launches the fragment
