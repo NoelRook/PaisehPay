@@ -2,12 +2,14 @@ package com.example.paisehpay.blueprints;
 
 import com.example.paisehpay.R;
 
+import java.util.ArrayList;
+
 public class Item {
     //used in recycleview of item in each expense (add people pg)
 
     String itemName;
 
-    String itemPrice;
+   String itemPrice;
 
     String itemPeople;
 

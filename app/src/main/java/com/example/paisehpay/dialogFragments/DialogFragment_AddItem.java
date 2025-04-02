@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Item;
 
+import java.util.ArrayList;
+
 public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment{
     //popup class when u press create group
 
@@ -25,6 +27,9 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
     EditText itemPriceText;
     Button confirmButton;
     DialogFragmentListener listener;
+
+    ArrayList<String> itemArray = new ArrayList<>();
+    ArrayList<Double> itemPriceArray = new ArrayList<>();
 
 
 
@@ -52,6 +57,14 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
                 String itemPrice = itemPriceText.getText().toString().trim();
                 String itemPeople = "Add people to item";
 
+
+                //stuff data into array for computation
+                itemArray.add(itemName);
+                //itemPriceArray.add(itemPrice);
+
+
+
+                //populate recycleview
                 if (itemPrice.isEmpty()){
                     Toast.makeText(getActivity(),"never input price bro",Toast.LENGTH_LONG).show();
                 } else if (itemName.isEmpty()){
