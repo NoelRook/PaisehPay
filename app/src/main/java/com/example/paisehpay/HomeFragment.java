@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class HomeFragment extends Fragment {
     DialogFragment_CreateGroup joinGroupFragment;
     String Username;
     String Email;
+    String id;
 
 
     @Override
@@ -47,8 +49,10 @@ public class HomeFragment extends Fragment {
 
         User savedUser = preferenceManager.getUser();
         if (savedUser != null) {
+            id = savedUser.getId();
             Username = savedUser.getUsername();
             Email = savedUser.getEmail();
+            Log.d("Usersaved",id + Username +Email);
         }
 
         welcomeMessage = rootView.findViewById(R.id.welcome_message);

@@ -115,4 +115,12 @@ public class UserAdapter extends BaseDatabase  {
                 });
     }
 
+    public User getUserFromSnapshot(DataSnapshot snapshot) {
+        User user = snapshot.getValue(User.class);
+        if (user != null) {
+            user.setId(snapshot.getKey());  // Set ID from snapshot key
+        }
+        return user;
+    }
+
 }

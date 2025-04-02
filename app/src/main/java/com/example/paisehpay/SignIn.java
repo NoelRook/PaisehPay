@@ -108,18 +108,15 @@ public class SignIn extends AppCompatActivity {
                             // Sign in success
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                // Check if email is verified (optional)
-                                /*if (!user.isEmailVerified()) {
-                                    Toast.makeText(SignIn.this, "Please verify your email first.", Toast.LENGTH_SHORT).show();
-                                    mAuth.signOut();
-                                    return;
-                                }*/
 
                                 // Get additional user data from Realtime Database
                                 mDatabase.child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
+
                                         User userData = dataSnapshot.getValue(User.class);
+                                        userData.setId(dataSnapshot.getKey());
+
                                         if (userData != null) {
                                             // Successful login with user data
                                             Intent intent = new Intent(SignIn.this, MainActivity.class);
