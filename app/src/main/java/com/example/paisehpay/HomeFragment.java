@@ -10,10 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 
 
 public class HomeFragment extends Fragment {
     //fragment that loads when u press home
+    TextView welcomeMessage;
     Button oweDetailsButton;
     Button owedDetailsButton;
     Button groupButton;
@@ -25,12 +30,12 @@ public class HomeFragment extends Fragment {
 
     DialogFragment_CreateGroup createGroupFragment;
     DialogFragment_CreateGroup joinGroupFragment;
+    String Username;
+    String Email;
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +43,16 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        PreferenceManager preferenceManager = new PreferenceManager(getContext());
+
+        User savedUser = preferenceManager.getUser();
+        if (savedUser != null) {
+            Username = savedUser.getUsername();
+            Email = savedUser.getEmail();
+        }
+
+        welcomeMessage = rootView.findViewById(R.id.welcome_message);
+        welcomeMessage.setText("Hello "+ Username+"!");
 
         //view owe details lead to owe details page
         oweLayout = rootView.findViewById(R.id.owe_layout);
@@ -96,6 +111,7 @@ public class HomeFragment extends Fragment {
 }
 
 // <!-- TODO: 1. change "hello username" text to user's name  -->
+
 // <!-- TODO: 2. change date text to update today's date -->
 // <!-- TODO: 3. change owe_amount and owed_amount from db  -->
 // <!-- TODO: 4. catch name of group data in both create group and join group button, then instantiate a new group object for that user -->

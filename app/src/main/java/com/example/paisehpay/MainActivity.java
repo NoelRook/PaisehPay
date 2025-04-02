@@ -2,7 +2,8 @@ package com.example.paisehpay;
 
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.os.Parcelable;
+import android.util.Log;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -12,12 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databinding.ActivityMainBinding;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
     //main activity that loads the bottom nav screen and the 5 fragments
 
     ActivityMainBinding binding;
+    String Username;
+    String Email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+
+        User savedUser = preferenceManager.getUser();
+        if (savedUser != null) {
+            Username = savedUser.getUsername();
+            Email = savedUser.getEmail();
+        }
 
         // check which fragment to load
         Intent intent = getIntent();

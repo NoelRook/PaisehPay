@@ -1,6 +1,11 @@
 package com.example.paisehpay.blueprints;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+public class User  {
     String id;
     String email;
     String username;
@@ -32,4 +37,7 @@ public class User {
         this.username = username;
     }
 
+    public String getId() {
+        return id;
+    }
 }

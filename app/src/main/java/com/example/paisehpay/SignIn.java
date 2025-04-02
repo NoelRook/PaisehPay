@@ -4,6 +4,7 @@ package com.example.paisehpay;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.UserAdapter;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -62,7 +64,7 @@ public class SignIn extends AppCompatActivity {
         // Initialize firebase
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        PreferenceManager preferenceManager = new PreferenceManager(this);
 
         // all the animation
         appIcon = findViewById(R.id.app_icon);
@@ -88,22 +90,6 @@ public class SignIn extends AppCompatActivity {
         String passwordString = passwordText.getText().toString();
         Log.i(usernameString,passwordString);
 
-        String usernameStringCorrect = "username"; //take from db
-        String passwordStringCorrect = "password"; //take from db
-
-        //login button to lead to home page
-        /*loginButton = loginLayout.findViewById(R.id.login_button);
-        loginButton.setOnClickListener(view -> {
-            if (usernameString.equals(usernameString) & passwordString.equals(passwordString)) { //change when got db
-                Intent intent = new Intent(SignIn.this, MainActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
-            } else {
-                Toast.makeText(SignIn.this,R.string.wrong_login_details,Toast.LENGTH_LONG).show();
-                //show warning msg to re-enter details
-            }
-        }); */
         loginButton = loginLayout.findViewById(R.id.login_button);
         // Login button click listener
         loginButton.setOnClickListener(view -> {
@@ -138,7 +124,8 @@ public class SignIn extends AppCompatActivity {
                                             // Successful login with user data
                                             Intent intent = new Intent(SignIn.this, MainActivity.class);
                                             Log.d("userData", userData.toString());
-                                            //intent.putExtra("USER_DATA", (CharSequence) userData);
+
+                                            preferenceManager.saveUser(userData);
                                             startActivity(intent);
                                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                             finish();
