@@ -3,15 +3,20 @@ package com.example.paisehpay.blueprints;
 public class Group {
     //expense object used in recycleview of grouphomepage
 
+    String groupId;
     String groupName;
     String groupCreatedDate;
     String groupAmount = "No expenses recorded yet";
 
-    public Group(String groupName, String groupCreatedDate){
+    public Group(String groupId,String groupName, String groupCreatedDate){
+        this.groupId = groupId;
         this.groupName = groupName;
         this.groupCreatedDate = groupCreatedDate;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
 
     public String getGroupName() {
         return groupName;

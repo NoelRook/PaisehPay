@@ -13,6 +13,7 @@
     <color name="semi_transparent_white">#BFFFFFFF</color>
     <color name="semi_transparent_black">#40000000</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="nav_bar">#030210</color>
     <color name="background_light_mode">#FDE8E9</color>
     <color name="background_dark_mode">#160F29</color>
     <color name="text_colour_light_mode">#160F29</color>

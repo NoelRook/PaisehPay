@@ -3,13 +3,17 @@ package com.example.paisehpay.activities;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -18,6 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Item;
+import com.example.paisehpay.computation.Nine_GST;
+import com.example.paisehpay.computation.ReceiptInstance;
+import com.example.paisehpay.computation.Receipts;
+import com.example.paisehpay.computation.Ten_SVC;
+import com.example.paisehpay.computation.Types_Of_GST;
+import com.example.paisehpay.computation.Types_Of_SVC;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddItem;
 import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
@@ -36,6 +46,16 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
     DialogFragment_SelectGroup selectGroupFragment;
     DialogFragment_AddItem addItemFragment;
     private RecycleViewAdapter_Item adapter_items;
+
+    SwitchCompat gstToggle;
+    SwitchCompat svcToggle;
+    ConstraintLayout subTotalLayout;
+    ConstraintLayout finalTotalLayout;
+    TextView subTotalText;
+    TextView gstText;
+    TextView svcText;
+    TextView finalTotalText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,19 +113,64 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         adapter_items = new RecycleViewAdapter_Item(this,itemArray,null);
         itemView.setAdapter(adapter_items);
         itemView.setLayoutManager(new LinearLayoutManager(this));
-        showItemList();
-
-    }
-
-    private void showItemList() {
-        //dummy data
-        //String[] nameList = getResources().getStringArray(R.array.dummy_item_name_list);
-        //String[] priceList = getResources().getStringArray(R.array.dummy_expense_amount_list);
-
-        //for (int i = 0; i<nameList.length; i++){
-        //    itemArray.add(new Item(nameList[i],priceList[i],"add people to item"));
-        //}
         adapter_items.notifyDataSetChanged();
+
+
+
+
+
+
+        //do caculations
+        Receipts instance = ReceiptInstance.getInstance();
+        Nine_GST gst = new Nine_GST();
+        Ten_SVC svc = new Ten_SVC();
+        instance.set_gstamt(gst);
+        instance.set_sctamt(svc);
+
+
+        gstToggle = findViewById(R.id.include_gst_switch);
+        svcToggle = findViewById(R.id.include_svc_switch);
+        gstToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isToggled) {
+                if (isToggled){
+                    Log.d("SwitchCompat","gst set on");
+                    instance.setGST(true);
+                    updateReceiptComputation();
+
+                } else {
+                    Log.d("SwitchCompat","gst set off");
+                    instance.setGST(false);
+                    updateReceiptComputation();
+                }
+            }
+        });
+
+        svcToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isToggled) {
+                if (isToggled){
+                    Log.d("SwitchCompat","svc set on");
+                    instance.setSCT(true);
+                    updateReceiptComputation();
+                } else {
+                    Log.d("SwitchCompat","svc set off");
+                    instance.setSCT(false);
+                    updateReceiptComputation();
+                }
+            }
+        });
+
+        subTotalLayout = findViewById(R.id.total_layout);
+        subTotalText = subTotalLayout.findViewById(R.id.sub_total_amount);
+        gstText = subTotalLayout.findViewById(R.id.gst_total_amount);
+        svcText = subTotalLayout.findViewById(R.id.svc_total_amount);
+        finalTotalLayout = findViewById(R.id.final_total);
+        finalTotalText = finalTotalLayout.findViewById(R.id.grand_total_amount);
+
+
+
+
     }
 
     @Override
@@ -114,6 +179,21 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         adapter_items.notifyItemInserted(itemArray.size() - 1);
 
     }
+
+    public void updateReceiptComputation(){
+        ReceiptInstance.getInstance().calculate_receipt_subtotal();
+        ReceiptInstance.getInstance().calculate_receipt_subtotal_gst();
+        ReceiptInstance.getInstance().calculate_receipt_subtotal_sct();
+        ReceiptInstance.getInstance().calculate_receipt_total();
+
+        subTotalText.setText(ReceiptInstance.getInstance().getSubtotal());
+        gstText.setText(ReceiptInstance.getInstance().getSubtotal_gst());
+        svcText.setText(ReceiptInstance.getInstance().getSubtotal_sct());
+        finalTotalText.setText(ReceiptInstance.getInstance().getTotal());
+    }
+
+
+
 
 
     // <!-- TODO: 2. do ocr json magic, output a list of all items and do math  -->

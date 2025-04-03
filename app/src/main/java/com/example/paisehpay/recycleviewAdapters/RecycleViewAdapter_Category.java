@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.Category;
+import com.example.paisehpay.blueprints.Expense;
 
 import java.util.ArrayList;
 
@@ -19,11 +19,11 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
      //adapter for category recycle view
 
     Context context;
-    ArrayList<Category> categoryArray;
+    ArrayList<Expense> categoryArray;
     private int selectedPosition = RecyclerView.NO_POSITION; // Stores the selected button index
 
 
-    public RecycleViewAdapter_Category(Context context, ArrayList<Category> categoryArray){
+    public RecycleViewAdapter_Category(Context context, ArrayList<Expense> categoryArray){
         this.context = context;
         this.categoryArray = categoryArray;
     }
@@ -40,8 +40,8 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
 
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapter_Category.MyViewHolder holder, int position) {
-        Category category = categoryArray.get(position);
-        holder.nameText.setText(category.getCategoryName());
+        Expense category = categoryArray.get(position);
+        holder.nameText.setText(category.getExpenseCategory());
 
 
 
@@ -49,7 +49,7 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
         if (holder.getAdapterPosition() == selectedPosition) {
             holder.categoryButton.setImageResource(R.drawable.added_icon);  // Image for selected state
         } else {
-            holder.categoryButton.setImageResource(category.getCategoryIcon());  // Default image
+            holder.categoryButton.setImageResource(category.getExpenseIcon());  // Default image
         }
 
         // Set click listener for the ImageButton

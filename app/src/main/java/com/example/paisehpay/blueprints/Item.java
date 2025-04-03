@@ -9,12 +9,12 @@ public class Item {
 
     String itemName;
 
-   String itemPrice;
+    Double itemPrice;
 
     String itemPeople;
 
 
-    public Item(String itemName, String itemPrice, String itemPeople){
+    public Item(String itemName, Double itemPrice, String itemPeople){
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemPeople = itemPeople;
@@ -29,8 +29,12 @@ public class Item {
         return itemPeople;
     }
 
-    public String getItemPrice() {
+    public Double getItemPrice() {
         return itemPrice;
+    }
+
+    public String getItemPriceString(){
+        return itemPrice.toString();
     }
 
     public void setItemName(String itemName) {
@@ -41,7 +45,7 @@ public class Item {
         this.itemPeople = itemPeople;
     }
 
-    public void setItemPrice(String itemPrice) {
+    public void setItemPrice(Double itemPrice) {
         this.itemPrice = itemPrice;
     }
 }

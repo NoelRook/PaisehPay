@@ -67,7 +67,7 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
                 Date currentDate = calendar.getTime();
                 if (listener != null && !groupName.isEmpty() ){
                     Log.d("DialogFragment", "Sending new group: " + groupName);
-                    Group group = new Group(groupName,"created on  " + currentDate.toString());
+                    Group group = new Group(null, groupName,"created on  " + currentDate.toString());
                     listener.onDataSelected(-2,group);
                 }
                 dismiss();

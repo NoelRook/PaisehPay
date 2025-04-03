@@ -66,9 +66,11 @@ public class ExpenseFragment extends Fragment {
         String[] expensePaidByList = getResources().getStringArray(R.array.dummy_expense_paid_by_list);
         String[] expenseActionList = getResources().getStringArray(R.array.dummy_expense_action_list);
         String[] expenseAmountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
+        String[] expenseCategoryList = getResources().getStringArray(R.array.category_name_array);
 
-        for (int i = 0; i<expenseAmountList.length; i++){
-            expenseArray.add(new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i]));
+
+        for (int i = 0; i<expenseCategoryList.length; i++){
+            expenseArray.add(new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],expenseCategoryList[i], R.drawable.nav_friends));
 
         }
     }

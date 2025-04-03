@@ -8,13 +8,17 @@ public class Expense {
     String expensePaidBy;
     String expenseAction;
     String expenseAmount;
+    String expenseCategory;
+    int expenseIcon;
 
-    public Expense(String expenseTitle,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount){
+    public Expense(String expenseTitle,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, int expenseIcon){
         this.expenseTitle = expenseTitle;
         this.expenseDate = expenseDate;
         this.expensePaidBy = expensePaidBy;
         this.expenseAction = expenseAction;
         this.expenseAmount = expenseAmount;
+        this.expenseCategory = expenseCategory;
+        this.expenseIcon = expenseIcon;
     }
 
     public String getExpenseAction() {
@@ -36,4 +40,11 @@ public class Expense {
     public String getExpenseTitle() {
         return expenseTitle;
     }
+
+    public String getExpenseCategory() {return expenseCategory;}
+
+    public int getExpenseIcon() {
+        return expenseIcon;
+    }
 }
+

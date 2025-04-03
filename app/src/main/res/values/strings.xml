@@ -152,6 +152,8 @@
     <string name="include_service_charge">Include Service Charge</string>
     <string name="add_people_text">Add people and split bill</string>
     <string name="redo_ocr">Redo scan</string>
+    <string name="zero">0.0</string>
+    <string name="NA">NA</string>
 
     //expense details
     <string name="add_people">Add People</string>

@@ -1,7 +1,7 @@
 package com.example.paisehpay.computation;
 
 public class Nine_GST extends Types_Of_GST {
-    Nine_GST(){
+    public Nine_GST(){
         super(9.0);
 
     }

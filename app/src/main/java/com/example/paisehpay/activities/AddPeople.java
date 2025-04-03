@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,12 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
 import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddItem;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
-import com.example.paisehpay.blueprints.Category;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.R;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Category;
@@ -37,7 +38,7 @@ import java.util.Date;
 public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener<Item> {
     //ie the expense overview page
     RecyclerView categoryView;
-    ArrayList<Category> categoryArray = new ArrayList<>();
+    ArrayList<Expense> categoryArray = new ArrayList<>();
 
     RecyclerView itemView;
     ArrayList<Item> itemArray = new ArrayList<>();
@@ -127,7 +128,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         String[] priceList = getResources().getStringArray(R.array.dummy_expense_amount_list);
 
         for (int i = 0; i<nameList.length; i++){
-            itemArray.add(new Item(nameList[i],priceList[i],"add people to item"));
+            itemArray.add(new Item(nameList[i],Double.parseDouble(priceList[i]),"add people to item"));
         }
         adapter_items.notifyDataSetChanged();
     }
@@ -141,9 +142,8 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         for (int i = 0; i < nameList.length; i++) {
             int imageResId = imageArray.getResourceId(i, 0);
 
-            Log.d("CategoryList", "Category: " + nameList[i] + " → Image ID: " + imageResId);
 
-            categoryArray.add(new Category(nameList[i], imageResId));
+            categoryArray.add(new Expense(null, null, null, null, null, nameList[i], imageResId));
         }
 
         imageArray.recycle();
@@ -166,10 +166,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             String selectedNames = data.getItemPeople();
             itemArray.get(position).setItemPeople(selectedNames);
             adapter_items.notifyItemChanged(position);
-        } //else {
-            //itemArray.add(data);
-            //adapter_items.notifyItemInserted(itemArray.size() - 1);
-        //}
+        }
 
     }
 
@@ -184,6 +181,4 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     // <!-- TODO: 4. store expense name, category, group, and item info in db after pressing confirm button  -->
     // <!-- TODO: 8. query item name, price from db -->
 
-
-    //if manual input
 }

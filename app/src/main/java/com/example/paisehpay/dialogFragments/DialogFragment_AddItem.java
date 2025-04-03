@@ -1,5 +1,6 @@
 package com.example.paisehpay.dialogFragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.activities.ReceiptOverview;
 import com.example.paisehpay.blueprints.Item;
+import com.example.paisehpay.computation.ReceiptInstance;
+import com.example.paisehpay.computation.Receipts;
 
 import java.util.ArrayList;
 
@@ -45,10 +49,11 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
         itemPriceText = rootView.findViewById(R.id.item_price_input);
 
         confirmButton = rootView.findViewById(R.id.confirm_button);
-
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 if (itemNameText == null || itemPriceText == null) {
                     Log.e("DialogFragment", "EditTexts are null");
                     return;
@@ -58,12 +63,6 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
                 String itemPeople = "Add people to item";
 
 
-                //stuff data into array for computation
-                itemArray.add(itemName);
-                //itemPriceArray.add(itemPrice);
-
-
-
                 //populate recycleview
                 if (itemPrice.isEmpty()){
                     Toast.makeText(getActivity(),"never input price bro",Toast.LENGTH_LONG).show();
@@ -71,7 +70,14 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
                     Toast.makeText(getActivity(),"never input name bro", Toast.LENGTH_LONG).show();
                 } else if (listener != null){
                     Log.d("DialogFragment",  itemName + " : " + itemPrice);
-                    Item item = new Item(itemName,itemPrice,itemPeople);
+                    Item item = new Item(itemName,Double.valueOf(itemPrice),itemPeople);
+
+                    ReceiptInstance.getInstance().addToReceipt(item);
+
+                    ((ReceiptOverview) requireActivity()).updateReceiptComputation();
+
+
+
                     listener.onDataSelected(-3,item);
                     dismiss();
                 }
@@ -90,6 +96,7 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
     }
 
 
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -100,7 +107,6 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
         }
     }
 
-    // <!--
 
 }
 

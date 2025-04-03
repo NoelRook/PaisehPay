@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.activities.ReceiptOverview;
 import com.example.paisehpay.blueprints.Item;
+import com.example.paisehpay.computation.ReceiptInstance;
 
 import java.util.ArrayList;
 
@@ -43,7 +45,7 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
     public void onBindViewHolder(@NonNull RecycleViewAdapter_Item.MyViewHolder holder, int position) {
         //assign values to the views
         holder.nameText.setText(itemArray.get(position).getItemName());
-        holder.priceText.setText(itemArray.get(position).getItemPrice());
+        holder.priceText.setText(itemArray.get(position).getItemPriceString());
         holder.peopleText.setText(itemArray.get(position).getItemPeople());
         if (recycleViewInterface != null){
             holder.deleteItemButton.setVisibility(View.GONE);
@@ -65,6 +67,12 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
                     int position = holder.getAdapterPosition();
                     if (position >= 0 && position < itemArray.size()) {
                         itemArray.remove(position);
+
+
+                        ReceiptInstance.getInstance().removeFromReceipt(position);
+                        if (context instanceof ReceiptOverview){
+                        ((ReceiptOverview) context).updateReceiptComputation();
+                        }
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, itemArray.size());
                     }

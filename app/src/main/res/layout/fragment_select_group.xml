@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/layout_border_light_mode"
+    android:background="@color/text_colour_light_mode"
     tools:context=".dialogFragments.DialogFragment_SelectGroup">
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:text="@string/confirm"
         style="@style/ButtonLightMode"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/select_group_recycle"
