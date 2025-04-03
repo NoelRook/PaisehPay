@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -46,9 +47,12 @@ public class SignIn extends AppCompatActivity {
     Button loginButton;
     Button signupButton;
     Button changePasswordButton;
+    CheckBox rememberMeBox;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private PreferenceManager preferenceManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +66,10 @@ public class SignIn extends AppCompatActivity {
         });
 
         // Initialize firebase
+         // get preference manager to save the user preferenace
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        PreferenceManager preferenceManager = new PreferenceManager(this);
-
+        preferenceManager = new PreferenceManager(this);
         // all the animation
         appIcon = findViewById(R.id.app_icon);
         ObjectAnimator moveLogoUp = ObjectAnimator.ofFloat(appIcon,"translationY",0f,-600f);
@@ -90,7 +94,7 @@ public class SignIn extends AppCompatActivity {
         String passwordString = passwordText.getText().toString();
         Log.i(usernameString,passwordString);
 
-        loginButton = loginLayout.findViewById(R.id.login_button);
+        loginButton = loginLayout.findViewById(R.id.login_button); // find login button on activity
         // Login button click listener
         loginButton.setOnClickListener(view -> {
             String email = usernameText.getText().toString().trim();
@@ -101,47 +105,10 @@ public class SignIn extends AppCompatActivity {
                 return;
             }
 
+
             // Authenticate with Firebase
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            // Sign in success
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-
-                                // Get additional user data from Realtime Database
-                                mDatabase.child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                        User userData = dataSnapshot.getValue(User.class);
-                                        userData.setId(dataSnapshot.getKey());
-
-                                        if (userData != null) {
-                                            // Successful login with user data
-                                            Intent intent = new Intent(SignIn.this, MainActivity.class);
-                                            Log.d("userData", userData.toString());
-
-                                            preferenceManager.saveUser(userData);
-                                            startActivity(intent);
-                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                            finish();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Toast.makeText(SignIn.this, "Failed to load user data.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(SignIn.this, "Authentication failed: " + task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        });
+            userLogin(email, password);
+        }); // end login functionality
 
         //sign up button to lead to sign up page
         signupButton = loginLayout.findViewById(R.id.sign_up_button);
@@ -160,6 +127,25 @@ public class SignIn extends AppCompatActivity {
             overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             finish();
         });
+
+
+        // remember me function
+        rememberMeBox = findViewById(R.id.remember_me_check_box);
+
+        rememberMeBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferenceManager.rememberMe(isChecked);
+        });
+
+        User savedUser = preferenceManager.getUser();
+        if (savedUser != null && preferenceManager.getRememberMe()) {
+            Intent intent = new Intent(SignIn.this, MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
+
+
+
+
 
 
         //JK testing get all users
@@ -230,7 +216,51 @@ public class SignIn extends AppCompatActivity {
 
     }
 
-    // <!-- TODO: 1. function when press login page, check db for credentials  -->
+    // todo. seperate login functionality to invoke remember me functionality
+
+    private void userLogin(String email, String password){
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+
+                            // Get additional user data from Realtime Database
+                            mDatabase.child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    User userData = dataSnapshot.getValue(User.class);
+                                    userData.setId(dataSnapshot.getKey());
+
+                                    if (userData != null) {
+                                        // Successful login with user data
+                                        Intent intent = new Intent(SignIn.this, MainActivity.class);
+                                        Log.d("userData", userData.toString());
+
+                                        preferenceManager.saveUser(userData);
+                                        startActivity(intent);
+                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Toast.makeText(SignIn.this, "Failed to load user data.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(SignIn.this, "Authentication failed: " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
 
 
 }

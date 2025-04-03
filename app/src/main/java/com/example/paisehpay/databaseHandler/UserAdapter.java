@@ -10,17 +10,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class UserAdapter extends BaseDatabase  {
-    private DatabaseReference userRef;
+    private DatabaseReference databaseRef;
     private  static final String USER_TABLE = "Users";
 
     public UserAdapter(){
         super(USER_TABLE);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        userRef = database.getReference(USER_TABLE);
+        databaseRef = database.getReference(USER_TABLE);
     }
 
 
@@ -31,13 +30,13 @@ public class UserAdapter extends BaseDatabase  {
             return;
         }
 
-        String userId = userRef.push().getKey();
+        String userId = databaseRef.push().getKey();
         if (userId == null) {
             callback.onError(DatabaseError.fromException(new Exception("Failed to generate user ID")));
             return;
         }
 
-        userRef.child(userId).setValue(user)
+        databaseRef.child(userId).setValue(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>(){
                     @Override
                     public void onComplete(Task<Void> task) {
@@ -52,7 +51,7 @@ public class UserAdapter extends BaseDatabase  {
     // Get all users
     @Override
     public void get(final ListCallback callback) {
-        userRef.addValueEventListener(new ValueEventListener() {
+        databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<User> users = new ArrayList<>();
@@ -81,7 +80,7 @@ public class UserAdapter extends BaseDatabase  {
             return;
         }
 
-        userRef.child(userId).setValue(user)
+        databaseRef.child(userId).setValue(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(Task<Void> task) {
@@ -102,7 +101,7 @@ public class UserAdapter extends BaseDatabase  {
             return;
         }
 
-        userRef.child(userId).removeValue()
+        databaseRef.child(userId).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(Task<Void> task) {

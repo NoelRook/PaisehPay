@@ -41,6 +41,21 @@ public class PreferenceManager {
         return null;
     }
 
+    //remember me
+    public void rememberMe(boolean isChecked){
+        sharedPreferences.edit().putBoolean("checkbox_state", isChecked).apply();
+    }
+
+    public boolean getRememberMe(){
+        return sharedPreferences.getBoolean("checkbox_state", false);
+    }
+
+    // clear all stored data
+    public void clearPreferences(){
+        sharedPreferences.edit().clear().apply();
+    }
+
+
     // Clear user data (for logout)
     public void clearUser() {
         editor.remove(KEY_USER_ID);
