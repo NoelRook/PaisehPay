@@ -27,7 +27,6 @@ public class GroupSettings extends AppCompatActivity {
 
     RecyclerView groupMemberView;
     ArrayList<GroupMember> groupMemberArray = new ArrayList<>();
-
     TextView toolbarTitleText;
     ImageView backArrow;
     Button deleteGroupButton;
@@ -61,7 +60,7 @@ public class GroupSettings extends AppCompatActivity {
             }
         });
 
-        //show groupmember list
+        //show groupMember list
         groupMemberView = findViewById(R.id.recycle_view_members);
         showGroupMemberList();
         RecycleViewAdapter_GroupMember adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray);
@@ -70,6 +69,7 @@ public class GroupSettings extends AppCompatActivity {
 
     }
 
+    //we will change this later with actual data
     private void showGroupMemberList() {
         String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list);
         String[] emailList = getResources().getStringArray(R.array.dummy_email_list);

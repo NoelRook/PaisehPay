@@ -22,6 +22,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class GroupHomepage extends AppCompatActivity {
+    //this is the page when user clicks group hompage
     TextView toolbarTitleText;
     ImageView backArrow;
     Button groupSettingButton;
@@ -37,11 +38,13 @@ public class GroupHomepage extends AppCompatActivity {
             return insets;
         });
 
+        //this is to link the Viewpager adapter which allows users to access scrollable tab
         TabLayout tabLayout = findViewById(R.id.expense_tab_layout);
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
         // Add fragments to adapter
+        //we
         adapter.addFragment(new ExpenseFragment(), getString(R.string.overall));
         adapter.addFragment(new ExpenseFragment(), getString(R.string.food));
         adapter.addFragment(new ExpenseFragment(), getString(R.string.transport));
@@ -52,7 +55,7 @@ public class GroupHomepage extends AppCompatActivity {
         adapter.addFragment(new ExpenseFragment(), getString(R.string.health));
         viewPager.setAdapter(adapter);
 
-        // Connect TabLayout and ViewPager2
+        // Connect TabLayout and ViewPager
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             tab.setText(adapter.getTitle(position));
 
@@ -71,8 +74,8 @@ public class GroupHomepage extends AppCompatActivity {
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.group_homepage);
-        //press back arrow lead back to home fragment
 
+        //press back arrow lead back to home fragment
         backArrow = findViewById(R.id.back_arrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +89,7 @@ public class GroupHomepage extends AppCompatActivity {
             }
         });
 
+        //press group settings button lead to group settings page
         groupSettingButton = findViewById(R.id.group_settings);
         groupSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override

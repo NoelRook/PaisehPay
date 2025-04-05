@@ -1,5 +1,7 @@
 package com.example.paisehpay.blueprints;
 
+import java.util.ArrayList;
+
 public class Expense {
     //expense object used in recycleview of grouphomepage
 
@@ -10,8 +12,9 @@ public class Expense {
     String expenseAmount;
     String expenseCategory;
     int expenseIcon;
+    ArrayList<Item> expenseItems;
 
-    public Expense(String expenseTitle,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, int expenseIcon){
+    public Expense(String expenseTitle,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, int expenseIcon,ArrayList<Item> expenseItems){
         this.expenseTitle = expenseTitle;
         this.expenseDate = expenseDate;
         this.expensePaidBy = expensePaidBy;
@@ -19,6 +22,7 @@ public class Expense {
         this.expenseAmount = expenseAmount;
         this.expenseCategory = expenseCategory;
         this.expenseIcon = expenseIcon;
+        this.expenseItems = expenseItems;
     }
 
     public String getExpenseAction() {
@@ -45,6 +49,10 @@ public class Expense {
 
     public int getExpenseIcon() {
         return expenseIcon;
+    }
+
+    public ArrayList<Item> getExpenseItems() {
+        return expenseItems;
     }
 }
 

@@ -1,11 +1,12 @@
 package com.example.paisehpay.blueprints;
 
-import com.example.paisehpay.R;
 
-import java.util.ArrayList;
+import android.os.Parcel;
+
 
 public class Item {
     //used in recycleview of item in each expense (add people pg)
+    String itemId;
 
     String itemName;
 
@@ -14,11 +15,13 @@ public class Item {
     String itemPeople;
 
 
-    public Item(String itemName, Double itemPrice, String itemPeople){
+    public Item(String itemId,String itemName, Double itemPrice, String itemPeople){
+        this.itemId = itemId;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemPeople = itemPeople;
     }
+
 
     public String getItemName() {
         return itemName;
@@ -48,4 +51,13 @@ public class Item {
     public void setItemPrice(Double itemPrice) {
         this.itemPrice = itemPrice;
     }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
 }

@@ -70,7 +70,7 @@ public class ExpenseFragment extends Fragment {
 
 
         for (int i = 0; i<expenseCategoryList.length; i++){
-            expenseArray.add(new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],expenseCategoryList[i], R.drawable.nav_friends));
+            expenseArray.add(new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],expenseCategoryList[i], R.drawable.nav_friends,null));
 
         }
     }

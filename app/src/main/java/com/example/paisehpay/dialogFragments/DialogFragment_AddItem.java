@@ -1,6 +1,6 @@
 package com.example.paisehpay.dialogFragments;
 
-import android.app.Dialog;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,9 +18,7 @@ import com.example.paisehpay.R;
 import com.example.paisehpay.activities.ReceiptOverview;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.computation.ReceiptInstance;
-import com.example.paisehpay.computation.Receipts;
 
-import java.util.ArrayList;
 
 public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment{
     //popup class when u press create group
@@ -30,10 +27,8 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
     EditText itemNameText;
     EditText itemPriceText;
     Button confirmButton;
-    DialogFragmentListener listener;
+    DialogFragmentListener<Item> listener;
 
-    ArrayList<String> itemArray = new ArrayList<>();
-    ArrayList<Double> itemPriceArray = new ArrayList<>();
 
 
 
@@ -48,37 +43,35 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
         itemNameText = rootView.findViewById(R.id.item_name_input);
         itemPriceText = rootView.findViewById(R.id.item_price_input);
 
+
         confirmButton = rootView.findViewById(R.id.confirm_button);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                if (itemNameText == null || itemPriceText == null) {
-                    Log.e("DialogFragment", "EditTexts are null");
-                    return;
-                }
-                String itemName = itemNameText.getText().toString().trim();
+                String itemName = itemNameText.getText().toString().trim(); //process textview
                 String itemPrice = itemPriceText.getText().toString().trim();
                 String itemPeople = "Add people to item";
 
 
-                //populate recycleview
+                //if user clicks confirm
                 if (itemPrice.isEmpty()){
                     Toast.makeText(getActivity(),"never input price bro",Toast.LENGTH_LONG).show();
                 } else if (itemName.isEmpty()){
                     Toast.makeText(getActivity(),"never input name bro", Toast.LENGTH_LONG).show();
                 } else if (listener != null){
+                    //if the DialogFragmentListener is attached properly to ReceiptOverview
+                    //we will add to the Item RecycleView
                     Log.d("DialogFragment",  itemName + " : " + itemPrice);
-                    Item item = new Item(itemName,Double.valueOf(itemPrice),itemPeople);
 
+                    //we create a new Item
+                    Item item = new Item(null, itemName,Double.valueOf(itemPrice),itemPeople);
+
+                    //get the receipt instance
                     ReceiptInstance.getInstance().addToReceipt(item);
-
+                    //call the update computation method
                     ((ReceiptOverview) requireActivity()).updateReceiptComputation();
-
-
-
-                    listener.onDataSelected(-3,item);
+                    //implement DialogFragmentListener's method so to attach the data back to ReceiptOverview
+                    listener.onDataSelected(0,item);
                     dismiss();
                 }
 
@@ -87,6 +80,7 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
         return rootView;
     }
 
+    //set custom layout
     @Override
     public void onStart() {
         super.onStart();
@@ -97,11 +91,13 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
 
 
 
+
+    //check if we are able to pass data from DialogFragment back to RecieptOverview page
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (DialogFragmentListener) context;
+            listener = (DialogFragmentListener<Item>) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement DialogFragmentListener");
         }

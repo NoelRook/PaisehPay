@@ -23,9 +23,7 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment {
 
     Spinner oweFilterSpinner;
     View rootView;
-
     RecyclerView oweView;
-
     ArrayList<Owe> oweArray = new ArrayList<>();
 
     @Nullable

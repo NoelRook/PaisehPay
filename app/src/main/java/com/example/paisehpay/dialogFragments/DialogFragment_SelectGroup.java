@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.AddPeople;
+import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.Person;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Person;
@@ -34,14 +35,14 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
     ArrayList<Person> personArray = new ArrayList<>();
     ArrayList<String> selectedPeople = new ArrayList<>();
     Button confirmButton;
-
     private static final String DATA_TO_QUERY = "data_to_query";
     private int query_from;
-
     private DialogFragmentListener listener;
     private static final String POSITION = "position";
     private int pos;
 
+
+    //since we are instantiating the fragment from different locations, we need to be able to differentiate where it is from
     public static DialogFragment_SelectGroup newInstance(int query_from, @Nullable Integer pos){
         DialogFragment_SelectGroup fragment = new DialogFragment_SelectGroup();
         Bundle args = new Bundle();
@@ -62,6 +63,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
         rootView = inflater.inflate(R.layout.fragment_select_group, container, false);
 
         if (getArguments() != null){
+            //we will need the pos argument as we are populating RecycleView
             query_from = getArguments().getInt(DATA_TO_QUERY);
             if (getArguments().containsKey(POSITION)){
                 pos = getArguments().getInt(POSITION);
@@ -79,7 +81,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
     }
 
 
-
+    //put custom layout
     @Override
     public void onStart() {
         super.onStart();
@@ -88,6 +90,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
         }
     }
 
+    //currently populating with fake data
     private void showPersonList() {
         personArray.clear();
         if (query_from == 0) { //we set 0 if we pressed select group
@@ -105,6 +108,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
 
     }
 
+    //we need to ensure that AddPeople implements the interface so that we can pass data over
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -136,7 +140,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
                     updateSelectedPeopleList();
                     Log.d("DialogFragment",selectedPeople.toString());
                     if (listener != null){
-                        Item item = new Item(null,null,formatSelectedPeople());
+                        Item item = new Item(null, null,null,formatSelectedPeople());
                         listener.onDataSelected(pos,item);
                     }
                     dismiss();

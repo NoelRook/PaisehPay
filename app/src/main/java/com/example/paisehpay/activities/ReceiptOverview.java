@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +44,6 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
     RecyclerView itemView;
     ArrayList<Item> itemArray = new ArrayList<>();
     Button addItemButton;
-    DialogFragment_SelectGroup selectGroupFragment;
     DialogFragment_AddItem addItemFragment;
     private RecycleViewAdapter_Item adapter_items;
 
@@ -68,22 +68,29 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
             return insets;
         });
 
-        //press add button to add people layout
-        addPeopleButton = findViewById(R.id.add_to_split);
-        addPeopleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Open SecondActivity
-                Intent intent = new Intent(ReceiptOverview.this, AddPeople.class);
-                startActivity(intent);
-            }
-        });
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.receipt_details);
-        //press back arrow lead back to home fragment
 
+        //press add button to addPeople page
+        //user needs to key in at least one item in order to proceed
+        addPeopleButton = findViewById(R.id.add_to_split);
+        addPeopleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (finalTotalText.getText().toString().equals("NA")){
+                    Toast.makeText(ReceiptOverview.this, "U never input any items bro",Toast.LENGTH_LONG).show();
+                } else{
+                    Intent intent = new Intent(ReceiptOverview.this, AddPeople.class);
+                    startActivity(intent);
+                }
+
+            }
+        });
+
+
+        //press back arrow lead back to home fragment
         backArrow = findViewById(R.id.back_arrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,8 +126,7 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
 
 
 
-
-        //do caculations
+        //Instantiate the ReceiptInstance Singleton Class
         Receipts instance = ReceiptInstance.getInstance();
         Nine_GST gst = new Nine_GST();
         Ten_SVC svc = new Ten_SVC();
@@ -128,8 +134,8 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         instance.set_sctamt(svc);
 
 
+        //allow user to toggle on and off for GST
         gstToggle = findViewById(R.id.include_gst_switch);
-        svcToggle = findViewById(R.id.include_svc_switch);
         gstToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isToggled) {
@@ -146,6 +152,8 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
             }
         });
 
+        //allow user to toggle and off SVC
+        svcToggle = findViewById(R.id.include_svc_switch);
         svcToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isToggled) {
@@ -161,6 +169,8 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
             }
         });
 
+
+        //used to assign values to the dynamic textViews which we would edit in updateReceiptComputation
         subTotalLayout = findViewById(R.id.total_layout);
         subTotalText = subTotalLayout.findViewById(R.id.sub_total_amount);
         gstText = subTotalLayout.findViewById(R.id.gst_total_amount);
@@ -168,11 +178,11 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         finalTotalLayout = findViewById(R.id.final_total);
         finalTotalText = finalTotalLayout.findViewById(R.id.grand_total_amount);
 
-
-
-
     }
 
+
+    //when user presses add item, we would instantiate a DialogFragment_AddItem which would pass out a Item object
+    //we will implement DialogFragmentListener.OnDataSelected to attach the fragment to this button and update the RecycleView
     @Override
     public void onDataSelected(int position, Item data) {
         itemArray.add(data);
@@ -180,6 +190,8 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
 
     }
 
+
+    //computations. Since ReceiptInstance has 1 instance, we need to call that instance.
     public void updateReceiptComputation(){
         ReceiptInstance.getInstance().calculate_receipt_subtotal();
         ReceiptInstance.getInstance().calculate_receipt_subtotal_gst();
@@ -194,7 +206,4 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
 
 
 
-
-
-    // <!-- TODO: 2. do ocr json magic, output a list of all items and do math  -->
 }

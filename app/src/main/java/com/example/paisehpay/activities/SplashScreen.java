@@ -30,7 +30,7 @@ public class SplashScreen extends AppCompatActivity {
         });
 
 
-        //moves from splash screen to sign in page - iris
+        //moves from splash screen to sign in page
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

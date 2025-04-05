@@ -1,10 +1,15 @@
 package com.example.paisehpay.computation;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.example.paisehpay.blueprints.Item;
 
 import java.util.ArrayList;
 
-public class Receipts{
+public class Receipts {
 
     private ArrayList<String> array_of_items = new ArrayList<>();
     private ArrayList<Double> array_of_item_prices = new ArrayList<>();
@@ -19,6 +24,7 @@ public class Receipts{
 
     public Receipts(){
     }
+
 
     //ADD FUNCTION
     public void addToReceipt(Item item){
@@ -110,6 +116,14 @@ public class Receipts{
 
     public String getTotal(){
         return this.total;
+    }
+
+    public ArrayList<Double> getArray_of_item_prices() {
+        return array_of_item_prices;
+    }
+
+    public ArrayList<String> getArray_of_items() {
+        return array_of_items;
     }
 
     public void setGST(boolean gst){

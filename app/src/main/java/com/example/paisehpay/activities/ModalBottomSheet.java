@@ -33,7 +33,6 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         manualButton = view.findViewById(R.id.manual_button);
         scanButton = view.findViewById(R.id.scan_button);
 
@@ -41,6 +40,7 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
             v.setEnabled(false);
             navigateToAddFragment();
             new Handler(Looper.getMainLooper()).postDelayed(this::dismissAllowingStateLoss, 50);
+            //we set a timer so that the add fragment loads in time
         });
 
         scanButton.setOnClickListener(v -> {
@@ -50,8 +50,8 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
         });
     }
 
+    //this is used to load the add fragment through the ModalBottomSheet instead of the bottom navigation bar.
     private void navigateToAddFragment() {
-        // Get activity context
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.replaceFragment(new AddFragment()); // Switch fragment

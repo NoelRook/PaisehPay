@@ -1,5 +1,10 @@
 package com.example.paisehpay.computation;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 public class ReceiptInstance {
     private static Receipts instance;
 
@@ -9,4 +14,5 @@ public class ReceiptInstance {
         }
         return instance;
     }
+
 }

@@ -21,7 +21,6 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
 
     Context context;
     ArrayList<Item> itemArray;
-
     private final RecycleViewInterface recycleViewInterface;
 
 
@@ -47,7 +46,14 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
         holder.nameText.setText(itemArray.get(position).getItemName());
         holder.priceText.setText(itemArray.get(position).getItemPriceString());
         holder.peopleText.setText(itemArray.get(position).getItemPeople());
+
+        //since we are using the Item RecycleView multiple times but showcasing different attributes of class Item each time
+        //we will use a common layout but hide some of the widgets based on where we are instantiating from
+        //we will also need a way to differentiate where we are instantiating from
         if (recycleViewInterface != null){
+            //if we are adding people to items on AddPeople.java, RecycleView -> DialogFragment -> RecycleView
+            //thus we require recycleViewInterface
+            //We don't want users to delete items, only add people
             holder.deleteItemButton.setVisibility(View.GONE);
             holder.itemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -59,17 +65,20 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
                 }
             });
         } else {
+            //if we are adding items on ReceiptOverview.java, DialogFragment -> RecycleView
+            //we don't need recycleViewInterface, and we can't have users add people
             holder.peopleText.setVisibility(View.GONE);
             holder.itemButton.setVisibility(View.GONE);
             holder.deleteItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = holder.getAdapterPosition();
+                    //remove item if its a valid postion
                     if (position >= 0 && position < itemArray.size()) {
                         itemArray.remove(position);
-
-
+                        //get the instance of the receipt, then delete item
                         ReceiptInstance.getInstance().removeFromReceipt(position);
+                        //check if the RecycleView exists in the ReceiptOverview page
                         if (context instanceof ReceiptOverview){
                         ((ReceiptOverview) context).updateReceiptComputation();
                         }

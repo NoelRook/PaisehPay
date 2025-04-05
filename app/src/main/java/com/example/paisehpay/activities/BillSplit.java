@@ -28,7 +28,6 @@ public class BillSplit extends AppCompatActivity {
     ImageView backArrow;
     RecyclerView summaryView;
     ArrayList<Summary> summaryArray = new ArrayList<>();
-
     Button homeButton;
 
     @Override
@@ -70,7 +69,7 @@ public class BillSplit extends AppCompatActivity {
             }
         });
 
-        //show item list
+        //show the RecycleView of all who owe u
         summaryView = findViewById(R.id.summary_recycle_view);
         showSummaryList();
         RecycleViewAdapter_Summary adapter = new RecycleViewAdapter_Summary(this,summaryArray);
@@ -78,6 +77,7 @@ public class BillSplit extends AppCompatActivity {
         summaryView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    //will be changed later
     private void showSummaryList() {
         String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list); //can hover to see what dummy data it using
         String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);

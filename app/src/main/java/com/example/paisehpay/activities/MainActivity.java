@@ -60,20 +60,18 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.add) {
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.constraint_layout);
 
-                // Show Bottom Sheet **only if** AddFragment is NOT already open
+                // Show ModalBottomSheet only if AddFragment is not already open
                 if (!(currentFragment instanceof AddFragment)) {
                     ModalBottomSheet bottomSheet = new ModalBottomSheet();
                     bottomSheet.show(getSupportFragmentManager(), "ScanSelectionBottomSheet");
                 }
-                return false; // Prevents reselecting Add in the bottom nav
+                return false; // Prevents user from reselecting Add Expense in bottom navigation menu
 
             } else if (itemId == R.id.friends) {
                 replaceFragment(new FriendsFragment());
             } else if (itemId == R.id.profile) {
                 replaceFragment(new ProfileFragment());
             }
-
-
             return true;
         });
 

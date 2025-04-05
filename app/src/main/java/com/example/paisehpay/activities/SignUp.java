@@ -70,13 +70,6 @@ public class SignUp extends AppCompatActivity {
 
 
 
-        //missing: function that
-        //1. checks if data is all filled
-        //2. check if data is correct type
-        //3. check if password matches
-        //4. stuff info in db
-        //5. when all gd, change text on sign up button to say 'you have successfully signed up!' then intent after a time delay
-
         //sign up button lead to sign in page
         signUpButton = signupLayout.findViewById(R.id.sign_up_button);
         signUpButton.setOnClickListener(view -> {
