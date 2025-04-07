@@ -5,8 +5,8 @@
     android:id="@+id/group_homepage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark_mode"
-    tools:context=".GroupHomepage">
+    android:background="@drawable/background1"
+    tools:context=".activities.GroupHomepage">
 
     <include
         android:id="@+id/toolbar"
@@ -135,18 +135,6 @@
                 app:layout_constraintTop_toBottomOf="@id/group_summary"
                 style="@style/textViewMediumDarkMode"/>
 
-
-            <Button
-                android:id="@+id/add_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_category"
-                app:layout_constraintStart_toEndOf="@id/transaction_history"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/transaction_history"
-                app:layout_constraintBottom_toBottomOf="@id/transaction_history"
-                style="@style/ButtonBordelessDarkMode"/>
-
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/expense_tab_layout"
                 android:layout_width="match_parent"
@@ -155,8 +143,8 @@
                 android:contentDescription="@string/add"
                 app:tabMode="scrollable"
                 android:layout_marginVertical="20dp"
-                app:tabIndicatorColor="@color/text_colour_dark_mode"
-                app:tabTextColor="@color/text_colour_dark_mode"
+                app:tabIndicatorColor="@color/text_colour_light_mode"
+                app:tabTextColor="@color/text_colour_light_mode"
                 app:tabSelectedTextColor="@color/highlight_3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

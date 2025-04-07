@@ -5,7 +5,7 @@
     android:layout_height="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/layout_border_light_mode"
-    tools:context=".DialogFragment_Owe">
+    tools:context=".dialogFragments.DialogFragment_Owe">
 
     <TextView
         android:id="@+id/who_owes_you"

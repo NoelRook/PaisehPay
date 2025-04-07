@@ -4,8 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/layout_border_light_mode"
-    tools:context=".DialogFragment_SelectGroup">
+    android:background="@color/text_colour_light_mode"
+    tools:context=".dialogFragments.DialogFragment_SelectGroup">
 
     <TextView
         android:id="@+id/select_group"
@@ -24,12 +24,23 @@
         android:layout_width="wrap_content"
         android:layout_height="350dp"
         android:layout_margin="20dp"
-        android:background="@drawable/layout_border_highlight3_mode"
         android:visibility="visible"
         android:contentDescription="@string/select_group"
         app:layout_constraintTop_toBottomOf="@id/select_group"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/confirm_button"/>
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm"
+        style="@style/ButtonLightMode"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/select_group_recycle"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 

@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">PaisehPay_Iris</string>
-    <string name="first_fragment_label">PaisehPay_Iris</string>
-    <string name="second_fragment_label">PaisehPay_Iris</string>
+    <string name="app_name">PaisehPay</string>
+    <string name="first_fragment_label">PaisehPay</string>
+    <string name="second_fragment_label">PaisehPay</string>
 
 
     //Signin page
@@ -146,9 +146,14 @@
     <string name="item_price">Price</string>
     <string name="total">Grand Total</string>
     <string name="sub_total">Sub Total</string>
-    <string name="with_gst">Add 9% GST</string>
+    <string name="with_gst">9% GST</string>
+    <string name="with_service_charge">10% Service Charge</string>
+    <string name="include_gst">Include GST</string>
+    <string name="include_service_charge">Include Service Charge</string>
     <string name="add_people_text">Add people and split bill</string>
     <string name="redo_ocr">Redo scan</string>
+    <string name="zero">0.0</string>
+    <string name="NA">NA</string>
 
     //expense details
     <string name="add_people">Add People</string>
@@ -162,12 +167,45 @@
     <string name="add_item">Add Item</string>
     <string name="select_all">Select All</string>
 
+    //add item fragment
+    <string name="item_name_text">Item Name</string>
+    <string name="item_name_prompt">Enter your item name</string>
+    <string name="item_price_text">Item Price</string>
+    <string name="item_price_prompt">Enter your item price</string>
+
+
+
+
+
 
     //after split bill
     <string name="summary">Summary</string>
     <string name="bill_split">Bill has been split!</string>
     <string name="avatar">Avatar</string>
     <string name="you_paid_for">xx owes you $yy for zz</string>
+
+
+    //friends fragment
+    <string name="search_friend">Search for a friend:</string>
+    <string name="your_friends">Your friends!</string>
+    <string name="enter_name">Enter name</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="delete_friend">Delete Friend</string>
+
+    //profile fragment
+    <string name="my_profile">My Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_language">Change Language</string>
+    <string name="user_activity">User Activity</string>
+    <string name="enable_notifications">Enable Notifications</string>
+    <string name="log_out">Log Out</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="privacy">Privacy</string>
+    <string name="phone_test">+65 0000 0000</string>
+
+
+
+
 
 
 

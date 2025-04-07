@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/layout_border_light_mode"
-    tools:context=".DialogFragment_CreateGroup">
+    tools:context=".dialogFragments.DialogFragment_CreateGroup">
 
     <TextView
         android:id="@+id/create_group"

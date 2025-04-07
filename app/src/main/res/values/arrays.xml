@@ -79,16 +79,16 @@
     </string-array>
 
     <string-array name="dummy_expense_amount_list">
-        <item>$10</item>
-        <item>$2</item>
-        <item>$3.50</item>
-        <item>$100.20</item>
-        <item>$88.90</item>
-        <item>$4.50</item>
-        <item>$0.10</item>
-        <item>$9.90</item>
-        <item>$1.39</item>
-        <item>$1.60</item>
+        <item>10</item>
+        <item>2</item>
+        <item>3.50</item>
+        <item>100.20</item>
+        <item>88.90</item>
+        <item>4.50</item>
+        <item>0.10</item>
+        <item>9.90</item>
+        <item>1.39</item>
+        <item>1.60</item>
     </string-array>
 
 
@@ -147,13 +147,13 @@
     </string-array>
 
     <array name="category_item_array">
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
-        <item>@drawable/avatar</item>
+        <item>@drawable/food</item>
+        <item>@drawable/transport</item>
+        <item>@drawable/shopping</item>
+        <item>@drawable/utilities</item>
+        <item>@drawable/entertainment</item>
+        <item>@drawable/rent</item>
+        <item>@drawable/health</item>
     </array>
 
     <string-array name="category_name_array">

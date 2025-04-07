@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import com.example.paisehpay.databaseHandler.FirebaseAdapter;
-import com.google.firebase.Firebase;
+import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.google.firebase.database.DatabaseReference;
 
 /**
@@ -24,7 +23,7 @@ public class ExampleUnitTest {
 
     @Test
     public void testAdapter() {
-        FirebaseAdapter adapter = new FirebaseAdapter();
+        UserAdapter adapter = new UserAdapter();
         // Use Mockito to mock Firebase behavior
     }
 

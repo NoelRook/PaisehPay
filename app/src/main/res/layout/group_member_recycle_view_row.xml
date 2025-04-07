@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_margin="10dp"
-    android:background="@color/background_dark_mode">
+    android:background="@color/transparent">
 
     <ImageView
         android:id="@+id/member_avatar"
