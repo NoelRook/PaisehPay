@@ -44,6 +44,7 @@ public class RecycleViewAdapter_Person extends RecyclerView.Adapter<RecycleViewA
         holder.nameText.setText(personArray.get(position).getPersonName());
         if(personArray.get(position).isSelected()){
             holder.groupButton.setImageResource(R.drawable.added_icon);
+            holder.groupButton.setSelected(false);
         } else {
             holder.groupButton.setImageResource(R.drawable.add_icon);
         }

@@ -50,7 +50,6 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
             public void onClick(View view) {
                 String itemName = itemNameText.getText().toString().trim(); //process textview
                 String itemPrice = itemPriceText.getText().toString().trim();
-                String itemPeople = "Add people to item";
 
 
                 //if user clicks confirm
@@ -64,7 +63,7 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
                     Log.d("DialogFragment",  itemName + " : " + itemPrice);
 
                     //we create a new Item
-                    Item item = new Item(null, itemName,Double.valueOf(itemPrice),itemPeople);
+                    Item item = new Item(null, itemName,Double.parseDouble(itemPrice),null);
 
                     //get the receipt instance
                     ReceiptInstance.getInstance().addToReceipt(item);

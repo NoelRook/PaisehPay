@@ -45,7 +45,7 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
         //assign values to the views
         holder.nameText.setText(itemArray.get(position).getItemName());
         holder.priceText.setText(itemArray.get(position).getItemPriceString());
-        holder.peopleText.setText(itemArray.get(position).getItemPeople());
+        holder.peopleText.setText(itemArray.get(position).getItemPeopleString());
 
         //since we are using the Item RecycleView multiple times but showcasing different attributes of class Item each time
         //we will use a common layout but hide some of the widgets based on where we are instantiating from

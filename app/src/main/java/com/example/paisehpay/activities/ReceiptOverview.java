@@ -104,7 +104,7 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
             }
         });
 
-        //press add button add new item to reycleview
+        //press add button add new item to recycleview
         addItemButton = findViewById(R.id.add_item);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
