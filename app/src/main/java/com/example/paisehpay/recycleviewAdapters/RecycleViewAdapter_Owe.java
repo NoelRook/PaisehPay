@@ -1,6 +1,7 @@
 package com.example.paisehpay.recycleviewAdapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,12 @@ public class RecycleViewAdapter_Owe extends RecyclerView.Adapter<RecycleViewAdap
     public RecycleViewAdapter_Owe(Context context, ArrayList<Owe> oweArray){
         this.context = context;
         this.oweArray = oweArray;
+    }
+
+    public void updateOweArray(ArrayList<Owe> oweArray){
+        this.oweArray = oweArray;
+        notifyDataSetChanged();
+        Log.d("update adapter", "after sorting: "+ oweArray.toString());
     }
 
     @NonNull

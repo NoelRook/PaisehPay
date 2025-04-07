@@ -1,6 +1,7 @@
 package com.example.paisehpay.dialogFragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.blueprints.Owe;
 import com.example.paisehpay.R;
+import com.example.paisehpay.computation.HeapSortHelper;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Owe;
 import com.example.paisehpay.tabBar.SpinnerAdapter;
 
 import java.util.ArrayList;
+import com.example.paisehpay.computation.FilterListener;
 
-public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment {
+public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment implements FilterListener{
     //the popup that displays when you press owe details on home fragment
 
     Spinner oweFilterSpinner;
     View rootView;
     RecyclerView oweView;
     ArrayList<Owe> oweArray = new ArrayList<>();
+
+    private RecycleViewAdapter_Owe adapter;
 
     @Nullable
     @Override
@@ -33,7 +38,10 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment {
         // Inflate the layout for this fragment
         super.onCreateView(inflater,container,savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_owe, container, false);
-
+        //show owelist
+        oweView = rootView.findViewById(R.id.owe_recycle);
+        oweArray = new ArrayList<>();
+        adapter = new RecycleViewAdapter_Owe(getActivity(),oweArray);
         //create spinner
         oweFilterSpinner = rootView.findViewById(R.id.owe_filter_spinner);
         oweFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -54,13 +62,12 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment {
         oweFilterList.add(getString(R.string.latest));
         oweFilterList.add(getString(R.string.amount));
         oweFilterList.add(getString(R.string.home));
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), oweFilterList,oweFilterSpinner);
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), oweFilterList,oweFilterSpinner, this);
         oweFilterSpinner.setAdapter(spinnerAdapter);
 
         //show owelist
-        oweView = rootView.findViewById(R.id.owe_recycle);
+        //oweView = rootView.findViewById(R.id.owe_recycle);
         showOweList();
-        RecycleViewAdapter_Owe adapter = new RecycleViewAdapter_Owe(getActivity(),oweArray);
         oweView.setLayoutManager(new LinearLayoutManager(getActivity()));
         oweView.setAdapter(adapter);
 
@@ -83,6 +90,7 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment {
 
         for (int i = 0; i<groupList.length; i++){
             oweArray.add(new Owe(groupList[i],personList[i],amountList[i]));
+            adapter.updateOweArray(oweArray);
 
         }
     }
@@ -90,5 +98,23 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment {
     // <!-- TODO: 2. filter from db and query data based on user's selected option  -->
     // <!-- TODO: 3. currently, this dialog fragment is used for both owe and owed. update "who do u owe?" or "who owes you?" -->
     // <!-- TODO: 4. query owe and owed expenses depending on which button was pressed in the home fragment  -->
+    @Override
+    public void onFilterSelected(String filterType) {
+        Log.e("filter","selected: "+ filterType);
+        switch(filterType){
+            case "Earliest":
+                HeapSortHelper.sortByDateEarliest(oweArray);
+                break;
+            case "Latest":
+                HeapSortHelper.sortByDateLatest(oweArray);
+                break;
+            case "Amount":
+                HeapSortHelper.sortByAmount(oweArray);
+                break;
+        }
+        //requireActivity().runOnUiThread(() ->adapter.notifyDataSetChanged());
+        adapter.updateOweArray(oweArray);
+
+    }
 
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.computation.FilterListener;
 
 import java.util.List;
 
@@ -23,15 +24,17 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
     private int selectedPosition = -1; // Store selected item
 
     private Spinner spinner;
+    private FilterListener listener;
 
     TextView spinnerText;
     RadioButton spinnerButton;
 
-    public SpinnerAdapter(Context context, List<String> items, Spinner spinner) {
+    public SpinnerAdapter(Context context, List<String> items, Spinner spinner, FilterListener listener) {
         super(context, R.layout.spinner_items, items);
         this.context = context;
         this.items = items;
         this.spinner = spinner;
+        this.listener = listener;
     }
 
 
@@ -64,7 +67,10 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
                 notifyDataSetChanged();  // Refresh the dropdown view
 
                 spinner.setSelection(position);  // Update the spinner selection
-                spinner.performClick();
+                //spinner.performClick();
+                if (listener != null) {
+                    listener.onFilterSelected(items.get(position));
+                }
     });
 
         return dropdownLayout;
