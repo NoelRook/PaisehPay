@@ -16,7 +16,7 @@ public class itemAdapter extends BaseDatabase{
     }
 
     @Override
-    public void create(User user, OperationCallback callback) {
+    public <item> void create(item item, OperationCallback callback) {
         //todo 1. add in create item and find some way to tie it to group
     }
 
@@ -26,7 +26,7 @@ public class itemAdapter extends BaseDatabase{
     }
 
     @Override
-    public void update(String Id, User user, OperationCallback callback) {
+    public <item> void update(String Id, item user, OperationCallback callback) {
         //todo. 3 update an item associated to a group
     }
 

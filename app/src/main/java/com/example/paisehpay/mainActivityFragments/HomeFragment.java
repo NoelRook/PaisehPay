@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Group;
+import com.example.paisehpay.blueprints.Notification;
+import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.GroupAdapter;
+import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_CreateGroup;
 import com.example.paisehpay.dialogFragments.DialogFragment_Owe;
@@ -22,10 +28,15 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.widget.TextView;
 
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
+import com.google.firebase.database.DatabaseError;
 
 
 public class HomeFragment extends Fragment implements DialogFragmentListener<Group> {
@@ -49,7 +60,8 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     RecyclerView groupView;
     ArrayList<Group> groupArray = new ArrayList<>();
     RecycleViewAdapter_Group adapter;
-
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +75,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         PreferenceManager preferenceManager = new PreferenceManager(getContext());
+
 
 
         User savedUser = preferenceManager.getUser();
@@ -129,16 +142,34 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 
     private void showGroupList() {
 
-        //populated by user create data alr
-        //String[] nameList = getResources().getStringArray(R.array.dummy_group_name_list);
-        //String[] dateList = getResources().getStringArray(R.array.dummy_expense_date_list);
-        //String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
+        executorService.execute(() -> {
+            GroupAdapter grpAdapter = new GroupAdapter();
+            grpAdapter.get(new BaseDatabase.ListCallback<Group>() {
+                @Override
+                public void onListLoaded(List<Group> groups) {
+                    ArrayList<Group> tempList = new ArrayList<>();
 
+                    for (Group group : groups) {
+                        Log.d("group", group.getGroupId() + " - " + group.getGroupName()+ " - " +group.getGroupCreatedDate() + " - " +group.getGroupAmount() );
+                        tempList.add(new Group(group.getGroupId(),group.getGroupName(), "Created " +group.getGroupCreatedDate() ));
+                    }
 
-        //for (int i = 0; i < nameList.length; i++) {
-        //    groupArray.add(new Group(nameList[i], "Created " + dateList[i]));
-        //}
-        adapter.notifyDataSetChanged();
+                    // Update UI on the main thread
+                    mainHandler.post(() -> {
+                        groupArray.clear();
+                        groupArray.addAll(tempList);
+                        adapter.notifyDataSetChanged();
+                    });
+
+                    Log.d("notification", groupArray.toString());
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    Log.e("FirebaseError", error.getMessage());
+                }
+            });
+        });
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.paisehpay.databaseHandler;
 
+import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,8 +25,12 @@ public class UserAdapter extends BaseDatabase  {
 
 
     @Override
-    public void create(User user, final OperationCallback callback) {
-        if (user == null) {
+    public <T> void create(T object, final OperationCallback callback) {
+        if (!(object instanceof User)){
+            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
+            return;
+        }
+        if (object == null) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot empty")));
             return;
         }
@@ -36,7 +41,7 @@ public class UserAdapter extends BaseDatabase  {
             return;
         }
 
-        databaseRef.child(userId).setValue(user)
+        databaseRef.child(userId).setValue(object)
                 .addOnCompleteListener(new OnCompleteListener<Void>(){
                     @Override
                     public void onComplete(Task<Void> task) {
@@ -74,13 +79,16 @@ public class UserAdapter extends BaseDatabase  {
 
     // Update a user
     @Override
-    public void update(String userId, User user, final OperationCallback callback) {
+    public <T> void update(String userId, T object, final OperationCallback callback) {
+        if (!(object instanceof User)){
+            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
+        }
         if (userId == null || userId.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;
         }
 
-        databaseRef.child(userId).setValue(user)
+        databaseRef.child(userId).setValue(object)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(Task<Void> task) {

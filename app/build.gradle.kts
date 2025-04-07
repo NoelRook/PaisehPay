@@ -54,6 +54,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore:25.1.3")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.google.code.gson:gson:2.10.1")
 
 
 }

@@ -15,11 +15,11 @@ public abstract class BaseDatabase {
         databaseRef = database.getReference(reference);
     }
 
-    public abstract void create(User user, final OperationCallback callback);
+    public abstract<T> void create(T object, final OperationCallback callback) throws IllegalArgumentException;
 
     public abstract void get(final ListCallback callback);
 
-    public abstract void update(String Id, User user, OperationCallback callback);
+    public abstract<T>void update(String Id, T object, OperationCallback callback);
 
     public abstract void delete(String Id, final OperationCallback callback);
 
