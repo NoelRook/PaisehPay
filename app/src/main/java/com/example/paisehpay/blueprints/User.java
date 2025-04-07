@@ -1,6 +1,5 @@
 package com.example.paisehpay.blueprints;
-
-public class User {
+public class User  {
     String id;
     String email;
     String username;
@@ -32,4 +31,11 @@ public class User {
         this.username = username;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String key) {
+        this.id = key;
+    }
 }

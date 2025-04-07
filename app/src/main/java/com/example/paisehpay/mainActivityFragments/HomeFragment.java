@@ -1,4 +1,6 @@
 package com.example.paisehpay.mainActivityFragments;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,12 +22,18 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import android.widget.TextView;
+
+import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 
 
 public class HomeFragment extends Fragment implements DialogFragmentListener<Group> {
     //fragment that loads when u press home
+    TextView welcomeMessage;
     Button oweDetailsButton;
     Button owedDetailsButton;
+    Button groupButton;
     Button joinGroupButton;
     Button createGroupButton;
     ConstraintLayout oweLayout;
@@ -34,6 +42,9 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 
     DialogFragment_CreateGroup createGroupFragment;
     DialogFragment_CreateGroup joinGroupFragment;
+    String Username;
+    String Email;
+    String id;
 
     RecyclerView groupView;
     ArrayList<Group> groupArray = new ArrayList<>();
@@ -51,6 +62,19 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        PreferenceManager preferenceManager = new PreferenceManager(getContext());
+
+
+        User savedUser = preferenceManager.getUser();
+        if (savedUser != null) {
+            id = savedUser.getId();
+            Username = savedUser.getUsername();
+            Email = savedUser.getEmail();
+            Log.d("Usersaved",id + Username +Email);
+        }
+
+        welcomeMessage = rootView.findViewById(R.id.welcome_message);
+        welcomeMessage.setText("Hello "+ Username+"!");
 
         //view owe details lead to owe details page
         oweLayout = rootView.findViewById(R.id.owe_layout);
@@ -135,3 +159,5 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 // <!-- TODO: 3. change owe_amount and owed_amount from db  -->
 // <!-- TODO: 4. catch name of group data in both create group and join group button, then instantiate a new group object for that user -->
 // <!-- TODO: 5. add them to user's db and update group recycleview  -->
+// <!-- TODO: 6. figure out how to isolate a certain group button to lead to the correct group homepage  -->
+// <!-- TODO: 7. (for iris) change scrolllayout to reycleview with the usual shit  -->

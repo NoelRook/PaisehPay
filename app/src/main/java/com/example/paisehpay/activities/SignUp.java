@@ -1,5 +1,7 @@
 package com.example.paisehpay.activities;
 
+import static android.icu.text.DisplayOptions.DisplayLength.LENGTH_SHORT;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;

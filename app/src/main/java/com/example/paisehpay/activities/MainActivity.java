@@ -17,13 +17,17 @@ import com.example.paisehpay.mainActivityFragments.HomeFragment;
 import com.example.paisehpay.mainActivityFragments.NotificationFragment;
 import com.example.paisehpay.mainActivityFragments.ProfileFragment;
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databinding.ActivityMainBinding;
 import com.example.paisehpay.mainActivityFragments.AddFragment;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
     //main activity that loads the bottom nav screen and the 5 fragments
 
     ActivityMainBinding binding;
+    String Username;
+    String Email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+
+        User savedUser = preferenceManager.getUser();
+        if (savedUser != null) {
+            Username = savedUser.getUsername();
+            Email = savedUser.getEmail();
+        }
 
         // check which fragment to load
         Intent intent = getIntent();
