@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Summary;
 import com.example.paisehpay.blueprints.Summary;
 
@@ -29,6 +31,8 @@ public class BillSplit extends AppCompatActivity {
     RecyclerView summaryView;
     ArrayList<Summary> summaryArray = new ArrayList<>();
     Button homeButton;
+    Expense expense;
+    ArrayList<Item> itemArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,12 @@ public class BillSplit extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        //catch the intent from AddPeople.java
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("Expense")){
+            expense = intent.getParcelableExtra("Expense");
+        }
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -79,14 +89,13 @@ public class BillSplit extends AppCompatActivity {
 
     //will be changed later
     private void showSummaryList() {
-        String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list); //can hover to see what dummy data it using
-        String[] amountList = getResources().getStringArray(R.array.dummy_expense_amount_list);
-        String[] itemList = getResources().getStringArray(R.array.dummy_item_name_list);
+        itemArray = expense.getExpenseItems();
 
 
-        for (int i = 0; i<nameList.length; i++){
-            summaryArray.add(new Summary(String.format("%s owes you %s for %s",nameList[i],amountList[i],itemList[i])));
-
+        for (Item item: itemArray){
+            for (String user: item.getItemPeopleArray()){
+                summaryArray.add(new Summary(String.format("%s owes you %s for %s",user,item.getItemIndividualPrice(),item.getItemName())));
+            }
         }
     }
 

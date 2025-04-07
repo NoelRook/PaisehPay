@@ -105,6 +105,19 @@ public class SignUp extends AppCompatActivity {
                     usernameinp.setError("Username already exists");
                     return;
                 }
+<<<<<<< Updated upstream
+=======
+
+                Log.d("SignUp","test test");
+                //Create user in Firebase Auth
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        //save additional user data to Realtime DB
+                        saveUserToDatabase(username, email);
+                    } else{
+                        Toast.makeText(SignUp.this, "Sign up failed: " + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+>>>>>>> Stashed changes
                 });
             //Create user in Firebase Auth
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {

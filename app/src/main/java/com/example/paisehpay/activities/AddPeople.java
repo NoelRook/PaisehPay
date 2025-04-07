@@ -22,7 +22,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.paisehpay.blueprints.Category;
 import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.computation.EqualSplit;
 import com.example.paisehpay.computation.ReceiptInstance;
 import com.example.paisehpay.computation.Receipts;
@@ -34,13 +36,21 @@ import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.R;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Category;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewListener;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 //add people is the expense overview page
-public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener<Item> {
+public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener<Item>, RecycleViewListener {
     RecyclerView categoryView;
-    ArrayList<Expense> categoryArray = new ArrayList<>();
+    ArrayList<Category> categoryArray = new ArrayList<>();
 
     RecyclerView itemView;
     ArrayList<Item> itemArray = new ArrayList<>();
@@ -57,7 +67,14 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     EditText expenseNameText;
     String expenseName;
     String expenseGroup;
-
+    String expenseDate;
+    String expenseCategory;
+    String expenseAmount;
+    PreferenceManager preferenceManager;
+    String Username;
+    String Email;
+    String id;
+    //User savedUser = preferenceManager.getUser();
 
 
     @Override
@@ -103,10 +120,10 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             }
         });
 
-        //some find view ids for the logic for splitting
-        //expenseNameText = findViewById(R.id.add_expense_name);
-        //String expenseName = expenseNameText.getText().toString().trim();
-        //String expenseGroup = selectedGroupText.getText().toString();
+        expenseNameText = findViewById(R.id.add_expense_name);
+
+
+
 
 
 
@@ -117,29 +134,49 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         splitBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if (expenseNameText == null){
-                //    Toast.makeText(AddPeople.this,"Bro u never put name of expense",Toast.LENGTH_LONG).show();
-                //} else if (expenseGroup == null){
-                //    Toast.makeText(AddPeople.this,"u never select group",Toast.LENGTH_LONG).show();
-                //} else if (!checkItemHasUsers()){
-                //    Toast.makeText(AddPeople.this,"you haven't added people to ur item",Toast.LENGTH_LONG).show();
-                //} else {
-                    Log.d("AddPeople","Name: "+ expenseName + " Group: " + expenseGroup);
+                expenseName = expenseNameText.getText().toString();
+
+                Date today = Calendar.getInstance().getTime(); //change with db one
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String formattedDate = formatter.format(today);
+                expenseDate = formattedDate;
+
+                //if (savedUser != null) {
+                //    id = savedUser.getId();
+                //    Username = savedUser.getUsername();
+                //    Email = savedUser.getEmail();
+                //    Log.d("Usersaved",id + Username +Email);
+                //}
+
+                Receipts instance = ReceiptInstance.getInstance();
+                expenseAmount = instance.getTotal();
+
+                if (expenseNameText == null) {
+                    Toast.makeText(AddPeople.this, "Bro u never put name of expense", Toast.LENGTH_LONG).show();
+                } else if (expenseGroup == null) {
+                    Toast.makeText(AddPeople.this, "u never select group", Toast.LENGTH_LONG).show();
+                } else if (!(checkItemHasUsers())) {
+                    Toast.makeText(AddPeople.this, "you haven't added people to ur item", Toast.LENGTH_LONG).show();
+                } else {
+                    Log.d("AddPeople", "Name: " + expenseName + " Group: " + expenseGroup + " Category: " + expenseCategory + " Date: " + expenseDate + " Amount: " + expenseAmount);
+                    Expense expense = new Expense(expenseName,expenseDate,null,null,expenseAmount,expenseCategory,itemArray);
                     Intent intent = new Intent(AddPeople.this, BillSplit.class);
+                    intent.putExtra("Expense",expense);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
-
-
+            }
         });
+
+
 
 
         //show category list.
         //we will link the adapter used for the category scroll bar
         categoryView = findViewById(R.id.recycle_view_category);
         showCategoryList();
-        RecycleViewAdapter_Category adapter_category = new RecycleViewAdapter_Category(this,categoryArray);
+        RecycleViewAdapter_Category adapter_category = new RecycleViewAdapter_Category(this,categoryArray,this);
         categoryView.setAdapter(adapter_category);
         categoryView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -182,9 +219,8 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             int imageResId = imageArray.getResourceId(i, 0);
 
 
-            categoryArray.add(new Expense(null, null, null, null, null, nameList[i], imageResId,null));
+            categoryArray.add(new Category(nameList[i], imageResId));
         }
-
         imageArray.recycle();
         }
 
@@ -220,16 +256,28 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     public void selectGroup(String groupName){
         selectedGroupText = findViewById(R.id.group_selected);
         selectedGroupText.setText(groupName);
-
+        expenseGroup = groupName;
     }
 
     public boolean checkItemHasUsers(){
-        for (Item item: itemArray){
-            if (!item.hasPeople()){
+
+        for (Item item : itemArray) {
+            String peopleStr = item.getItemPeopleString();
+            if (peopleStr == null || peopleStr.trim().isEmpty()) {
+                return false;
+            }
+            ArrayList<String> peopleArray = item.setItemPeopleArray();
+            if (peopleArray == null || peopleArray.isEmpty()) {
                 return false;
             }
         }
         return true;
+    }
+
+    @Override
+    public void onSelected(String name) {
+        expenseCategory = name;
+        Log.d("Category", "User selected: " + name);
     }
 
     //general

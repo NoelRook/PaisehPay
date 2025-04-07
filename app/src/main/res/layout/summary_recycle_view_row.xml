@@ -20,11 +20,13 @@
 
     <TextView
         android:id="@+id/you_paid"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="@string/you_paid_for"
-        style="@style/textViewMediumLightMode"
+        style="@style/textViewSmallLightMode"
+        android:gravity="center"
         android:maxLines="2"
+        android:lines="2"
         android:breakStrategy="simple"
         app:layout_constraintStart_toEndOf="@id/member_avatar"
         app:layout_constraintEnd_toEndOf="parent"
