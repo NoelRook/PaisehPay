@@ -1,10 +1,4 @@
 package com.example.paisehpay.blueprints;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-
 public class User  {
     String id;
     String email;

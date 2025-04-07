@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment {
 
         PreferenceManager preferenceManager = new PreferenceManager(getContext());
 
+
         User savedUser = preferenceManager.getUser();
         if (savedUser != null) {
             id = savedUser.getId();

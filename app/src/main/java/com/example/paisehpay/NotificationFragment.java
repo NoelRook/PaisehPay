@@ -1,5 +1,6 @@
 package com.example.paisehpay;
 
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.UserAdapter;
+import com.example.paisehpay.sessionHandler.fragmentPopulator;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class NotificationFragment extends Fragment {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     RecyclerView notificationView;
     ArrayList<Notification> notificationArray = new ArrayList<>();
+    fragmentPopulator frag = new fragmentPopulator();
 
     public NotificationFragment() {
         // launches the fragment
@@ -59,7 +62,11 @@ public class NotificationFragment extends Fragment {
     }
 
     private void showNotificationList() {
-        executorService.execute(() -> {
+        frag.showList(executorService,mainHandler, notificationArray,notificationView);
+    }
+
+    /*
+    * executorService.execute(() -> {
             UserAdapter adapter = new UserAdapter();
             adapter.get(new BaseDatabase.ListCallback<User>() {
                 @Override
@@ -87,7 +94,7 @@ public class NotificationFragment extends Fragment {
                 }
             });
         });
-    }
+    * */
 
 
     // <!-- TODO: 1. query from db  -->
