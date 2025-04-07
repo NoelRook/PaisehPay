@@ -14,7 +14,7 @@ public class friendAdapter extends BaseDatabase {
     }
 
     @Override
-    public void create(User user, BaseDatabase.OperationCallback callback) {
+    public <User> void create(User user, BaseDatabase.OperationCallback callback) {
         //todo 1. add in create group
     }
 
@@ -24,7 +24,7 @@ public class friendAdapter extends BaseDatabase {
     }
 
     @Override
-    public void update(String Id, User user, BaseDatabase.OperationCallback callback) {
+    public <User> void update(String Id, User user, BaseDatabase.OperationCallback callback) {
         //todo 1. add in update group based on user
     }
 

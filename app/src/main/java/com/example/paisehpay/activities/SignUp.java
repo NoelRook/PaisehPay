@@ -97,6 +97,7 @@ public class SignUp extends AppCompatActivity {
             }
             if (!password.equals(passwordre)){
                 passwordreinp.setError("Passwords do not match");
+                return;
             }
 
             checkUsernameUnique(username, isUnique -> {
@@ -104,16 +105,15 @@ public class SignUp extends AppCompatActivity {
                     usernameinp.setError("Username already exists");
                     return;
                 }
-
-                //Create user in Firebase Auth
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        //save additional user data to Realtime DB
-                        saveUserToDatabase(username, email);
-                    } else{
-                        Toast.makeText(SignUp.this, "Sign up failed: " + task.getException(), Toast.LENGTH_SHORT).show();
-                    }
                 });
+            //Create user in Firebase Auth
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    //save additional user data to Realtime DB
+                    saveUserToDatabase(username, email);
+                } else{
+                    Toast.makeText(SignUp.this, "Sign up failed: " + task.getException(), Toast.LENGTH_SHORT).show();
+                }
             });
 
 

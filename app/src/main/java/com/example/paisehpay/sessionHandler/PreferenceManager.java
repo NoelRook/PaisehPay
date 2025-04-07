@@ -5,12 +5,17 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.paisehpay.blueprints.User;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 public class PreferenceManager {
     private static final String PREF_NAME = "MyAppPreferences";
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
+
+    private static final String KEY_GROUP = "group_list";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -54,6 +59,19 @@ public class PreferenceManager {
     public void clearPreferences(){
         sharedPreferences.edit().clear().apply();
     }
+
+    public void saveGroups(ArrayList groupList){
+        Gson gson = new Gson();
+        String json = gson.toJson(groupList);
+        sharedPreferences.edit().putString(KEY_GROUP, json).apply();
+    }
+
+    public ArrayList getGroups(){
+
+        return null;
+    }
+
+
 
 
     // Clear user data (for logout)

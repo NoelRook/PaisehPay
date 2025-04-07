@@ -2,6 +2,8 @@ package com.example.paisehpay.dialogFragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +17,14 @@ import androidx.annotation.Nullable;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Group;
+import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.GroupAdapter;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFragment{
     TextView titleText;
@@ -29,6 +36,8 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
 
     private static final String DATA_TO_QUERY = "data_to_query";
 
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     //since we use this fragment multiple times with different data, we need to have ways to differentiate them
     public static DialogFragment_CreateGroup newInstance(String query_from) {
@@ -73,6 +82,8 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
                     //we instantiate a new Group Object
                     Group group = new Group(null, groupName,"created on  " + currentDate.toString());
                     //we override the DialogFragmentListener method in HomeFragment to be able to add groups
+                    //create group here
+                    createGroup(group);
                     listener.onDataSelected(0,group);
                 }
                 //dismiss fragment after data is sent
@@ -111,6 +122,27 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
     }
 
     // <!-- TODO: 1. need error checking, whether group alr exists in user's groups, or the group code doesn't exist so far  -->
+    private void createGroup(Group group){
+        //todo 1. add in create group
+        executorService.execute(() ->{
+            GroupAdapter adapter = new GroupAdapter();
+            adapter.create(group, new GroupAdapter.OperationCallback() {
+                @Override
+                public void onSuccess() {
+                    // User created successfully
+                    Log.d("Success", "User created");
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    // Handle error
+                    Log.e("FirebaseError", error.getMessage());
+                }
+            });
+        });
+    };
+
+
 
 }
 
