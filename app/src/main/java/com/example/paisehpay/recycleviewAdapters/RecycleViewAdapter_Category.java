@@ -66,11 +66,11 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
             } else {
                 int previousSelected = selectedPosition;
                 selectedPosition = currentPosition;
-                selectedCategoryName = categoryArray.get(currentPosition).getCategoryName(); // Save name
+                selectedCategoryName = categoryArray.get(currentPosition).getCategoryName();
                 notifyItemChanged(previousSelected); // Unselect previous
                 notifyItemChanged(currentPosition);
                 if (listener != null) {
-                    listener.onSelected(selectedCategoryName); // ✅ send it to activity
+                    listener.onSelected(selectedCategoryName); //
                 }
             }
         });

@@ -9,23 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
-    //used in the bottom nav page
-    private final List<Fragment> fragmentList = new ArrayList<>();
-    private final List<String> fragmentTitles = new ArrayList<>();
+    private final ArrayList<Fragment> fragmentList = new ArrayList<>();
+    private final ArrayList<String> fragmentTitleList = new ArrayList<>();
 
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-        super(fragmentActivity);
+    public ViewPagerAdapter(@NonNull FragmentActivity fa) {
+        super(fa);
     }
 
     public void addFragment(Fragment fragment, String title) {
         fragmentList.add(fragment);
-        fragmentTitles.add(title);
+        fragmentTitleList.add(title);
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return fragmentList.get(position);
+        return fragmentList.get(position); // THIS MUST return the fragment with the correct Bundle
     }
 
     @Override
@@ -34,7 +33,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     }
 
     public String getTitle(int position) {
-        return fragmentTitles.get(position);
+        return fragmentTitleList.get(position);
     }
 }
+
 

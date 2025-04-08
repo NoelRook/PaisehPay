@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.paisehpay.blueprints.GroupMember;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;

@@ -16,21 +16,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.dialogFragments.DialogFragmentListener;
+import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
+import com.example.paisehpay.dialogFragments.DialogFragment_AddPeople;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
 import com.example.paisehpay.blueprints.GroupMember;
 
 import java.util.ArrayList;
 
-public class GroupSettings extends AppCompatActivity {
+public class GroupSettings extends AppCompatActivity implements DialogFragmentListener<User> {
 
     //ur group settings page accessible by group_homepage
 
     RecyclerView groupMemberView;
-    ArrayList<GroupMember> groupMemberArray = new ArrayList<>();
+    ArrayList<User> groupMemberArray = new ArrayList<>();
     TextView toolbarTitleText;
     ImageView backArrow;
     Button deleteGroupButton;
     Button addMemebersButton;
+    DialogFragment_AddMembers addMembersFragment;
+    RecycleViewAdapter_GroupMember adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +66,22 @@ public class GroupSettings extends AppCompatActivity {
             }
         });
 
+        addMemebersButton= findViewById(R.id.add_members);
+        addMemebersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addMembersFragment = new DialogFragment_AddMembers();
+                addMembersFragment.show(getSupportFragmentManager(), "DialogFragment_AddMembers");
+            }
+        });
+
         //show groupMember list
         groupMemberView = findViewById(R.id.recycle_view_members);
         showGroupMemberList();
-        RecycleViewAdapter_GroupMember adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray);
+        adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray);
         groupMemberView.setAdapter(adapter);
         groupMemberView.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
@@ -75,9 +91,15 @@ public class GroupSettings extends AppCompatActivity {
         String[] emailList = getResources().getStringArray(R.array.dummy_email_list);
 
         for (int i = 0; i<nameList.length; i++){
-            groupMemberArray.add(new GroupMember(nameList[i],emailList[i]));
+            groupMemberArray.add(new User(null,emailList[i],nameList[i],null,null));
 
         }
+    }
+
+    @Override
+    public void onDataSelected(int position, User data) {
+        groupMemberArray.add(new User(data.getId(),data.getEmail(), data.getUsername(),data.getFriendKey(),null));
+        adapter.notifyDataSetChanged();
     }
 
     // <!-- TODO: 1. query data from db  -->

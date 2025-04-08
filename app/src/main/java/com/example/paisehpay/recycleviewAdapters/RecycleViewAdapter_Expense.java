@@ -1,6 +1,8 @@
 package com.example.paisehpay.recycleviewAdapters;
 
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
     @Override
     public int getItemCount() {
         //number of items want displayed
+        Log.d("RecycleViewAdapter", "Item count: " + expenseArray.size());
         return expenseArray.size();
     }
 

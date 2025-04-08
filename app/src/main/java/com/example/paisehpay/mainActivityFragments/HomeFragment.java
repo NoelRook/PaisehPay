@@ -45,14 +45,12 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     TextView welcomeMessage;
     Button oweDetailsButton;
     Button owedDetailsButton;
-    Button joinGroupButton;
     Button createGroupButton;
     ConstraintLayout oweLayout;
     DialogFragment_Owe oweDialogFragment;
     DialogFragment_Owe owedDialogFragment;
 
     DialogFragment_CreateGroup createGroupFragment;
-    DialogFragment_CreateGroup joinGroupFragment;
     String Username;
     String Email;
     String id;
@@ -111,15 +109,6 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
             }
         });
 
-        //press join group will join a group
-        joinGroupButton = rootView.findViewById(R.id.join_group);
-        joinGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                joinGroupFragment = DialogFragment_CreateGroup.newInstance(getString(R.string.join_group));
-                joinGroupFragment.show(getChildFragmentManager(), "DialogFragment_CreateGroup");
-            }
-        });
 
         //press create group will create a group
         createGroupButton = rootView.findViewById(R.id.create_group);
