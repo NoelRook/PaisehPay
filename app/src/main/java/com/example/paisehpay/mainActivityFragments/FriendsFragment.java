@@ -55,7 +55,7 @@ public class FriendsFragment extends Fragment {
         String[] emailList = getResources().getStringArray(R.array.dummy_email_list);
 
         for (int i = 0; i<personList.length; i++){
-            friendsArray.add(new User(null, emailList[i],personList[i]));
+            friendsArray.add(new User(null, emailList[i],personList[i],null,null));
 
         }
     }

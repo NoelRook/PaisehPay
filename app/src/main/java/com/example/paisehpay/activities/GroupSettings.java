@@ -91,14 +91,14 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         String[] emailList = getResources().getStringArray(R.array.dummy_email_list);
 
         for (int i = 0; i<nameList.length; i++){
-            groupMemberArray.add(new User(null,emailList[i],nameList[i]));
+            groupMemberArray.add(new User(null,emailList[i],nameList[i],null,null));
 
         }
     }
 
     @Override
     public void onDataSelected(int position, User data) {
-        groupMemberArray.add(new User(data.getId(),data.getEmail(), data.getUsername()));
+        groupMemberArray.add(new User(data.getId(),data.getEmail(), data.getUsername(),data.getFriendKey(),null));
         adapter.notifyDataSetChanged();
     }
 

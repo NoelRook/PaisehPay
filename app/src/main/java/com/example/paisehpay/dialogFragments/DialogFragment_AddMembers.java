@@ -70,9 +70,9 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list);//since we now populating fake data
         String[] emailList = getResources().getStringArray(R.array.dummy_email_list);
         for (int i = 0; i < nameList.length; i++) {
-            userArray.add(new User(null,emailList[i],nameList[i]));
+            userArray.add(new User(null,emailList[i],nameList[i],null,null));
             }
-        userArray.add(new User(null,"test@gmail.com","Leanne")); //we select this ah if not rv also see no change
+        userArray.add(new User(null,"test@gmail.com","Leanne",null,null)); //we select this ah if not rv also see no change
         }
 
 
