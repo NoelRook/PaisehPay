@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.paisehpay.blueprints.GroupMember;
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class FriendsFragment extends Fragment {
 
     RecyclerView friendsView;
-    ArrayList<GroupMember> friendsArray = new ArrayList<>();
+    ArrayList<User> friendsArray = new ArrayList<>();
 
     ConstraintLayout friendsLayout;
 
@@ -54,7 +55,7 @@ public class FriendsFragment extends Fragment {
         String[] emailList = getResources().getStringArray(R.array.dummy_email_list);
 
         for (int i = 0; i<personList.length; i++){
-            friendsArray.add(new GroupMember(personList[i],emailList[i]));
+            friendsArray.add(new User(null, emailList[i],personList[i]));
 
         }
     }
