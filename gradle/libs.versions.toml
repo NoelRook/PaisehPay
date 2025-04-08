@@ -17,6 +17,7 @@ preference = "1.2.0"
 firebase-bom = "32.7.0"
 google-services = "4.4.2"
 firebaseDatabase = "21.0.0"
+lifecycleProcess = "2.8.7"
 
 [libraries]
 androidx-xcamera-extensions = { module = "androidx. camera: camera-extensions", version.ref = "xcameraExtensions" }
@@ -41,6 +42,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

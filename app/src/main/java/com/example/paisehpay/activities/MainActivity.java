@@ -1,10 +1,13 @@
 package com.example.paisehpay.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -41,17 +45,21 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        PreferenceManager preferenceManager = new PreferenceManager(this);
 
+        PreferenceManager preferenceManager = new PreferenceManager(this);
         User savedUser = preferenceManager.getUser();
         if (savedUser != null) {
             Username = savedUser.getUsername();
             Email = savedUser.getEmail();
         }
 
+
+
+
         // check which fragment to load
         Intent intent = getIntent();
         String fragmentToLoad = intent.getStringExtra("fragmentToLoad");
+        Log.d("ThemeDebug", "fragmentToLoad = " + fragmentToLoad);
         if (fragmentToLoad != null) { //if navigating from activity to fragment
             loadFragmentFromIntent(fragmentToLoad);
         } else { //if navigating from SignIn to fragment, where the default fragment is the home page
@@ -97,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
 
     //load specific fragment from activity
     private void loadFragmentFromIntent(String fragmentName) {
-        Fragment fragment = new HomeFragment();
-        int fragmentId = R.id.home;
+        Log.d("ThemeDebug", "Using loadFragmentFromIntent with: " + fragmentName);
+        Fragment fragment;
+        int fragmentId;
 
         if (fragmentName.equals("ProfileFragment")) {
             fragment = new ProfileFragment();
@@ -113,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
         else if (fragmentName.equals("FriendsFragment")) {
             fragment = new FriendsFragment();
             fragmentId = R.id.friends;
+        } else{
+            fragment = new HomeFragment();
+            fragmentId = R.id.home;
         }
         if (fragment != null){
             replaceFragment(fragment);

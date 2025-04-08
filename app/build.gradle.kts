@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.androidx.preference)
     implementation(libs.firebase.database)
+    implementation(libs.androidx.lifecycle.process)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     implementation(platform(libs.firebase.bom))
