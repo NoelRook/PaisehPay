@@ -14,6 +14,7 @@ public class PreferenceManager {
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_FRIENDKEY = "friendKey";
 
     private static final String KEY_GROUP = "group_list";
 
@@ -31,6 +32,8 @@ public class PreferenceManager {
         editor.putString(KEY_USER_ID, user.getId());
         editor.putString(KEY_USERNAME, user.getUsername());
         editor.putString(KEY_EMAIL, user.getEmail());
+        editor.putString(KEY_FRIENDKEY, user.getFriendKey());
+
         editor.apply();
     }
 
@@ -39,9 +42,10 @@ public class PreferenceManager {
         String id = sharedPreferences.getString(KEY_USER_ID, null);
         String username = sharedPreferences.getString(KEY_USERNAME, null);
         String email = sharedPreferences.getString(KEY_EMAIL, null);
+        String friendKey = sharedPreferences.getString(KEY_FRIENDKEY, null);
 
         if (username != null && email != null) {
-            return new User(id, username, email);
+            return new User(id, username, email, null, null);
         }
         return null;
     }
@@ -79,6 +83,7 @@ public class PreferenceManager {
         editor.remove(KEY_USER_ID);
         editor.remove(KEY_USERNAME);
         editor.remove(KEY_EMAIL);
+        editor.remove(KEY_FRIENDKEY);
         editor.apply();
     }
 }

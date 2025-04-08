@@ -14,7 +14,12 @@ public class Group {
     private HashMap<String, String> members;
     private boolean isSelected;
     public Group() {}
-    public Group(String id, String groupName, String groupCreatedDate, String groupAmount, String createdBy,HashMap<String, String> members) {
+    public Group(String id,
+                 String groupName,
+                 String groupCreatedDate,
+                 String groupAmount,
+                 String createdBy,
+                 HashMap<String, String> members) {
         this.groupId = id;
         this.groupName = groupName;
         this.groupCreatedDate = groupCreatedDate;

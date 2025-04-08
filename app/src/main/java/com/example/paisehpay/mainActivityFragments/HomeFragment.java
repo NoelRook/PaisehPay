@@ -136,9 +136,8 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         adapter = new RecycleViewAdapter_Group(getActivity(), groupArray);
         groupView.setAdapter(adapter);
         groupView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        //todo add caching for groupArray here
         showGroupList();
-
-
         return rootView;
     }
 

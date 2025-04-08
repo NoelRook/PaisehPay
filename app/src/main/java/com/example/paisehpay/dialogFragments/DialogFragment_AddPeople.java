@@ -92,7 +92,7 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
         userArray.clear();
         String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list);
         for (String s : nameList) {
-            userArray.add(new User(null,null,s));
+            userArray.add(new User(null,null,s,null,null));
             }
         }
 

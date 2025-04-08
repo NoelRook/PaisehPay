@@ -171,4 +171,5 @@ public class GroupAdapter extends BaseDatabase {
                     }
                 });
     }
+
 }

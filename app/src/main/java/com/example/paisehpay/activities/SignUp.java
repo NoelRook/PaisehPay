@@ -4,6 +4,8 @@ import static android.icu.text.DisplayOptions.DisplayLength.LENGTH_SHORT;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import java.util.HashMap;
@@ -37,6 +41,8 @@ public class SignUp extends AppCompatActivity {
     ConstraintLayout signupLayout;
     Button signInButton;
     Button signUpButton;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +117,11 @@ public class SignUp extends AppCompatActivity {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         //save additional user data to Realtime DB
-                        saveUserToDatabase(username, email);
+                        executorService.execute(() -> {
+                            saveUserToDatabase(username, email);
+                        });
+
+
                     } else{
                         Toast.makeText(SignUp.this, "Sign up failed: " + task.getException(), Toast.LENGTH_SHORT).show();
                     }

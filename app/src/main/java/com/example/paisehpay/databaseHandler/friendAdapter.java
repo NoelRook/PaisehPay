@@ -41,4 +41,6 @@ public class friendAdapter extends BaseDatabase {
     public void delete(String Id, BaseDatabase.OperationCallback callback) {
         //todo 1. add in delete group
     }
+
+
 }
