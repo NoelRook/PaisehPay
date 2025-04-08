@@ -66,7 +66,6 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
         }
     }
 
-    //currently populating with fake data
     private void showGroupList() {
         groupArray.clear();
         executorService.execute(() -> {
@@ -83,7 +82,8 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
                                 group.getGroupName(),
                                 "Created " + group.getGroupCreatedDate(),
                                 group.getGroupAmount(),
-                                group.getPeopleInvolved()
+                                group.getCreatedBy(),
+                                group.getMembers()
                         ));
                     }
 

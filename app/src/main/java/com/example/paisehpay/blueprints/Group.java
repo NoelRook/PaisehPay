@@ -6,21 +6,24 @@ import java.util.Map;
 public class Group {
     //expense object used in recycleview of grouphomepage
 
-    String groupId;
-    String groupName;
-    String groupCreatedDate;
-    String groupAmount = "No expenses recorded yet";
-    private HashMap<String, String> peopleInvolved; // Changed to HashMap to match your structure
+    private String groupId;
+    private String groupName;
+    private String groupCreatedDate;
+    private String groupAmount;
+    private String createdBy;
+    private HashMap<String, String> members;
     private boolean isSelected;
     public Group() {}
-    public Group(String id, String groupName, String groupCreatedDate, String groupAmount, HashMap<String, String> peopleInvolved) {
+    public Group(String id, String groupName, String groupCreatedDate, String groupAmount, String createdBy,HashMap<String, String> members) {
         this.groupId = id;
         this.groupName = groupName;
         this.groupCreatedDate = groupCreatedDate;
         this.groupAmount = groupAmount;
-        this.peopleInvolved = peopleInvolved;
+        this.createdBy = createdBy;
+        this.members = members;
         this.isSelected = false;
     }
+    //todo implement builder for this in the future
 
     public String getGroupId() {
         return groupId;
@@ -54,22 +57,31 @@ public class Group {
         this.isSelected = selected;
     }
 
-    public HashMap<String, String> getPeopleInvolved() {
-        return peopleInvolved;
+    public HashMap<String, String> getMembers() {
+        return members;
     }
 
-    public void setPeopleInvolved(HashMap<String, String> peopleInvolved) {
-        this.peopleInvolved = peopleInvolved;
+    public void setMembers(HashMap<String, String> members) {
+        this.members = members;
+    }
+    public boolean containsUser(String userId) {
+        return members != null && members.containsValue(userId);
     }
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("groupName", groupName);
         result.put("groupCreatedDate", groupCreatedDate);
         result.put("groupAmount", groupAmount);
-        result.put("peopleInvolved", peopleInvolved);
+        result.put("createdBy", createdBy);
+        result.put("members", members);
         return result;
     }
-    public boolean containsUser(String userId) {
-        return peopleInvolved != null && peopleInvolved.containsValue(userId);
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

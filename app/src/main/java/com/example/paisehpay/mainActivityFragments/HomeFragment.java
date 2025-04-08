@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
@@ -142,11 +143,29 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     }
 
     private void showGroupList() {
+        // Clear existing data and show loading state
+        mainHandler.post(() -> {
+            groupArray.clear();
+            adapter.notifyDataSetChanged();
+            // Optionally show loading indicator
+        });
+
         PreferenceManager pref = new PreferenceManager(getContext());
-        User curUser = pref.getUser();
+        User currentUser = pref.getUser();
+
+        // Check if user is logged in
+        if (currentUser == null || currentUser.getId() == null) {
+            mainHandler.post(() -> {
+                Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            });
+            return;
+        }
+
         executorService.execute(() -> {
             GroupAdapter grpAdapter = new GroupAdapter();
-            grpAdapter.getGroupsForUser(curUser.getId(),new BaseDatabase.ListCallback<Group>() {
+
+            // Get groups where user is either creator or member
+            grpAdapter.getGroupsForUser(currentUser.getId(), new BaseDatabase.ListCallback<Group>() {
                 @Override
                 public void onListLoaded(List<Group> groups) {
                     ArrayList<Group> tempList = new ArrayList<>();
@@ -157,32 +176,43 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
                                         ", Name: " + group.getGroupName() +
                                         ", Date: " + group.getGroupCreatedDate() +
                                         ", Amount: " + group.getGroupAmount());
+
+                        // Create new Group object with formatted date
                         tempList.add(new Group(
                                 group.getGroupId(),
                                 group.getGroupName(),
                                 "Created " + group.getGroupCreatedDate(),
                                 group.getGroupAmount(),
-                                group.getPeopleInvolved()
+                                group.getCreatedBy(),
+                                group.getMembers()
                         ));
                     }
 
-                    // Update UI on the main thread
+                    // Update UI on main thread
                     mainHandler.post(() -> {
                         groupArray.clear();
-                        groupArray.addAll(tempList);
+                        if (tempList.isEmpty()) {
+                            // Show empty state if no groups found
+                            // textEmptyState.setVisibility(View.VISIBLE);
+                        } else {
+                            groupArray.addAll(tempList);
+                            // textEmptyState.setVisibility(View.GONE);
+                        }
                         adapter.notifyDataSetChanged();
                     });
-
-                    Log.d("notification", groupArray.toString());
                 }
 
                 @Override
                 public void onError(DatabaseError error) {
-                    Log.e("FirebaseError", error.getMessage());
+                    mainHandler.post(() -> {
+                        Log.e("FirebaseError", error.getMessage());
+                        Toast.makeText(getContext(),
+                                "Failed to load groups: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    });
                 }
             });
         });
-
     }
 
 
