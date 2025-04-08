@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -80,7 +81,11 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
                     //if the DialogFragmentListener is attached to the HomeFragment, data can be sent back
                     Log.d("DialogFragment", "Sending new group: " + groupName);
                     //we instantiate a new Group Object
-                    Group group = new Group(null, groupName,"created on  " + currentDate.toString());
+                    Group group = new Group("someid",
+                            "someid",
+                            "Created " + "someid",
+                            "someid",
+                            new HashMap<>());
                     //we override the DialogFragmentListener method in HomeFragment to be able to add groups
                     //create group here
                     createGroup(group);

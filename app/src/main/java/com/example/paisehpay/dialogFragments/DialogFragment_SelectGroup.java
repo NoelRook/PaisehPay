@@ -22,20 +22,28 @@ import com.example.paisehpay.activities.AddPeople;
 import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.Person;
+import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Person;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFragment implements RecycleViewInterface {
     //popup when u select group during addpeople page
 
     View rootView;
     RecyclerView personView;
-    ArrayList<Person> personArray = new ArrayList<>();
+    ArrayList<Group> personArray = new ArrayList<>();
     ArrayList<String> selectedPeople = new ArrayList<>();
 
-
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    RecycleViewAdapter_Person adapter = new RecycleViewAdapter_Person(getActivity(),personArray,this);
 
 
     @Nullable
@@ -49,7 +57,6 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
 
         personView = rootView.findViewById(R.id.select_group_recycle);
         showGroupList();
-        RecycleViewAdapter_Person adapter = new RecycleViewAdapter_Person(getActivity(),personArray,this);
         personView.setAdapter(adapter);
         personView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
@@ -68,17 +75,46 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
     //currently populating with fake data
     private void showGroupList() {
         personArray.clear();
-        String[] nameList = getResources().getStringArray(R.array.dummy_group_name_list);
-        for (String s : nameList) {
-            personArray.add(new Person(s));
-        }
-    }
+        executorService.execute(() -> {
+            GroupAdapter grpAdapter = new GroupAdapter();
+            grpAdapter.get(new BaseDatabase.ListCallback<Group>() {
+                @Override
+                public void onListLoaded(List<Group> groups) {
+                    ArrayList<Group> tempList = new ArrayList<>();
 
+                    for (Group group : groups) {
+                        Log.d("group", group.getGroupId() + " - " + group.getGroupName()+ " - " +group.getGroupCreatedDate() + " - " +group.getGroupAmount() );
+                        tempList.add(new Group(
+                                group.getGroupId(),
+                                group.getGroupName(),
+                                "Created " + group.getGroupCreatedDate(),
+                                group.getGroupAmount(),
+                                group.getPeopleInvolved()
+                        ));
+                    }
+
+                    // Update UI on the main thread
+                    mainHandler.post(() -> {
+                        personArray.clear();
+                        personArray.addAll(tempList);
+                        adapter.notifyDataSetChanged();
+                    });
+
+                    Log.d("notification", personArray.toString());
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    Log.e("FirebaseError", error.getMessage());
+                }
+            });
+        });
+}
         @Override
         public void onButtonClick (int position){
-            personArray.get(position).setSelected(true);
+            //personArray.get(position).setSelected(true);
             personView.getAdapter().notifyItemChanged(position);
-            String selectedGroupName = personArray.get(position).getPersonName();
+            String selectedGroupName = "";//personArray.get(position).getPersonName();
             AddPeople addpeoplePage = (AddPeople) getActivity();
             if (addpeoplePage != null) {
                 addpeoplePage.selectGroup(selectedGroupName);

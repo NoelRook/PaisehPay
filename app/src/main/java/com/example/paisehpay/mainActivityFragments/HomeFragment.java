@@ -141,17 +141,28 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     }
 
     private void showGroupList() {
-
+        PreferenceManager pref = new PreferenceManager(getContext());
+        User curUser = pref.getUser();
         executorService.execute(() -> {
             GroupAdapter grpAdapter = new GroupAdapter();
-            grpAdapter.get(new BaseDatabase.ListCallback<Group>() {
+            grpAdapter.getGroupsForUser(curUser.getId(),new BaseDatabase.ListCallback<Group>() {
                 @Override
                 public void onListLoaded(List<Group> groups) {
                     ArrayList<Group> tempList = new ArrayList<>();
 
                     for (Group group : groups) {
-                        Log.d("group", group.getGroupId() + " - " + group.getGroupName()+ " - " +group.getGroupCreatedDate() + " - " +group.getGroupAmount() );
-                        tempList.add(new Group(group.getGroupId(),group.getGroupName(), "Created " +group.getGroupCreatedDate() ));
+                        Log.d("GroupData",
+                                "ID: " + group.getGroupId() +
+                                        ", Name: " + group.getGroupName() +
+                                        ", Date: " + group.getGroupCreatedDate() +
+                                        ", Amount: " + group.getGroupAmount());
+                        tempList.add(new Group(
+                                group.getGroupId(),
+                                group.getGroupName(),
+                                "Created " + group.getGroupCreatedDate(),
+                                group.getGroupAmount(),
+                                group.getPeopleInvolved()
+                        ));
                     }
 
                     // Update UI on the main thread
