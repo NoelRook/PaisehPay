@@ -226,14 +226,15 @@ public class SignIn extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Sign in success
                         FirebaseUser user = mAuth.getCurrentUser();
+                        Log.d("cur user", user.getUid());
                         if (user != null) {
-
                             // Get additional user data from Realtime Database
                             mDatabase.child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     User userData = dataSnapshot.getValue(User.class);
+                                    Log.d("asdasd",dataSnapshot.toString());
                                     userData.setId(dataSnapshot.getKey());
 
                                     if (userData != null) {

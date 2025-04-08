@@ -74,12 +74,10 @@ public class User  {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("id", id);
         result.put("email", email);
         result.put("username", username);
         result.put("friendKey", friendKey);
         result.put("friends", friends);
-        result.put("isSelected", isSelected);
         return result;
     }
 }

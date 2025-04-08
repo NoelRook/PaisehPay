@@ -19,6 +19,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -111,21 +113,6 @@ public class SignUp extends AppCompatActivity {
                     usernameinp.setError("Username already exists");
                     return;
                 }
-
-                Log.d("SignUp","test test");
-                //Create user in Firebase Auth
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        //save additional user data to Realtime DB
-                        executorService.execute(() -> {
-                            saveUserToDatabase(username, email);
-                        });
-
-
-                    } else{
-                        Toast.makeText(SignUp.this, "Sign up failed: " + task.getException(), Toast.LENGTH_SHORT).show();
-                    }
-                });
                 //Create user in Firebase Auth
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -169,16 +156,24 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void saveUserToDatabase(String username, String email){
+
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user==null) return;
-
+        UserAdapter adapter = new UserAdapter();
         //Store under "Users/{uid}"
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("email", email);
-        userData.put("username", username);
+        User newUser = new User(
+                user.getUid(),  // Set the Firebase UID as the user ID
+                email,
+                username,
+                adapter.genFriendKey(email),  // Generate friend key
+                null  // Initialize friends list as null
+        );
 
-        usersRef.child(user.getUid()).setValue(userData).addOnSuccessListener(aVoid -> {
+
+
+        usersRef.child(user.getUid()).setValue(newUser).addOnSuccessListener(aVoid -> {
             //also store a reverse mapping for username uniqueness checks
             DatabaseReference usernamesRef = FirebaseDatabase.getInstance().getReference("Username");
 

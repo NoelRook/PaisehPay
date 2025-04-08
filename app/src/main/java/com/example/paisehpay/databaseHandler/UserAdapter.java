@@ -1,5 +1,7 @@
 package com.example.paisehpay.databaseHandler;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Group;
@@ -46,7 +48,7 @@ public class UserAdapter extends BaseDatabase  {
             callback.onError(DatabaseError.fromException(new Exception("Failed to generate user ID")));
             return;
         }
-        user.setUserId(userId);
+        //user.setUserId(userId);
 
         user.setFriendKey(genFriendKey(user.getEmail()));
         databaseRef.child(userId).setValue(user.toMap())
@@ -130,10 +132,9 @@ public class UserAdapter extends BaseDatabase  {
                     }
                 });
     }
-    private String genFriendKey(String email){
+    public String genFriendKey(String email){
         Date now = Calendar.getInstance().getTime();
         String key = now.getTime() + email;
-        System.out.println(key);
 
         CRC32 crc = new CRC32();
         crc.update(key.getBytes());
@@ -144,8 +145,11 @@ public class UserAdapter extends BaseDatabase  {
 
         // Ensure exactly 8 characters (pad with zeros or truncate)
         if (base36.length() > 8) {
+            Log.d("genKey",base36.substring(0, 8));
+
             return base36.substring(0, 8);
         } else {
+            Log.d("genKey",String.format("%8s", base36).replace(' ', '0'));
             return String.format("%8s", base36).replace(' ', '0');
         }
     }
