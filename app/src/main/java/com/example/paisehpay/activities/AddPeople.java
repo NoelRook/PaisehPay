@@ -160,6 +160,9 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                 } else {
                     Log.d("AddPeople", "Name: " + expenseName + " Group: " + expenseGroup + " Category: " + expenseCategory + " Date: " + expenseDate + " Amount: " + expenseAmount);
                     Expense expense = new Expense(expenseName,expenseDate,null,null,expenseAmount,expenseCategory,itemArray);
+
+                    //store in db
+
                     Intent intent = new Intent(AddPeople.this, BillSplit.class);
                     intent.putExtra("Expense",expense);
                     startActivity(intent);

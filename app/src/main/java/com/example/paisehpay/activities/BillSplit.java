@@ -33,6 +33,7 @@ public class BillSplit extends AppCompatActivity {
     Button homeButton;
     Expense expense;
     ArrayList<Item> itemArray;
+    TextView expenseName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,9 @@ public class BillSplit extends AppCompatActivity {
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.expense_details);
+
+        expenseName = findViewById(R.id.expense_name);
+        expenseName.setText(expense.getExpenseTitle());
 
         //press back arrow lead back to home fragment
         backArrow = findViewById(R.id.back_arrow);

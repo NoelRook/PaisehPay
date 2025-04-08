@@ -44,7 +44,6 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     TextView welcomeMessage;
     Button oweDetailsButton;
     Button owedDetailsButton;
-    Button groupButton;
     Button joinGroupButton;
     Button createGroupButton;
     ConstraintLayout oweLayout;
@@ -62,6 +61,8 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     RecycleViewAdapter_Group adapter;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

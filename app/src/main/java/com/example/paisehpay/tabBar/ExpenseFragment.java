@@ -19,17 +19,18 @@ import java.util.ArrayList;
 public class ExpenseFragment extends Fragment {
 
     //expense fragment that loads below the horizontal scroll bar on grouphomepage
-    private static final String c = "category";
-    private String categoryToLoad;
+    private static final String CATEGORY = "category";
+    String categoryToLoad;
     View rootView;
     RecyclerView expenseView;
     ArrayList<Expense> expenseArray = new ArrayList<>();
+    RecycleViewAdapter_Expense adapter;
 
 
     public static ExpenseFragment newInstance(String category) {
         ExpenseFragment fragment = new ExpenseFragment();
         Bundle args = new Bundle();
-        args.putString(c, category);
+        args.putString(CATEGORY, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,7 +39,7 @@ public class ExpenseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            categoryToLoad = getArguments().getString(c);
+            categoryToLoad = getArguments().getString(CATEGORY);
         }
     }
 
@@ -51,10 +52,10 @@ public class ExpenseFragment extends Fragment {
 
         //show expense list
         expenseView = rootView.findViewById(R.id.recycle_view_expense);
-        showExpenseList();
-        RecycleViewAdapter_Expense adapter = new RecycleViewAdapter_Expense(getActivity(),expenseArray);
+        adapter = new RecycleViewAdapter_Expense(getActivity(),expenseArray);
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        showExpenseList();
 
         return rootView;
 
@@ -70,9 +71,15 @@ public class ExpenseFragment extends Fragment {
 
 
         for (int i = 0; i<expenseCategoryList.length; i++){
-            expenseArray.add(new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],expenseCategoryList[i], null));
-
+            String category = expenseCategoryList[i];
+            if (category.equals(categoryToLoad)){
+                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],category, null);
+                expenseArray.add(expense);
+            }
         }
+        adapter.notifyDataSetChanged();
+
+        //call from db all expense items
     }
 
     // <!-- TODO: 1. when user clicks horizontal tab bar with categories, pass category name data into this fragment-->

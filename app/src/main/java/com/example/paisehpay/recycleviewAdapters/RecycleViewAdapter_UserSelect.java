@@ -11,38 +11,39 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.Person;
+import com.example.paisehpay.blueprints.Group;
+import com.example.paisehpay.blueprints.User;
 
 import java.util.ArrayList;
 
-public class RecycleViewAdapter_Person extends RecyclerView.Adapter<RecycleViewAdapter_Person.MyViewHolder> {
+public class RecycleViewAdapter_UserSelect extends RecyclerView.Adapter<RecycleViewAdapter_UserSelect.MyViewHolder> {
 
     Context context;
-    ArrayList<Person> personArray;
+    ArrayList<User> userArray;
     private final RecycleViewInterface recycleViewInterface;
 
 
-    public RecycleViewAdapter_Person(Context context, ArrayList<Person> personArray, RecycleViewInterface recycleViewInterface){
+    public RecycleViewAdapter_UserSelect(Context context, ArrayList<User> userArray, RecycleViewInterface recycleViewInterface){
         this.context = context;
-        this.personArray = personArray;
+        this.userArray = userArray;
         this.recycleViewInterface = recycleViewInterface;
     }
 
     @NonNull
     @Override
-    public RecycleViewAdapter_Person.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecycleViewAdapter_UserSelect.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.person_recycle_view_row,parent,false);
 
-        return new RecycleViewAdapter_Person.MyViewHolder(view, recycleViewInterface);
+        return new RecycleViewAdapter_UserSelect.MyViewHolder(view, recycleViewInterface);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapter_Person.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecycleViewAdapter_UserSelect.MyViewHolder holder, int position) {
         //assign values to the views
-        holder.nameText.setText(personArray.get(position).getPersonName());
-        if(personArray.get(position).isSelected()){
+        holder.nameText.setText(userArray.get(position).getUsername());
+        if(userArray.get(position).isSelected()){
             holder.groupButton.setImageResource(R.drawable.added_icon);
             holder.groupButton.setSelected(false);
         } else {
@@ -56,7 +57,7 @@ public class RecycleViewAdapter_Person extends RecyclerView.Adapter<RecycleViewA
     @Override
     public int getItemCount() {
         //number of items want displayed
-        return personArray.size();
+        return userArray.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

@@ -3,12 +3,14 @@ public class User  {
     String id;
     String email;
     String username;
+    private boolean isSelected;
 
     public User(){}
     public User(String id, String email, String username){
         this.id = id;
         this.email = email;
         this.username = username;
+        this.isSelected = false;
     }
 
     public void setUserId(String key) {
@@ -37,5 +39,12 @@ public class User  {
 
     public void setId(String key) {
         this.id = key;
+    }
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
     }
 }
