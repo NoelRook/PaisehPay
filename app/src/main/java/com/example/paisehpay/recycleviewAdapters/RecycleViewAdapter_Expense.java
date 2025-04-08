@@ -1,17 +1,18 @@
 package com.example.paisehpay.recycleviewAdapters;
 
-
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.activities.GroupHomepage;
 import com.example.paisehpay.blueprints.Expense;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleViewAdapter_Expense.MyViewHolder> {
     Context context;
     ArrayList<Expense> expenseArray;
+
 
 
     public RecycleViewAdapter_Expense(Context context, ArrayList<Expense> expenseArray){
@@ -45,12 +47,12 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         holder.expenseActionText.setText(expenseArray.get(position).getExpenseAction());
         holder.expenseAmountText.setText(expenseArray.get(position).getExpenseAmount());
 
+
     }
 
     @Override
     public int getItemCount() {
         //number of items want displayed
-        Log.d("RecycleViewAdapter", "Item count: " + expenseArray.size());
         return expenseArray.size();
     }
 

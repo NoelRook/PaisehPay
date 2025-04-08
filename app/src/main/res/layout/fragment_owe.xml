@@ -4,7 +4,7 @@
     android:layout_width="350dp"
     android:layout_height="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/layout_border_light_mode"
+    android:background="@drawable/background1"
     tools:context=".dialogFragments.DialogFragment_Owe">
 
     <TextView
@@ -68,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:layout_margin="10dp"
-        android:background="@drawable/layout_border_highlight3_mode"
+        android:background="@drawable/layout_border_highlight1_mode"
         android:visibility="visible"
         android:contentDescription="@string/expense_amount"
         app:layout_constraintTop_toBottomOf="@id/amount"

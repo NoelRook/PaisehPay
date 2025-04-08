@@ -174,10 +174,6 @@
     <string name="item_price_prompt">Enter your item price</string>
 
 
-
-
-
-
     //after split bill
     <string name="summary">Summary</string>
     <string name="bill_split">Bill has been split!</string>
@@ -201,6 +197,8 @@
     <string name="log_out">Log Out</string>
     <string name="light_mode">Light Mode</string>
     <string name="privacy">Privacy</string>
+    <string name="user_code">User Code</string>
+    <string name="user_code_test">12345678</string>
     <string name="phone_test">+65 0000 0000</string>
 
 

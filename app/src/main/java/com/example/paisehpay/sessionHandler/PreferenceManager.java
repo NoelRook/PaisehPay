@@ -28,7 +28,7 @@ public class PreferenceManager {
 
     // Save user data
     public void saveUser(User user) {
-        Log.d("savedUseredit", user.getId() +user.getUsername() +user.getEmail());
+        Log.d("savedUseredit", user.getId() +user.getUsername() +user.getEmail()+user.getFriendKey());
         editor.putString(KEY_USER_ID, user.getId());
         editor.putString(KEY_USERNAME, user.getUsername());
         editor.putString(KEY_EMAIL, user.getEmail());
@@ -45,7 +45,7 @@ public class PreferenceManager {
         String friendKey = sharedPreferences.getString(KEY_FRIENDKEY, null);
 
         if (username != null && email != null) {
-            return new User(id, username, email, null, null);
+            return new User(id, email, username, friendKey, null);
         }
         return null;
     }

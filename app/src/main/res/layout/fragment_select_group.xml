@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/text_colour_light_mode"
+    android:background="@drawable/background1"
     tools:context=".dialogFragments.DialogFragment_SelectGroup">
 
     <TextView

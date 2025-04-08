@@ -237,6 +237,7 @@ public class SignIn extends AppCompatActivity {
                                     Log.d("asdasd",dataSnapshot.toString());
                                     userData.setId(dataSnapshot.getKey());
 
+
                                     if (userData != null) {
                                         // Successful login with user data
                                         Intent intent = new Intent(SignIn.this, MainActivity.class);
@@ -251,6 +252,8 @@ public class SignIn extends AppCompatActivity {
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
+                                    Log.d("DATA",databaseError.toString());
+
                                     Toast.makeText(SignIn.this, "Failed to load user data.", Toast.LENGTH_SHORT).show();
                                 }
                             });
