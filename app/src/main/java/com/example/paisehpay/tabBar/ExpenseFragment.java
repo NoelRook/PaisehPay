@@ -73,7 +73,7 @@ public class ExpenseFragment extends Fragment {
         for (int i = 0; i<expenseCategoryList.length; i++){
             String category = expenseCategoryList[i];
             if (category.equals(categoryToLoad)){
-                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],category, null);
+                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],category, null,null);
                 expenseArray.add(expense);
             }
         }

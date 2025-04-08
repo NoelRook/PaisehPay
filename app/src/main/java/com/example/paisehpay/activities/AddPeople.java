@@ -159,7 +159,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     Toast.makeText(AddPeople.this, "you haven't added people to ur item", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d("AddPeople", "Name: " + expenseName + " Group: " + expenseGroup + " Category: " + expenseCategory + " Date: " + expenseDate + " Amount: " + expenseAmount);
-                    Expense expense = new Expense(expenseName,expenseDate,null,null,expenseAmount,expenseCategory,itemArray);
+                    Expense expense = new Expense(expenseName,expenseDate,null,null,expenseAmount,expenseCategory,null, itemArray);
 
                     //store in db
 

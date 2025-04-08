@@ -37,7 +37,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapter_Expense.MyViewHolder holder, int position) {
         //assign values to the views
-        holder.expenseTitleText.setText(expenseArray.get(position).getExpenseTitle());
+        holder.expenseTitleText.setText(expenseArray.get(position).getDescription());
         holder.expenseDateText.setText(expenseArray.get(position).getExpenseDate());
         holder.expensePaidByText.setText(expenseArray.get(position).getExpensePaidBy());
         holder.expenseActionText.setText(expenseArray.get(position).getExpenseAction());

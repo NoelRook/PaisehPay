@@ -17,9 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.blueprints.Person;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupSelect;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_UserSelect;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 

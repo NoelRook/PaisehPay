@@ -16,12 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.AddPeople;
 import com.example.paisehpay.blueprints.Group;
-import com.example.paisehpay.blueprints.Person;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupSelect;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Person;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 import com.google.firebase.database.DatabaseError;
 
@@ -41,7 +39,6 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
-    RecycleViewAdapter_Person adapter = new RecycleViewAdapter_Person(getActivity(),personArray,this);
 
 
     @Nullable

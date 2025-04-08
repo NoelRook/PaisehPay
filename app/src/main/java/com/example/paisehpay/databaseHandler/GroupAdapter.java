@@ -1,5 +1,7 @@
 package com.example.paisehpay.databaseHandler;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Group;
@@ -130,6 +132,7 @@ public class GroupAdapter extends BaseDatabase{
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Group> userGroups = new ArrayList<>();
                 for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
+                    Log.d("DataSnapshot",groupSnapshot.toString());
                     Group group = groupSnapshot.getValue(Group.class);
                     if (group != null && group.containsUser(userId)) {
                         group.setGroupId(groupSnapshot.getKey());

@@ -57,7 +57,7 @@ public class BillSplit extends AppCompatActivity {
         toolbarTitleText.setText(R.string.expense_details);
 
         expenseName = findViewById(R.id.expense_name);
-        expenseName.setText(expense.getExpenseTitle());
+        expenseName.setText(expense.getDescription());
 
         //press back arrow lead back to home fragment
         backArrow = findViewById(R.id.back_arrow);

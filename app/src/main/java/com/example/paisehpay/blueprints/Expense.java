@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Expense {
+public class Expense implements Parcelable {
     //expense object used in recycleview of grouphomepage
 
     String expenseId;
@@ -21,10 +21,10 @@ public class Expense {
     String expenseAction;
     String expenseAmount;
     String expenseCategory;
-    List<Item> expenseItems;
+    ArrayList<Item> expenseItems;
 
-    public Expense(String expenseTitle,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, String GroupId ,List<Item> expenseItems){
-        this.description = expenseTitle;
+    public Expense(String description,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, String GroupId ,ArrayList<Item> expenseItems){
+        this.description = description;
         this.expenseDate = expenseDate;
         this.expensePaidBy = expensePaidBy;
         this.expenseAction = expenseAction;
@@ -44,7 +44,7 @@ public class Expense {
         expenseItems = in.createTypedArrayList(Item.CREATOR);
     }
 
-    public static final Parcelable.Creator<Expense> CREATOR = new Creator<Expense>() {
+    public static final Parcelable.Creator<Expense> CREATOR = new Parcelable.Creator<Expense>() {
         @Override
         public Expense createFromParcel(Parcel in) {
             return new Expense(in);
@@ -78,7 +78,7 @@ public class Expense {
 
     public String getExpenseCategory() {return expenseCategory;}
 
-    public List<Item> getExpenseItems() {
+    public ArrayList<Item> getExpenseItems() {
         return expenseItems;
     }
 
