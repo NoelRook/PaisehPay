@@ -105,9 +105,19 @@ public class SignUp extends AppCompatActivity {
                     usernameinp.setError("Username already exists");
                     return;
                 }
+
+                Log.d("SignUp","test test");
+                //Create user in Firebase Auth
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        //save additional user data to Realtime DB
+                        saveUserToDatabase(username, email);
+                    } else{
+                        Toast.makeText(SignUp.this, "Sign up failed: " + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
                 });
-            //Create user in Firebase Auth
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                //Create user in Firebase Auth
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     //save additional user data to Realtime DB
                     saveUserToDatabase(username, email);
@@ -122,9 +132,8 @@ public class SignUp extends AppCompatActivity {
             //startActivity(intent);
             //overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             //finish();
+            });
         });
-
-
     }
 
     private boolean isValidEmail(String email){

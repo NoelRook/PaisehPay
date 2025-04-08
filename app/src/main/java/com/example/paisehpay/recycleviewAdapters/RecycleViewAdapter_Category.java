@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.Category;
 import com.example.paisehpay.blueprints.Expense;
 
 import java.util.ArrayList;
@@ -19,13 +20,15 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
      //adapter for category recycle view
 
     Context context;
-    ArrayList<Expense> categoryArray;
+    ArrayList<Category> categoryArray;
     private int selectedPosition = RecyclerView.NO_POSITION; // Stores the selected button index
+    private String selectedCategoryName = null;
+    private RecycleViewListener listener;
 
-
-    public RecycleViewAdapter_Category(Context context, ArrayList<Expense> categoryArray){
+    public RecycleViewAdapter_Category(Context context, ArrayList<Category> categoryArray,RecycleViewListener listener){
         this.context = context;
         this.categoryArray = categoryArray;
+        this.listener = listener;
     }
 
     @NonNull
@@ -40,8 +43,8 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
 
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapter_Category.MyViewHolder holder, int position) {
-        Expense category = categoryArray.get(position);
-        holder.nameText.setText(category.getExpenseCategory());
+        Category category = categoryArray.get(position);
+        holder.nameText.setText(category.getCategoryName());
 
 
 
@@ -49,22 +52,27 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
         if (holder.getAdapterPosition() == selectedPosition) {
             holder.categoryButton.setImageResource(R.drawable.added_icon);  // Image for selected state
         } else {
-            holder.categoryButton.setImageResource(category.getExpenseIcon());  // Default image
+            holder.categoryButton.setImageResource(category.getCategoryIcon());  // Default image
         }
 
         // Set click listener for the ImageButton
         holder.categoryButton.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
             // If the clicked item is already selected, unselect it
-            if (holder.getAdapterPosition() == selectedPosition) {
+            if (currentPosition == selectedPosition) {
                 selectedPosition = -1; // Unselect the item
+                selectedCategoryName = null;
+                listener.onSelected(null);
             } else {
-                selectedPosition = holder.getAdapterPosition() ; // Select the new item
+                int previousSelected = selectedPosition;
+                selectedPosition = currentPosition;
+                selectedCategoryName = categoryArray.get(currentPosition).getCategoryName(); // Save name
+                notifyItemChanged(previousSelected); // Unselect previous
+                notifyItemChanged(currentPosition);
+                if (listener != null) {
+                    listener.onSelected(selectedCategoryName); // ✅ send it to activity
+                }
             }
-            notifyItemChanged(holder.getAdapterPosition()); // Update the item at the given position
-            if (selectedPosition != -1 && selectedPosition != holder.getAdapterPosition()) {
-                // If another item was selected, notify that item as well
-                notifyItemChanged(selectedPosition);
-            } // Refresh the RecyclerView to update the images
         });
 
     }

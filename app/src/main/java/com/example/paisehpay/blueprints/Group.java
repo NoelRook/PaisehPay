@@ -11,6 +11,7 @@ public class Group {
     String groupCreatedDate;
     String groupAmount = "No expenses recorded yet";
     private HashMap<String, String> peopleInvolved; // Changed to HashMap to match your structure
+    private boolean isSelected;
     public Group() {}
     public Group(String id, String groupName, String groupCreatedDate, String groupAmount, HashMap<String, String> peopleInvolved) {
         this.groupId = id;
@@ -18,7 +19,9 @@ public class Group {
         this.groupCreatedDate = groupCreatedDate;
         this.groupAmount = groupAmount;
         this.peopleInvolved = peopleInvolved;
+        this.isSelected = false;
     }
+
     public String getGroupId() {
         return groupId;
     }
@@ -41,6 +44,14 @@ public class Group {
 
     public void setGroupId(String key) {
         this.groupId = key;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
     }
 
     public HashMap<String, String> getPeopleInvolved() {

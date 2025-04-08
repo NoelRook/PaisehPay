@@ -4,8 +4,6 @@ import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.activities.AddPeople;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.Person;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Person;
+import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupSelect;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_UserSelect;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 
 import java.util.ArrayList;
@@ -30,8 +29,8 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
     //popup when u select group during addpeople page
 
     View rootView;
-    RecyclerView personView;
-    ArrayList<Person> personArray = new ArrayList<>();
+    RecyclerView userView;
+    ArrayList<User> userArray = new ArrayList<>();
     ArrayList<String> selectedPeople = new ArrayList<>();
     Button confirmButton;
     private static final String DATA_TO_QUERY = "data_to_query";
@@ -42,6 +41,7 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
 
     private static final String ITEM = "item";
     private Item item;
+    RecycleViewAdapter_UserSelect adapter;
 
 
 
@@ -71,11 +71,11 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
             item = getArguments().getParcelable(ITEM);
         }
 
-        personView = rootView.findViewById(R.id.select_group_recycle);
+        userView = rootView.findViewById(R.id.select_group_recycle);
         showPersonList();
-        RecycleViewAdapter_Person adapter = new RecycleViewAdapter_Person(getActivity(),personArray,this);
-        personView.setAdapter(adapter);
-        personView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new RecycleViewAdapter_UserSelect(getActivity(),userArray,this);
+        userView.setAdapter(adapter);
+        userView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }
 
@@ -91,10 +91,10 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
 
     //currently populating with fake data
     private void showPersonList() {
-        personArray.clear();
+        userArray.clear();
         String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list);
         for (String s : nameList) {
-            personArray.add(new Person(s));
+            userArray.add(new User(null,null,s));
             }
         }
 
@@ -112,8 +112,8 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
 
     @Override
     public void onButtonClick(int position) {
-        personArray.get(position).setSelected(!personArray.get(position).isSelected());
-        personView.getAdapter().notifyItemChanged(position);
+        userArray.get(position).setSelected(!userArray.get(position).isSelected());
+        userView.getAdapter().notifyItemChanged(position);
         confirmButton = rootView.findViewById(R.id.confirm_button);
         confirmButton.setVisibility(VISIBLE);
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -134,9 +134,9 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
 
     private void updateSelectedPeopleList() {
         selectedPeople.clear();
-        for (Person person : personArray) {
-            if (person.isSelected()) {
-                selectedPeople.add(person.getPersonName());
+        for (User user : userArray) {
+            if (user.isSelected()) {
+                selectedPeople.add(user.getUsername());
             }
         }
     }

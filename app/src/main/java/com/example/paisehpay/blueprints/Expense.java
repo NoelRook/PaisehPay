@@ -1,5 +1,10 @@
 package com.example.paisehpay.blueprints;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +33,28 @@ public class Expense {
         this.expenseCategory = expenseCategory;
         this.expenseItems = expenseItems;
     }
+
+    protected Expense(Parcel in) {
+        description = in.readString();
+        expenseDate = in.readString();
+        expensePaidBy = in.readString();
+        expenseAction = in.readString();
+        expenseAmount = in.readString();
+        expenseCategory = in.readString();
+        expenseItems = in.createTypedArrayList(Item.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Expense> CREATOR = new Creator<Expense>() {
+        @Override
+        public Expense createFromParcel(Parcel in) {
+            return new Expense(in);
+        }
+
+        @Override
+        public Expense[] newArray(int size) {
+            return new Expense[size];
+        }
+    };
 
     public String getExpenseAction() {
         return expenseAction;
@@ -69,6 +96,22 @@ public class Expense {
         result.put("totalAmount", expenseAmount);
         result.put("items", expenseItems);
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(description);
+        parcel.writeString(expenseDate);
+        parcel.writeString(expensePaidBy);
+        parcel.writeString(expenseAction);
+        parcel.writeString(expenseAmount);
+        parcel.writeString(expenseCategory);
+        parcel.writeTypedList(expenseItems);
     }
 }
 

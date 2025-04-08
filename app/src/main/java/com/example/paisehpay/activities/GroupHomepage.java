@@ -21,11 +21,15 @@ import com.example.paisehpay.tabBar.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.ArrayList;
+
 public class GroupHomepage extends AppCompatActivity {
     //this is the page when user clicks group hompage
     TextView toolbarTitleText;
     ImageView backArrow;
     Button groupSettingButton;
+
+    ArrayList<String> categoryArray = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +47,28 @@ public class GroupHomepage extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
-        // Add fragments to adapter
-        //we
-        adapter.addFragment(new ExpenseFragment(), getString(R.string.overall));
-        adapter.addFragment(new ExpenseFragment(), getString(R.string.food));
-        adapter.addFragment(new ExpenseFragment(), getString(R.string.transport));
-        adapter.addFragment(new ExpenseFragment(), getString(R.string.shopping));
-        adapter.addFragment(new ExpenseFragment(),getString(R.string.utilities));
-        adapter.addFragment(new ExpenseFragment(), getString(R.string.entertainment));
-        adapter.addFragment(new ExpenseFragment(), getString(R.string.rent));
-        adapter.addFragment(new ExpenseFragment(), getString(R.string.health));
+        //add categories
+        categoryArray.add(getString(R.string.overall));
+        categoryArray.add(getString(R.string.food));
+        categoryArray.add(getString(R.string.transport));
+        categoryArray.add(getString(R.string.shopping));
+        categoryArray.add(getString(R.string.utilities));
+        categoryArray.add(getString(R.string.entertainment));
+        categoryArray.add(getString(R.string.rent));
+        categoryArray.add(getString(R.string.health));
+
+        for (String category: categoryArray){
+            adapter.addFragment(ExpenseFragment.newInstance(category),category);
+        }
         viewPager.setAdapter(adapter);
 
-        // Connect TabLayout and ViewPager
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             tab.setText(adapter.getTitle(position));
-
-            // Load the corresponding fragment in the FrameLayout
-            Fragment fragment = new ExpenseFragment(); // Use your actual filter fragment
-            Bundle args = new Bundle();
-            args.putString("category", adapter.getTitle(position)); // Pass category to fragment
-            fragment.setArguments(args);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.expense_filter_fragment, fragment)
-                    .commit();
         }).attach();
+
+        adapter.notifyDataSetChanged();
+
+
 
 
         //modify toolbar text based on page

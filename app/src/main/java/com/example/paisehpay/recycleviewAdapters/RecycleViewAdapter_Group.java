@@ -22,6 +22,7 @@ public class RecycleViewAdapter_Group extends RecyclerView.Adapter<RecycleViewAd
     ArrayList<Group> groupArray;
 
 
+
     public RecycleViewAdapter_Group(Context context, ArrayList<Group> groupArray){
         this.context = context;
         this.groupArray = groupArray;
