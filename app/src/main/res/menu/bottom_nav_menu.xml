@@ -17,5 +17,3 @@
         android:icon="@drawable/nav_user"
         android:id="@+id/profile"/>
 </menu>
-
-    <!-- TODO: 1. change colour, font for bar  -->

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Expense;
@@ -18,6 +19,8 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Expense;
 import java.util.ArrayList;
 
 public class ExpenseFragment extends Fragment {
+
+    //this is the page that allows u to filter expenses on groupHomepage
 
     private static final String CATEGORY = "category";
     private String categoryToLoad;
@@ -39,29 +42,33 @@ public class ExpenseFragment extends Fragment {
         if (getArguments() != null) {
             categoryToLoad = getArguments().getString(CATEGORY);  // Retrieve category
         }
-        Log.d("Expense",categoryToLoad);
+        //Log.d("ExpenseCategory",categoryToLoad);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_expense, container, false);
         expenseView = rootView.findViewById(R.id.recycle_view_expense);
-        showExpenseList();
-        Log.d("ExpenseDebug", "Loaded expense items: " + expenseArray.size());
-        expenseArray.add(new Expense("Test title", "Today", "Iris", "You paid", "$123", "Food", null, null));
         adapter = new RecycleViewAdapter_Expense(getActivity(), expenseArray);
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        expenseView.scrollToPosition(0);
+        expenseView.setHasFixedSize(true);
 
-        // Load data when fragment is created
-        adapter.notifyDataSetChanged();
+        showExpenseList();
         return rootView;
     }
 
-    // Load data based on category selection
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+
+    // shows all the expenses, might swap with actual data
     private void showExpenseList() {
-        // Dummy data arrays (use actual data in production)
+        expenseArray.clear();
         String[] expenseTitleList = getResources().getStringArray(R.array.dummy_expense_title_list);
         String[] expenseDateList = getResources().getStringArray(R.array.dummy_expense_date_list);
         String[] expensePaidByList = getResources().getStringArray(R.array.dummy_expense_paid_by_list);
@@ -70,17 +77,16 @@ public class ExpenseFragment extends Fragment {
         String[] expenseCategoryList = getResources().getStringArray(R.array.category_name_array);
 
         for (int i =0; i<expenseCategoryList.length;i++){
-            if (expenseCategoryList[i].equals(categoryToLoad)){
-                Log.d("CategoryCompare", "Comparing " + expenseCategoryList[i] + " with " + categoryToLoad);
-                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],categoryToLoad,null,null);
-                Log.d("Expense",expense.getDescription()+expense.getExpenseCategory());
+            if (expenseCategoryList[i].trim().equalsIgnoreCase(categoryToLoad.trim())) {
+                //Log.d("CategoryCompare", "Fragment received category: [" + categoryToLoad + "]");
+                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],categoryToLoad,null,null);;
                 expenseArray.add(expense);
             } else if (categoryToLoad.equals("Overall")){
                 Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],expenseCategoryList[i],null,null);
-                Log.d("Expense",expense.getDescription()+expense.getExpenseCategory());
                 expenseArray.add(expense);
             }
         }
+        adapter.notifyDataSetChanged();
 
     }
 }

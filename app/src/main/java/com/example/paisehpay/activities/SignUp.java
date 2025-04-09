@@ -192,10 +192,4 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    // <!-- TODO: 1. checks if data is all filled  -->
-    // <!-- TODO: 2. check if data is correct type  -->
-    // <!-- TODO: 3. check if password matches  -->
-    // <!-- TODO: 4. stuff info in db  -->
-    // <!-- TODO: 5. hen all gd, change text on sign up button to say 'you have successfully signed up!' then intent after a time delay  -->
-
     }

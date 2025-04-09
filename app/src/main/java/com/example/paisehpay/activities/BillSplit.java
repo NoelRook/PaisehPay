@@ -102,9 +102,4 @@ public class BillSplit extends AppCompatActivity {
             }
         }
     }
-
-    // <!-- TODO: 1. do math to figure out who owes you -->
-    // <!-- TODO: 2. assign expense data to various users in db  -->
-    // <!-- TODO: 3. replace data from db, call avatar of user that owes you -->
-    // <!-- TODO: 4. reformat string with user data  -->
 }

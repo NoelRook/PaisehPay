@@ -102,11 +102,4 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         adapter.notifyDataSetChanged();
     }
 
-    // <!-- TODO: 1. query data from db  -->
-    // <!-- TODO: 2. (iris will prob do) press add members button then lead to popup asking to add friend -->
-    // <!-- TODO: 3. query added friend from friend db, add them into this group -->
-    // <!-- TODO: 4. figure out a way to isolate a certain button data in the recycleview (ie u remove a friend) how to catch that data for that particular user?-->
-    // <!-- TODO: 5. afterwards update group db and remove user from group  -->
-    // <!-- TODO: 6. bind delete group button so that the group is deleted from db, removing this groups' homepage and group setting page as well as their box in the homefragment  -->
-
 }

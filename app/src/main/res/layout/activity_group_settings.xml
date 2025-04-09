@@ -25,27 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/group_code_text"
-                style="@style/textViewMediumDarkMode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="@string/group_code"
-                app:layout_constraintBottom_toTopOf="@id/group_code"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/group_code"
-                style="@style/textViewBigLightMode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/layout_border_highlight1_mode"
-                android:text="@string/code"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/group_code_text" />
 
             <TextView
                 android:id="@+id/group_members"
@@ -55,7 +34,7 @@
                 android:layout_margin="20dp"
                 android:text="@string/group_members"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/group_code"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycle_view_members"

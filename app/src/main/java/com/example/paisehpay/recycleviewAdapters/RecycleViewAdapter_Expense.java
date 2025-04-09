@@ -2,6 +2,7 @@ package com.example.paisehpay.recycleviewAdapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapter_Expense.MyViewHolder holder, int position) {
         //assign values to the views
+        Log.d("AdapterBind", "Binding expense: " + expenseArray.get(position).getDescription());
         holder.expenseTitleText.setText(expenseArray.get(position).getDescription());
         holder.expenseDateText.setText(expenseArray.get(position).getExpenseDate());
         holder.expensePaidByText.setText(expenseArray.get(position).getExpensePaidBy());

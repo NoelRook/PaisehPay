@@ -94,10 +94,7 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment imp
 
         }
     }
-    // <!-- TODO: 1. write function to store spinner (dropdown box) data  -->
-    // <!-- TODO: 2. filter from db and query data based on user's selected option  -->
-    // <!-- TODO: 3. currently, this dialog fragment is used for both owe and owed. update "who do u owe?" or "who owes you?" -->
-    // <!-- TODO: 4. query owe and owed expenses depending on which button was pressed in the home fragment  -->
+
     @Override
     public void onFilterSelected(String filterType) {
         Log.e("filter","selected: "+ filterType);

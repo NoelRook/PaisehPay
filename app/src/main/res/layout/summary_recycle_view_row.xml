@@ -34,5 +34,3 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- TODO: 1. might actually merge with person_recycle_view_row, almost the same  -->

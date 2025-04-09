@@ -101,8 +101,6 @@ public class GroupHomepage extends AppCompatActivity {
 
             }
         });
-        // <!-- TODO: 3. after clicking any category, send category name to expensefragment so that data can be filtered and queried by db  -->
-
 
     }
 }

@@ -93,5 +93,4 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
         return convertView;
     }
 
-    // <!-- TODO: 1. get data from the spinner and pass to owe recycle view to update -->
 }
