@@ -20,6 +20,32 @@ public class Receipts {
     public Receipts(){
     }
 
+    public void clearAll(){
+        array_of_items.clear();
+        array_of_item_prices.clear();
+    }
+
+    //change item gst cost
+    public void loadItemWithGST(){
+        if (GST && SCT){ //have gst and sct
+            for (int i = 0; i < array_of_item_prices.size();i++){
+                double itemPrice = array_of_item_prices.get(i);
+                array_of_item_prices.set(i,itemPrice*(1+0.09+0.1));
+            }
+        }
+        else if (GST){ //have gst and sct
+            for (int i = 0; i < array_of_item_prices.size();i++){
+                double itemPrice = array_of_item_prices.get(i);
+                array_of_item_prices.set(i,itemPrice*(1+0.09));
+            }
+        }else if (SCT){ //have gst and sct
+            for (int i = 0; i < array_of_item_prices.size();i++){
+                double itemPrice = array_of_item_prices.get(i);
+                array_of_item_prices.set(i,itemPrice*(1+0.1));
+            }
+        }
+    }
+
 
     //ADD FUNCTION
     public void addToReceipt(Item item){

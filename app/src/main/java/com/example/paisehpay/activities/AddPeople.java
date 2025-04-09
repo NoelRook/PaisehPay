@@ -99,12 +99,14 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         Username = user.getUsername();
         id = user.getId();
 
-        //press back arrow lead back to home fragment
+        //press back arrow lead back to receipt overview page
         backArrow = findViewById(R.id.back_arrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AddPeople.this, ReceiptOverview.class);
+
+                instance.clearAll();
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
@@ -206,6 +208,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     //once we add a item, we need tell the adapter that our dataset changed
     private void showItemList() {
         instance = ReceiptInstance.getInstance();
+        instance.loadItemWithGST();
         ArrayList<String> itemNameArray = instance.getArray_of_items();
         ArrayList<Double> itemPriceArray = instance.getArray_of_item_prices();
 
