@@ -50,7 +50,7 @@ public class RecycleViewAdapter_Group extends RecyclerView.Adapter<RecycleViewAd
             public void onClick(View view) {
                 Context context1 = view.getContext();
                 Intent intent = new Intent(context1,GroupHomepage.class);
-                intent.putExtra("GROUP_NAME", groupArray.get(holder.getAdapterPosition()).getGroupName());
+                intent.putExtra("GROUP_ID", groupArray.get(holder.getAdapterPosition()).getGroupId());
                 context1.startActivity(intent);
             }
         });

@@ -42,6 +42,10 @@ public class GroupHomepage extends AppCompatActivity {
             return insets;
         });
 
+        Intent intent = getIntent();
+        String groupID = intent.getStringExtra("GROUP_ID");
+
+
         //this is to link the Viewpager adapter which allows users to access scrollable tab
         TabLayout tabLayout = findViewById(R.id.expense_tab_layout);
         ViewPager2 viewPager = findViewById(R.id.viewPager);
@@ -95,6 +99,7 @@ public class GroupHomepage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GroupHomepage.this, GroupSettings.class);
+                intent.putExtra("GROUP_ID",groupID);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();

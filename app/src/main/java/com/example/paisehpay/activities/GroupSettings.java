@@ -49,6 +49,9 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
             return insets;
         });
 
+        Intent intent = getIntent();
+        String groupId = intent.getStringExtra("GROUP_ID");
+
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.group_settings);
@@ -70,7 +73,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         addMemebersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addMembersFragment = new DialogFragment_AddMembers();
+                addMembersFragment = DialogFragment_AddMembers.newInstance(groupId);
                 addMembersFragment.show(getSupportFragmentManager(), "DialogFragment_AddMembers");
             }
         });

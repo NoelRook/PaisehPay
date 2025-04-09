@@ -21,13 +21,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
+import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_UserSelect;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,6 +51,18 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     PreferenceManager pref;
+    private static final String GROUP_ID =  "group_id";
+    String groupId;
+
+
+    //since we are instantiating the fragment from different locations, we need to be able to differentiate where it is from
+    public static DialogFragment_AddMembers newInstance(String groupId){
+        DialogFragment_AddMembers fragment = new DialogFragment_AddMembers();
+        Bundle args = new Bundle();
+        args.putString(GROUP_ID,groupId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
     @Nullable
@@ -56,6 +72,11 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         // Inflate the layout for this fragment
         super.onCreateView(inflater,container,savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_select_group, container, false);
+
+        if (getArguments() != null){
+            //we will need the pos argument as we are populating RecycleView
+            groupId = getArguments().getString(GROUP_ID);
+        }
 
         grpAdapter = new GroupAdapter();
 
@@ -81,21 +102,43 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
 
     //currently populating with fake data
     private void showPersonList() {
-
+        // Clear the existing list (if any)
         userArray.clear();
-        String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list);//since we now populating fake data
-        String[] emailList = getResources().getStringArray(R.array.dummy_email_list);
-        for (int i = 0; i < nameList.length; i++) {
-            userArray.add(new User(null,emailList[i],nameList[i],null,null));
-            }
-        userArray.add(new User(null,"test@gmail.com","Leanne",null,null)); //we select this ah if not rv also see no change
 
-        executorService.execute(new Runnable() {
+        friendAdapter friendAdapter = new friendAdapter();
+
+        // Get the current user's ID
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Create callback for handling the friend list data
+        BaseDatabase.ListCallback friendsCallback = new BaseDatabase.ListCallback<User>() {
             @Override
-            public void run() {
+            public void onListLoaded(List<User> friends) {
+                // Add all friends to your array
+                userArray.addAll(friends);
+                Log.d("friends", friends.toString());
+
+                // Notify your adapter that data has changed
+                if (friendAdapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
 
             }
-        });
+
+            @Override
+            public void onError(DatabaseError error) {
+                // Show error message
+                Toast.makeText(getContext(), "Failed to load friends: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                Log.e("FriendsList", "Error loading friends", error.toException());
+
+                // You might want to show the dummy data as fallback
+                // showDummyDataAsFallback();
+            }
+        };
+
+        // Call the database function to get real friend data
+        friendAdapter.getFriendsForUser(currentUserId, friendsCallback);
 
     }
 
@@ -126,7 +169,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
                 if (listener != null){
                     //add person here
                     listener.onDataSelected(0,getSelectedPerson());
-                    addPerson(pref.getUser(),groupidhere);
+                    addPerson(pref.getUser(),groupId);
                 }
 
                 // add person here
@@ -149,18 +192,20 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
 //        PreferenceManager pref = new PreferenceManager(requireContext());
 //        User curUser = pref.getUser();
 
+        Log.d("test",groupId + user.toString());
+
         if (user== null) throw new NullPointerException("Current User is null");
-        grpAdapter.addMemberToGroup(groupId,user.getId(),user.getEmail(),new GroupAdapter.OperationCallback(){
+        grpAdapter.addMemberToGroup(groupId,user.getId(),user.getUsername(),new GroupAdapter.OperationCallback(){
             @Override
             public void onSuccess() {
-                Toast.makeText(getContext(), "Group created successfully", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Group created successfully", Toast.LENGTH_SHORT).show();
 
             }
 
             @Override
             public void onError(DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to add Users to group: " + error.getMessage(),
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Failed to add Users to group: " + error.getMessage(),
+               //         Toast.LENGTH_LONG).show();
                 Log.e("CreateGroup", "Error in adding users", error.toException());
 
             }
