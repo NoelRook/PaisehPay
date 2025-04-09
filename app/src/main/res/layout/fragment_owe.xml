@@ -65,7 +65,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/owe_recycle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="350dp"
         android:layout_margin="10dp"
         android:background="@drawable/layout_border_highlight1_mode"

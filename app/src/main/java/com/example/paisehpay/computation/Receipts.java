@@ -2,6 +2,8 @@ package com.example.paisehpay.computation;
 
 import com.example.paisehpay.blueprints.Item;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class Receipts {
@@ -30,18 +32,21 @@ public class Receipts {
         if (GST && SCT){ //have gst and sct
             for (int i = 0; i < array_of_item_prices.size();i++){
                 double itemPrice = array_of_item_prices.get(i);
-                array_of_item_prices.set(i,itemPrice*(1+0.09+0.1));
+                BigDecimal bigDecimal = new BigDecimal(itemPrice*(1+0.09+0.1)).setScale(2, RoundingMode.HALF_UP);
+                array_of_item_prices.set(i, bigDecimal.doubleValue());
             }
         }
-        else if (GST){ //have gst and sct
+        else if (GST){ //have gst
             for (int i = 0; i < array_of_item_prices.size();i++){
                 double itemPrice = array_of_item_prices.get(i);
-                array_of_item_prices.set(i,itemPrice*(1+0.09));
+                BigDecimal bigDecimal = new BigDecimal(itemPrice*(1+0.09)).setScale(2, RoundingMode.HALF_UP);
+                array_of_item_prices.set(i, bigDecimal.doubleValue());
             }
-        }else if (SCT){ //have gst and sct
+        }else if (SCT){ //have sct
             for (int i = 0; i < array_of_item_prices.size();i++){
                 double itemPrice = array_of_item_prices.get(i);
-                array_of_item_prices.set(i,itemPrice*(1+0.1));
+                BigDecimal bigDecimal = new BigDecimal(itemPrice*(1+0.1)).setScale(2, RoundingMode.HALF_UP);
+                array_of_item_prices.set(i, bigDecimal.doubleValue());
             }
         }
     }
