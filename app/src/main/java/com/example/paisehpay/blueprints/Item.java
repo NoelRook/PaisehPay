@@ -17,12 +17,13 @@ public class Item implements Parcelable {
     private String itemId;
     private String itemName;
     private double itemPrice;
-    private String itemPeopleString;
-    private double itemIndividualPrice = 0.0;
+    private String itemPeopleString; // not stored in DB
+    private double itemIndividualPrice = 0.0; // remove this later on
     private String expenseId;
-    private ArrayList<String> itemPeopleArray;
+    private ArrayList<String> itemPeopleArray; // not stored in DB
     private boolean isSelected;
-    private HashMap<String, String> debtpeople ;// {userid: paid}, not paid
+    private HashMap<String, Double> debtPeople ;// {userid: settled or not settled}, not paid
+    // if for all items in totalOwed == 0, user is settled
 
 
 
@@ -30,12 +31,13 @@ public class Item implements Parcelable {
                 String itemName,
                 double itemPrice,
                 String expenseId,
-                String itemPeopleString){
+                String itemPeopleString, HashMap<String, Double> debtpeople){
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.expenseId = expenseId;
         this.itemPeopleString = itemPeopleString;
+        this.debtPeople = debtpeople;
     }
 
 
@@ -148,13 +150,15 @@ public class Item implements Parcelable {
     }
 
     // users array needs to be a hashmap, not an arraylist
-//    public HashMap<String, String> getFriends() {
-//        return friends;
-//    }
-//
-//    public void setFriends(HashMap<String, String> friends) {
-//        this.friends = friends;
-//    }
+    public HashMap<String, Double> getDebtPeople() {
+        return debtPeople;
+    }
+
+    public void setDebtPeople(HashMap<String, Double> debtPeople) {
+        this.debtPeople = debtPeople;
+    }
+
+
 
     public Map<String, Object> ToMap(){
         HashMap<String, Object> result = new HashMap<>();
@@ -162,9 +166,24 @@ public class Item implements Parcelable {
         result.put("itemName", itemName);
         result.put("itemPrice", itemPrice);
         result.put("expenseId", expenseId);
-        result.put("itemPeopleString", itemPeopleArray);
+        result.put("debtpeople", debtPeople);
         return result;
     }
 
+    public void calculateDebts() {
+        if (itemPeopleArray != null && !itemPeopleArray.isEmpty()) {
+            double splitAmount = itemPrice / itemPeopleArray.size();
+            for (String userId : itemPeopleArray) {
+                debtPeople.put(userId, splitAmount);
+            }
+        }
+    }
 
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public void setItemPrice(double itemPrice) {
+        this.itemPrice = itemPrice;
+    }
 }

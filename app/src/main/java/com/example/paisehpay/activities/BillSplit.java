@@ -93,8 +93,7 @@ public class BillSplit extends AppCompatActivity {
 
     //will be changed later
     private void showSummaryList() {
-        itemArray = expense.getExpenseItems();
-
+        //get item array here by database call
 
         for (Item item: itemArray){
             for (String user: item.getItemPeopleArray()){

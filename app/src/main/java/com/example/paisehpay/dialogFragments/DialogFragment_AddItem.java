@@ -63,7 +63,7 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
                     Log.d("DialogFragment",  itemName + " : " + itemPrice);
 
                     //we create a new Item
-                    Item item = new Item(null, itemName,Double.parseDouble(itemPrice),null, null);
+                    Item item = new Item(null, itemName,Double.parseDouble(itemPrice),null, null, null);
 
                     //get the receipt instance
                     ReceiptInstance.getInstance().addToReceipt(item);

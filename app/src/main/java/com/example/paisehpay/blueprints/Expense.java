@@ -21,9 +21,9 @@ public class Expense implements Parcelable {
     String expenseAction;
     String expenseAmount;
     String expenseCategory;
-    ArrayList<Item> expenseItems;
+    //ArrayList<Item> expenseItems; // can we get rid of this?
 
-    public Expense(String description,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, String GroupId ,ArrayList<Item> expenseItems){
+    public Expense(String description,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, String GroupId ){
         this.description = description;
         this.expenseDate = expenseDate;
         this.expensePaidBy = expensePaidBy;
@@ -31,7 +31,7 @@ public class Expense implements Parcelable {
         this.associatedGroup = GroupId;
         this.expenseAmount = expenseAmount;
         this.expenseCategory = expenseCategory;
-        this.expenseItems = expenseItems;
+        //this.expenseItems = expenseItems;
     }
 
     protected Expense(Parcel in) {
@@ -41,7 +41,7 @@ public class Expense implements Parcelable {
         expenseAction = in.readString();
         expenseAmount = in.readString();
         expenseCategory = in.readString();
-        expenseItems = in.createTypedArrayList(Item.CREATOR);
+        //expenseItems = in.createTypedArrayList(Item.CREATOR);
     }
 
     public static final Parcelable.Creator<Expense> CREATOR = new Parcelable.Creator<Expense>() {
@@ -78,9 +78,6 @@ public class Expense implements Parcelable {
 
     public String getExpenseCategory() {return expenseCategory;}
 
-    public ArrayList<Item> getExpenseItems() {
-        return expenseItems;
-    }
 
     public void setExpenseId(String key) {
         this.expenseId = key;
@@ -94,7 +91,6 @@ public class Expense implements Parcelable {
         result.put("currency", "SGD");
         result.put("group_id", associatedGroup);
         result.put("totalAmount", expenseAmount);
-        result.put("items", expenseItems);
         return result;
     }
 
@@ -111,7 +107,10 @@ public class Expense implements Parcelable {
         parcel.writeString(expenseAction);
         parcel.writeString(expenseAmount);
         parcel.writeString(expenseCategory);
-        parcel.writeTypedList(expenseItems);
+    }
+
+    public String getexpenseId() {
+        return expenseId;
     }
 }
 

@@ -79,10 +79,10 @@ public class ExpenseFragment extends Fragment {
         for (int i =0; i<expenseCategoryList.length;i++){
             if (expenseCategoryList[i].trim().equalsIgnoreCase(categoryToLoad.trim())) {
                 //Log.d("CategoryCompare", "Fragment received category: [" + categoryToLoad + "]");
-                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],categoryToLoad,null,null);;
+                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],categoryToLoad,null);;
                 expenseArray.add(expense);
             } else if (categoryToLoad.equals("Overall")){
-                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],expenseCategoryList[i],null,null);
+                Expense expense = new Expense(expenseTitleList[i],expenseDateList[i],expensePaidByList[i],expenseActionList[i],expenseAmountList[i],expenseCategoryList[i],null);
                 expenseArray.add(expense);
             }
         }

@@ -50,6 +50,7 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
     private static final String POSITION = "position";
     private int pos;
     private static String groupId;
+    String expenseId;
     private static String GROUP_ID = "group_id";
 
     private static final String ITEM = "item";

@@ -5,6 +5,8 @@ import static android.util.Log.d;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +31,8 @@ import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.computation.EqualSplit;
 import com.example.paisehpay.computation.ReceiptInstance;
 import com.example.paisehpay.computation.Receipts;
+import com.example.paisehpay.databaseHandler.ExpenseAdapter;
+import com.example.paisehpay.databaseHandler.itemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddPeople;
 import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
@@ -39,6 +43,7 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Category;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewListener;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
+import com.google.firebase.database.DatabaseError;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -46,7 +51,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 //add people is the expense overview page
 public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener<Item>, RecycleViewListener {
@@ -76,6 +84,10 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     String Email;
     String id;
 
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    ExpenseAdapter expAdapter;
+    private String expenseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +106,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
         //get current user
         preferenceManager = new PreferenceManager(AddPeople.this);
+        expAdapter = new ExpenseAdapter();
         User user = preferenceManager.getUser();
         Email = user.getEmail();
         Username = user.getUsername();
@@ -138,46 +151,34 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
         //click confirm button to finalise bill and lead to split bill page
         splitBillButton = findViewById(R.id.confirm_button);
+        // In your splitBillButton onClick listener:
         splitBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 expenseName = expenseNameText.getText().toString();
-
-                Date today = Calendar.getInstance().getTime(); //change with db one
+                Date today = Calendar.getInstance().getTime();
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String formattedDate = formatter.format(today);
                 expenseDate = formattedDate;
-
-                //if (savedUser != null) {
-                //    id = savedUser.getId();
-                //    Username = savedUser.getUsername();
-                //    Email = savedUser.getEmail();
-                //    Log.d("Usersaved",id + Username +Email);
-                //}
 
                 Receipts instance = ReceiptInstance.getInstance();
                 expenseAmount = instance.getTotal();
 
                 if (expenseNameText == null) {
-                    Toast.makeText(AddPeople.this, "Bro u never put name of expense", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddPeople.this, "Please enter expense name", Toast.LENGTH_LONG).show();
                 } else if (expenseGroup == null) {
-                    Toast.makeText(AddPeople.this, "u never select group", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddPeople.this, "Please select a group", Toast.LENGTH_LONG).show();
                 } else if (!(checkItemHasUsers())) {
-                    Toast.makeText(AddPeople.this, "you haven't added people to ur item", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddPeople.this, "Please add people to your items", Toast.LENGTH_LONG).show();
                 } else {
-                    Log.d("AddPeople", "Name: " + expenseName + " Group: " + expenseGroup + " Category: " + expenseCategory + " Date: " + expenseDate + " Amount: " + expenseAmount);
-                    Expense expense = new Expense(expenseName,expenseDate,id,null,expenseAmount,expenseCategory,null, itemArray);
+                    Expense expense = new Expense(expenseName, expenseDate, id, null, expenseAmount, expenseCategory, expenseGroup);
 
-                    //store in db
-
-                    Intent intent = new Intent(AddPeople.this, BillSplit.class);
-                    intent.putExtra("Expense",expense);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    finish();
+                    // Store expense first
+                    StoreExpenseAndItems(expense, itemArray);
                 }
             }
         });
+
 
 
 
@@ -206,14 +207,16 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     //ReceiptInstance(of Receipt) stores the user's items entered in the ReceiptOverview page, then since using Singleton design pattern,
     //we can call the instance's items and prices, which we would populate the RecycleView
     //once we add a item, we need tell the adapter that our dataset changed
-    private void showItemList() {
+    private void showItemList() { // get the item array here
         instance = ReceiptInstance.getInstance();
         instance.loadItemWithGST();
         ArrayList<String> itemNameArray = instance.getArray_of_items();
         ArrayList<Double> itemPriceArray = instance.getArray_of_item_prices();
+        //hashmap should contain the name: price owed
+
 
         for (int i = 0; i<itemPriceArray.size();i++){
-            itemArray.add(new Item(null,itemNameArray.get(i),itemPriceArray.get(i),null,"Add People to Item"));
+            itemArray.add(new Item(null,itemNameArray.get(i),itemPriceArray.get(i),null,"Add People to Item", null));
         }
         adapter_items.notifyDataSetChanged();
     }
@@ -289,6 +292,63 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         expenseCategory = name;
         Log.d("Category", "User selected: " + name);
     }
+
+    // New method to handle the sequential operations
+    private void StoreExpenseAndItems(Expense expense, ArrayList<Item> items) {
+        executorService.execute(() -> {
+            expAdapter.create(expense, new ExpenseAdapter.OperationCallback() {
+                @Override
+                public void onSuccess() {
+                    String expenseId = expense.getexpenseId(); // Make sure this gets the generated ID
+                    Log.d("Saved expense", "ID: " + expenseId);
+
+                    // Now store items with this expenseId
+                    storeExpenseItems(items, expenseId);
+
+                    // Only navigate after all items are stored
+                    runOnUiThread(() -> {
+                        Intent intent = new Intent(AddPeople.this, BillSplit.class);
+                        intent.putExtra("Expense", expense);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
+                    });
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    runOnUiThread(() ->
+                            Toast.makeText(AddPeople.this,
+                                    "Failed to save expense: " + error.getMessage(),
+                                    Toast.LENGTH_SHORT).show());
+                }
+            });
+        });
+    }
+
+    // Modified storeExpenseItems method
+    private void storeExpenseItems(ArrayList<Item> items, String expenseId) {
+        itemAdapter itemadapter = new itemAdapter();
+        for (Item item : items) {
+            item.calculateDebts();
+            item.setExpenseId(expenseId); // Set the expense ID for each item
+
+            executorService.execute(() -> {
+                itemadapter.create(item, new ExpenseAdapter.OperationCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("Saved item", item.getItemName() + " for expense " + expenseId);
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Log.e("Save item error", error.getMessage());
+                    }
+                });
+            });
+        }
+    }
+
 
     //general
     // <!-- TODO: 4. store expense name, category, group, and item info in db after pressing confirm button  -->

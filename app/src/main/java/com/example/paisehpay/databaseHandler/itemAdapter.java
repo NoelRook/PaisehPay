@@ -1,5 +1,7 @@
 package com.example.paisehpay.databaseHandler;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Item;
@@ -27,27 +29,36 @@ public class itemAdapter extends BaseDatabase{
 
     @Override
     public <T> void create(T itemObj, OperationCallback callback) {
-        //todo 1. add in create item and find some way to tie it to group
-        //
+        Log.d("itemAdapter","create"+itemObj);
+
         if (!(itemObj instanceof Item)){
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("this is not a valid datatype")));
+            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Invalid data type - expected Item")));
             return;
         }
+
         Item item = (Item) itemObj;
         String itemId = databaseRef.push().getKey();
+
         if (itemId == null) {
-            callback.onError(DatabaseError.fromException(new Exception("Failed to generate group ID")));
+            callback.onError(DatabaseError.fromException(new Exception("Failed to generate item ID")));
             return;
         }
+
         item.setItemId(itemId);
-        //todo make the tomap function in item object
-//        databaseRef.child(itemId).setValue(item.toMap()).addOnCompleteListener(task->{
-//            if (task.isSuccessful()) {
-//                callback.onSuccess();
-//            } else {
-//                callback.onError(DatabaseError.fromException(task.getException()));
-//            }
-//        });
+
+        // Convert the Item to a Map and store it
+        databaseRef.child(itemId).setValue(item.ToMap())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        if (task.getException() != null) {
+                            callback.onError(DatabaseError.fromException(task.getException()));
+                        } else {
+                            callback.onError(DatabaseError.fromException(new Exception("Unknown error occurred")));
+                        }
+                    }
+                });
     }
 
     @Override
