@@ -1,10 +1,11 @@
 package com.example.paisehpay.databaseHandler;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Group;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.paisehpay.blueprints.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -12,7 +13,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GroupAdapter extends BaseDatabase {
 
@@ -129,6 +133,7 @@ public class GroupAdapter extends BaseDatabase {
 
     // adding specific members to group
     public void addMemberToGroup(String groupId, String userId, String userName, OperationCallback callback) {
+        Log.d("databaseside", groupId+" "+userId+" "+userName);
         databaseRef.child(groupId).child("members").child(userId).setValue(userName)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -174,20 +179,20 @@ public class GroupAdapter extends BaseDatabase {
                 });
     }
     // return all members in the group
-    public void getGroupMates(String groupId , ListCallback<Group> callback){
+    public void getGroupMates(String groupId , ListCallback<Map<String, String>> callback){
         databaseRef
                 .child(groupId)
                 .child("members")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Group> groups = new ArrayList<>();
-                Group group = snapshot.getValue(Group.class);
-                if (group != null) {
-                    group.setGroupId(snapshot.getKey());
-                    groups.add(group);
+                Map<String, String> members = new HashMap<>();
+                for (DataSnapshot memberSnapshot : snapshot.getChildren()) {
+                    String userId = memberSnapshot.getKey();
+                    String userName = memberSnapshot.getValue(String.class);
+                    members.put(userId, userName);
                 }
-                callback.onListLoaded(groups);
+                callback.onListLoaded(Collections.singletonList(members));
             }
 
             @Override

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.blueprints.Category;
 import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.computation.EqualSplit;
 import com.example.paisehpay.computation.ReceiptInstance;
@@ -240,7 +241,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     @Override
     public void onButtonClick(int position) {
         Item item = itemArray.get(position); //we are getting the actual item and its position
-        addPeopleFragment = DialogFragment_AddPeople.newInstance(1,position,item);
+        addPeopleFragment = DialogFragment_AddPeople.newInstance(1,expenseGroup,position,item);
         addPeopleFragment.show(getSupportFragmentManager(), "DialogFragment_AddPeople");
 
     }
@@ -260,14 +261,13 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
 
     //after user selects group in DialogFragment, our textView will display out the user's selected group
-    public void selectGroup(String groupName){
+    public void selectGroup(Group groupName){
         selectedGroupText = findViewById(R.id.group_selected);
-        selectedGroupText.setText(groupName);
-        expenseGroup = groupName;
+        selectedGroupText.setText(groupName.getGroupName());
+        expenseGroup = groupName.getGroupId();
     }
 
     public boolean checkItemHasUsers(){
-
         for (Item item : itemArray) {
             String peopleStr = item.getItemPeopleString();
             if (peopleStr == null || peopleStr.trim().isEmpty()) {

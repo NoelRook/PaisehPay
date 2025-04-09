@@ -30,6 +30,7 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -79,8 +80,6 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         }
 
         grpAdapter = new GroupAdapter();
-
-        pref = new PreferenceManager(requireContext());
 
         userView = rootView.findViewById(R.id.select_group_recycle);
         showPersonList();
@@ -168,10 +167,11 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
             public void onClick(View view) {
                 if (listener != null){
                     //add person here
-                    listener.onDataSelected(0,getSelectedPerson());
-                    addPerson(pref.getUser(),groupId);
-                }
 
+                    //listener.onDataSelected(0,getSelectedPerson());
+                    addMultiplePeople(groupId);
+                    // reload the user list here
+                }
                 // add person here
                 dismiss();
             }
@@ -179,13 +179,14 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
     }
 
 
-    private User getSelectedPerson() {
+    private ArrayList<User> getSelectedPerson() {
+        ArrayList<User> selectedUser = new ArrayList<>();
         for (User user : userArray) {
             if (user.isSelected()) {
-                return user;
+                selectedUser.add(user);
             }
         }
-        return null;
+        return selectedUser;
     }
     private void addPerson(User user, String groupId) {
         // add person to the group
@@ -210,6 +211,14 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
 
             }
         });
+    }
+
+    private void addMultiplePeople(String GROUP_ID){
+        ArrayList<User> selectedUser = getSelectedPerson();
+        Log.d("users to be added", selectedUser.toString());
+        for (User user : selectedUser){
+            addPerson(user,GROUP_ID);
+        }
     }
 
 

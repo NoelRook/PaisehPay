@@ -95,7 +95,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
                         tempList.add(new Group(
                                 group.getGroupId(),
                                 group.getGroupName(),
-                                "Created " + group.getGroupCreatedDate(),
+                                 group.getGroupCreatedDate(),
                                 group.getGroupAmount(),
                                 group.getCreatedBy(),
                                 group.getMembers()
@@ -132,7 +132,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
         public void onButtonClick (int position){
             groupArray.get(position).setSelected(true);
             groupView.getAdapter().notifyItemChanged(position);
-            String selectedGroupName = groupArray.get(position).getGroupName();
+            Group selectedGroupName = groupArray.get(position);
             AddPeople addpeoplePage = (AddPeople) getActivity();
             if (addpeoplePage != null) {
                 addpeoplePage.selectGroup(selectedGroupName);
