@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Item implements Parcelable {
@@ -17,14 +19,21 @@ public class Item implements Parcelable {
     private double itemPrice;
     private String itemPeopleString;
     private double itemIndividualPrice = 0.0;
+    private String expenseId;
     private ArrayList<String> itemPeopleArray;
+    private HashMap<String, String> debtpeople ;// {userid: paid}, not paid
 
 
 
-    public Item(String itemId, String itemName, double itemPrice,String itemPeopleString){
+    public Item(String itemId,
+                String itemName,
+                double itemPrice,
+                String expenseId,
+                String itemPeopleString){
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
+        this.expenseId = expenseId;
         this.itemPeopleString = itemPeopleString;
     }
 
@@ -35,6 +44,7 @@ public class Item implements Parcelable {
         itemPrice = in.readDouble();
         itemPeopleString = in.readString();
         itemIndividualPrice = in.readDouble();
+        expenseId = in.readString();
         itemPeopleArray = in.createStringArrayList();
     }
 
@@ -101,6 +111,13 @@ public class Item implements Parcelable {
         return itemIndividualPrice;
     }
 
+    public String getExpenseId() {
+        return expenseId;
+    }
+
+    public void setExpenseId(String expenseId) {
+        this.expenseId = expenseId;
+    }
 
     public void setItemIndividualPrice(double itemIndividualPrice) {
         this.itemIndividualPrice = itemIndividualPrice;
@@ -120,4 +137,25 @@ public class Item implements Parcelable {
         parcel.writeDouble(itemIndividualPrice);
         parcel.writeStringList(itemPeopleArray);
     }
+
+    // users array needs to be a hashmap, not an arraylist
+//    public HashMap<String, String> getFriends() {
+//        return friends;
+//    }
+//
+//    public void setFriends(HashMap<String, String> friends) {
+//        this.friends = friends;
+//    }
+
+    public Map<String, Object> ToMap(){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("id", itemId);
+        result.put("itemName", itemName);
+        result.put("itemPrice", itemPrice);
+        result.put("expenseId", expenseId);
+        result.put("itemPeopleString", itemPeopleArray);
+        return result;
+    }
+
+
 }

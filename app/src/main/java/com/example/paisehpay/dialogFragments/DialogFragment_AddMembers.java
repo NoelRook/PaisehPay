@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,8 +24,11 @@ import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_UserSelect;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -42,7 +46,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-
+    PreferenceManager pref;
 
 
     @Nullable
@@ -54,6 +58,8 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         rootView = inflater.inflate(R.layout.fragment_select_group, container, false);
 
         grpAdapter = new GroupAdapter();
+
+        pref = new PreferenceManager(requireContext());
 
         userView = rootView.findViewById(R.id.select_group_recycle);
         showPersonList();
@@ -109,6 +115,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
 
     @Override
     public void onButtonClick(int position) {
+
         userArray.get(position).setSelected(!userArray.get(position).isSelected());
         userView.getAdapter().notifyItemChanged(position);
         confirmButton = rootView.findViewById(R.id.confirm_button);
@@ -117,8 +124,12 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
             @Override
             public void onClick(View view) {
                 if (listener != null){
+                    //add person here
                     listener.onDataSelected(0,getSelectedPerson());
+                    addPerson(pref.getUser(),groupidhere);
                 }
+
+                // add person here
                 dismiss();
             }
         });
@@ -133,6 +144,29 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         }
         return null;
     }
+    private void addPerson(User user, String groupId) {
+        // add person to the group
+//        PreferenceManager pref = new PreferenceManager(requireContext());
+//        User curUser = pref.getUser();
+
+        if (user== null) throw new NullPointerException("Current User is null");
+        grpAdapter.addMemberToGroup(groupId,user.getId(),user.getEmail(),new GroupAdapter.OperationCallback(){
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getContext(), "Group created successfully", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to add Users to group: " + error.getMessage(),
+                        Toast.LENGTH_LONG).show();
+                Log.e("CreateGroup", "Error in adding users", error.toException());
+
+            }
+        });
+    }
+
 
 
 }

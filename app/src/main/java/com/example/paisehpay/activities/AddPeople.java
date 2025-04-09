@@ -74,7 +74,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     String Username;
     String Email;
     String id;
-    //User savedUser = preferenceManager.getUser();
 
 
     @Override
@@ -92,7 +91,12 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.expense_details);
 
-
+        //get current user
+        preferenceManager = new PreferenceManager(AddPeople.this);
+        User user = preferenceManager.getUser();
+        Email = user.getEmail();
+        Username = user.getUsername();
+        id = user.getId();
 
         //press back arrow lead back to home fragment
         backArrow = findViewById(R.id.back_arrow);
@@ -159,7 +163,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     Toast.makeText(AddPeople.this, "you haven't added people to ur item", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d("AddPeople", "Name: " + expenseName + " Group: " + expenseGroup + " Category: " + expenseCategory + " Date: " + expenseDate + " Amount: " + expenseAmount);
-                    Expense expense = new Expense(expenseName,expenseDate,null,null,expenseAmount,expenseCategory,null, itemArray);
+                    Expense expense = new Expense(expenseName,expenseDate,id,null,expenseAmount,expenseCategory,null, itemArray);
 
                     //store in db
 
@@ -205,7 +209,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         ArrayList<Double> itemPriceArray = instance.getArray_of_item_prices();
 
         for (int i = 0; i<itemPriceArray.size();i++){
-            itemArray.add(new Item(null,itemNameArray.get(i),itemPriceArray.get(i),"Add People to Item"));
+            itemArray.add(new Item(null,itemNameArray.get(i),itemPriceArray.get(i),null,"Add People to Item"));
         }
         adapter_items.notifyDataSetChanged();
     }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.AddPeople;
 import com.example.paisehpay.blueprints.Group;
+import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupSelect;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -35,7 +38,8 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
     RecyclerView groupView;
     ArrayList<Group> groupArray = new ArrayList<>();
     RecycleViewAdapter_GroupSelect adapter;
-
+    PreferenceManager pref;
+    User CurUser;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -50,6 +54,9 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
         rootView = inflater.inflate(R.layout.fragment_select_group, container, false);
         groupView = rootView.findViewById(R.id.select_group_recycle);
         showGroupList();
+        pref = new PreferenceManager(getContext());
+        CurUser = pref.getUser();
+
         adapter = new RecycleViewAdapter_GroupSelect(getActivity(),groupArray,this);
         groupView.setAdapter(adapter);
         groupView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -70,13 +77,21 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
         groupArray.clear();
         executorService.execute(() -> {
             GroupAdapter grpAdapter = new GroupAdapter();
-            grpAdapter.get(new BaseDatabase.ListCallback<Group>() {
+
+            // Get groups where user is either creator or member
+            grpAdapter.getGroupsForUser(CurUser.getId(), new BaseDatabase.ListCallback<Group>() {
                 @Override
                 public void onListLoaded(List<Group> groups) {
                     ArrayList<Group> tempList = new ArrayList<>();
 
                     for (Group group : groups) {
-                        Log.d("group", group.getGroupId() + " - " + group.getGroupName()+ " - " +group.getGroupCreatedDate() + " - " +group.getGroupAmount() );
+                        Log.d("GroupData",
+                                "ID: " + group.getGroupId() +
+                                        ", Name: " + group.getGroupName() +
+                                        ", Date: " + group.getGroupCreatedDate() +
+                                        ", Amount: " + group.getGroupAmount());
+
+                        // Create new Group object with formatted date
                         tempList.add(new Group(
                                 group.getGroupId(),
                                 group.getGroupName(),
@@ -87,19 +102,28 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
                         ));
                     }
 
-                    // Update UI on the main thread
+                    // Update UI on main thread
                     mainHandler.post(() -> {
                         groupArray.clear();
-                        groupArray.addAll(tempList);
+                        if (tempList.isEmpty()) {
+                            // Show empty state if no groups found
+                            // textEmptyState.setVisibility(View.VISIBLE);
+                        } else {
+                            groupArray.addAll(tempList);
+                            // textEmptyState.setVisibility(View.GONE);
+                        }
                         adapter.notifyDataSetChanged();
                     });
-
-                    Log.d("notification", groupArray.toString());
                 }
 
                 @Override
                 public void onError(DatabaseError error) {
-                    Log.e("FirebaseError", error.getMessage());
+                    mainHandler.post(() -> {
+                        Log.e("FirebaseError", error.getMessage());
+                        Toast.makeText(getContext(),
+                                "Failed to load groups: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    });
                 }
             });
         });

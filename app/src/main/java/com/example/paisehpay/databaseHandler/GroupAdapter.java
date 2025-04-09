@@ -103,6 +103,7 @@ public class GroupAdapter extends BaseDatabase {
                 });
     }
 
+    // get groups for the current user
     public void getGroupsForUser(String userId, ListCallback callback) {
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -126,6 +127,7 @@ public class GroupAdapter extends BaseDatabase {
         });
     }
 
+    // adding specific members to group
     public void addMemberToGroup(String groupId, String userId, String userName, OperationCallback callback) {
         databaseRef.child(groupId).child("members").child(userId).setValue(userName)
                 .addOnCompleteListener(task -> {
@@ -136,7 +138,7 @@ public class GroupAdapter extends BaseDatabase {
                     }
                 });
     }
-
+    // remove member from group based on the userid and groupid
     public void removeMemberFromGroup(String groupId, String userId, OperationCallback callback) {
         databaseRef.child(groupId).child("members").child(userId).removeValue()
                 .addOnCompleteListener(task -> {
@@ -148,7 +150,7 @@ public class GroupAdapter extends BaseDatabase {
                 });
     }
 
-    // Get groups created by a specific user
+    // Get groups created by a specific user (may not need)
     public void getGroupsCreatedByUser(String userId, ListCallback callback) {
         databaseRef.orderByChild("createdBy").equalTo(userId)
                 .addValueEventListener(new ValueEventListener() {
@@ -171,6 +173,7 @@ public class GroupAdapter extends BaseDatabase {
                     }
                 });
     }
+    // return all members in the group
     public void getGroupMates(String groupId , ListCallback<Group> callback){
         databaseRef
                 .child(groupId)
