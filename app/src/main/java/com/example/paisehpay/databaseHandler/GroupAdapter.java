@@ -171,5 +171,27 @@ public class GroupAdapter extends BaseDatabase {
                     }
                 });
     }
+    public void getGroupMates(String groupId , ListCallback<Group> callback){
+        databaseRef
+                .child(groupId)
+                .child("members")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Group> groups = new ArrayList<>();
+                Group group = snapshot.getValue(Group.class);
+                if (group != null) {
+                    group.setGroupId(snapshot.getKey());
+                    groups.add(group);
+                }
+                callback.onListLoaded(groups);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError);
+            }
+        });
+    }
 
 }

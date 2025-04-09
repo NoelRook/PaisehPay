@@ -153,4 +153,6 @@ public class UserAdapter extends BaseDatabase  {
             return String.format("%8s", base36).replace(' ', '0');
         }
     }
+
+    //get single user
 }

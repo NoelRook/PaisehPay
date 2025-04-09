@@ -35,6 +35,11 @@ public abstract class BaseDatabase {
         void onError(DatabaseError error);
     }
 
+    public interface SingleUserCallback {
+        void onUserLoaded(User user);
+        void onError(DatabaseError error);
+    }
+
     //todo possible implementation of valid checker for each create and update call
 
 }
