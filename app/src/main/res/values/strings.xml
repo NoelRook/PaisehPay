@@ -81,6 +81,12 @@
     <string name="action_reminder">xxx nudged you to return yyy</string>
     <string name="nudge">Nudge</string>
 
+    //expense fragment
+    <string name="settle_up">Select Item to Settle Up</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="settle_all">Settle All</string>
+
+
     //toolbar
     <string name="back_arrow">Back</string>
     <string name="toolbar_title">Toolbar title</string>

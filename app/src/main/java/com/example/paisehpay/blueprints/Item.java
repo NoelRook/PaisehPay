@@ -21,6 +21,7 @@ public class Item implements Parcelable {
     private double itemIndividualPrice = 0.0;
     private String expenseId;
     private ArrayList<String> itemPeopleArray;
+    private boolean isSelected;
     private HashMap<String, String> debtpeople ;// {userid: paid}, not paid
 
 
@@ -121,6 +122,14 @@ public class Item implements Parcelable {
 
     public void setItemIndividualPrice(double itemIndividualPrice) {
         this.itemIndividualPrice = itemIndividualPrice;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
     }
 
     @Override

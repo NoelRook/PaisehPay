@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.GroupHomepage;
 import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.dialogFragments.DialogFragment_Expense;
+import com.example.paisehpay.dialogFragments.DialogFragment_Owe;
 
 import java.util.ArrayList;
 
 public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleViewAdapter_Expense.MyViewHolder> {
     Context context;
     ArrayList<Expense> expenseArray;
+    static DialogFragment_Expense dialogFragmentExpense;
 
 
 
@@ -50,6 +53,8 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         holder.expenseAmountText.setText(expenseArray.get(position).getExpenseAmount());
 
 
+
+
     }
 
     @Override
@@ -69,11 +74,14 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
+
             expenseTitleText = itemView.findViewById(R.id.expense_title);
             expenseDateText = itemView.findViewById(R.id.expense_date);
             expensePaidByText = itemView.findViewById(R.id.expense_paid_by);
             expenseActionText = itemView.findViewById(R.id.expense_action);
             expenseAmountText = itemView.findViewById(R.id.expense_amount);
+
+
         }
     }
 

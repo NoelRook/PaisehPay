@@ -89,4 +89,8 @@ public class ExpenseFragment extends Fragment {
         adapter.notifyDataSetChanged();
 
     }
+
+    public void selectGroup(String selectedGroupName) {
+
+    }
 }
