@@ -15,14 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
-import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
@@ -41,7 +38,6 @@ public class FriendsFragment extends Fragment {
     EditText friendEmail;
     ArrayList<User> friendsArray = new ArrayList<>();
     RecycleViewAdapter_GroupMember adapter;
-    ConstraintLayout friendsLayout;
     friendAdapter friendAdapter;
     PreferenceManager pref;
     User curUser;
@@ -75,8 +71,8 @@ public class FriendsFragment extends Fragment {
         friendsView.setAdapter(adapter);
         friendsView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        Button addFriendButton = rootView.findViewById(R.id.add_friend);
-        EditText friendEmail = rootView.findViewById(R.id.search_friend);
+        addFriendButton = rootView.findViewById(R.id.add_friend);
+        friendEmail = rootView.findViewById(R.id.search_friend);
 
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +132,7 @@ public class FriendsFragment extends Fragment {
                 @Override
                 public void onSuccess() {
                     Toast.makeText(getContext(), "Friend added successfully", Toast.LENGTH_SHORT).show();
+                    showFriendList();
                 }
 
                 @Override

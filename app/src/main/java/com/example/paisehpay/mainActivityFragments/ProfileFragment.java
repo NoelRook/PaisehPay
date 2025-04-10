@@ -93,14 +93,35 @@ public class ProfileFragment extends Fragment {
 
 
         //turn on darkmode
-        darkModeLayout = rootView.findViewById(R.id.dark_mode_layout);
-        darkModeSwitch = darkModeLayout.findViewById(R.id.light_mode_switch);
-        darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isToggled) {
-                //BLEH FUCK THIS SHIT
+        SwitchCompat themeSwitch = rootView.findViewById(R.id.light_mode_switch); // Replace with your ID
+
+        // Check and apply current mode on launch
+        int currentNightMode = AppCompatDelegate.getDefaultNightMode();
+        if (currentNightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            themeSwitch.setChecked(true); // Dark mode on
+        } else {
+            themeSwitch.setChecked(false); // Light mode on
+        }
+
+        themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            //Save the current selected fragment ID before theme change
+            preferenceManager.getEditor().putInt("selectedFragmentId", R.id.profile).apply();
+
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
+
+            // Save the current fragment name before recreating
+            Intent intent = new Intent(requireContext(), MainActivity.class);
+            intent.putExtra("fragmentToLoad", "ProfileFragment");
+            getActivity().overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+            startActivity(intent);
+            requireActivity().finish(); // Finish current activity so theme applies
         });
+
+
 
 
 

@@ -18,12 +18,17 @@ public class PreferenceManager {
 
     private static final String KEY_GROUP = "group_list";
 
+
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     public PreferenceManager(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+    }
+
+    public SharedPreferences.Editor getEditor() {
+        return editor;
     }
 
     // Save user data
@@ -33,7 +38,6 @@ public class PreferenceManager {
         editor.putString(KEY_USERNAME, user.getUsername());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_FRIENDKEY, user.getFriendKey());
-
         editor.apply();
     }
 
@@ -48,6 +52,11 @@ public class PreferenceManager {
             return new User(id, email, username, friendKey, null);
         }
         return null;
+    }
+
+
+    public int savedFragmentId(){
+        return sharedPreferences.getInt("selectedFragmentId", -1);
     }
 
     //remember me
@@ -74,8 +83,6 @@ public class PreferenceManager {
 
         return null;
     }
-
-
 
 
     // Clear user data (for logout)

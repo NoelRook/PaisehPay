@@ -2,10 +2,12 @@ package com.example.paisehpay.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,12 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
-import com.example.paisehpay.dialogFragments.DialogFragment_AddPeople;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class GroupSettings extends AppCompatActivity implements DialogFragmentListener<User> {
 
@@ -33,9 +41,11 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     TextView toolbarTitleText;
     ImageView backArrow;
     Button deleteGroupButton;
-    Button addMemebersButton;
+    Button addMembersButton;
     DialogFragment_AddMembers addMembersFragment;
     RecycleViewAdapter_GroupMember adapter;
+    GroupAdapter groupAdapter;
+    String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +59,8 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         });
 
         Intent intent = getIntent();
-        String groupId = intent.getStringExtra("GROUP_ID");
+        groupId = intent.getStringExtra("GROUP_ID");
+        groupAdapter = new GroupAdapter();
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -68,8 +79,8 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
             }
         });
 
-        addMemebersButton= findViewById(R.id.add_members);
-        addMemebersButton.setOnClickListener(new View.OnClickListener() {
+        addMembersButton= findViewById(R.id.add_members);
+        addMembersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addMembersFragment = DialogFragment_AddMembers.newInstance(groupId);
@@ -87,20 +98,14 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
 
     }
 
-    //we will change this later with actual data
     private void showGroupMemberList() {
-        String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list);
-        String[] emailList = getResources().getStringArray(R.array.dummy_email_list);
-
-        for (int i = 0; i<nameList.length; i++){
-            groupMemberArray.add(new User(null,emailList[i],nameList[i],null,null));
-
-        }
+        //gotta call from db nvm jin can do
     }
 
     @Override
     public void onDataSelected(int position, User data) {
         groupMemberArray.add(new User(data.getId(),data.getEmail(), data.getUsername(),data.getFriendKey(),null));
+
         adapter.notifyDataSetChanged();
     }
 

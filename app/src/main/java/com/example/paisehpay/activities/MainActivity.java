@@ -55,15 +55,40 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-        // check which fragment to load
         Intent intent = getIntent();
         String fragmentToLoad = intent.getStringExtra("fragmentToLoad");
-        Log.d("ThemeDebug", "fragmentToLoad = " + fragmentToLoad);
-        if (fragmentToLoad != null) { //if navigating from activity to fragment
+
+        // Remove the savedFragmentId logic completely
+        if (fragmentToLoad != null) {
             loadFragmentFromIntent(fragmentToLoad);
-        } else { //if navigating from SignIn to fragment, where the default fragment is the home page
+        } else {
+            replaceFragment(new ProfileFragment());
+            binding.bottomNavigationView.setSelectedItemId(R.id.home);
+        }
+
+
+
+        int savedFragmentId = preferenceManager.savedFragmentId();
+
+        if (fragmentToLoad != null) {
+            loadFragmentFromIntent(fragmentToLoad);
+        } else if (savedFragmentId != -1) {
+            if (savedFragmentId == R.id.profile) {
+                replaceFragment(new ProfileFragment());
+                binding.bottomNavigationView.setSelectedItemId(R.id.profile);
+            } else if (savedFragmentId == R.id.notification) {
+                replaceFragment(new NotificationFragment());
+                binding.bottomNavigationView.setSelectedItemId(R.id.notification);
+            } else if (savedFragmentId == R.id.friends) {
+                replaceFragment(new FriendsFragment());
+                binding.bottomNavigationView.setSelectedItemId(R.id.friends);
+            } else {
+                replaceFragment(new HomeFragment());
+                binding.bottomNavigationView.setSelectedItemId(R.id.home);
+            }
+        } else {
             replaceFragment(new HomeFragment());
+            binding.bottomNavigationView.setSelectedItemId(R.id.home);
         }
 
 
@@ -100,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.constraint_layout, fragment);
+
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
         fragmentTransaction.commitNow(); //bloody fucking fucking hell
     }
 
@@ -128,11 +155,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if (fragment != null){
             replaceFragment(fragment);
+
             binding.bottomNavigationView.setSelectedItemId(fragmentId);
         }
     }
-
-
-
 
 }
