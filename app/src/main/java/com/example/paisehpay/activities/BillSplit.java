@@ -31,9 +31,9 @@ public class BillSplit extends AppCompatActivity {
     RecyclerView summaryView;
     ArrayList<Summary> summaryArray = new ArrayList<>();
     Button homeButton;
-    Expense expense;
     ArrayList<Item> itemArray;
     TextView expenseName;
+    Expense expense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,8 @@ public class BillSplit extends AppCompatActivity {
 
         //catch the intent from AddPeople.java
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("Expense")){
+        if (intent != null){
+        //    itemArray = intent.getParcelableExtra("Items");
             expense = intent.getParcelableExtra("Expense");
         }
 
@@ -95,10 +96,11 @@ public class BillSplit extends AppCompatActivity {
     private void showSummaryList() {
         //get item array here by database call
 
-        for (Item item: itemArray){
-            for (String user: item.getItemPeopleArray()){
-                summaryArray.add(new Summary(String.format("%s owes you %s for %s",user,item.getItemIndividualPrice(),item.getItemName())));
-            }
-        }
+        //for (Item item: itemArray){
+         //   for (String user: item.getItemPeopleArray()){
+         //       summaryArray.add(new Summary(String.format("%s owes you %s for %s",user,item.getItemIndividualPrice(),item.getItemName())));
+         //   }
+        //}
+
     }
 }

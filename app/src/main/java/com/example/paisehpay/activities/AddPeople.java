@@ -246,9 +246,13 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     //we are overriding the RecycleViewInterface.onButtonClick method, which allows us to map that particular position on the RecycleView to a DialogFragment
     @Override
     public void onButtonClick(int position) {
-        Item item = itemArray.get(position); //we are getting the actual item and its position
-        addPeopleFragment = DialogFragment_AddPeople.newInstance(1,expenseGroup,position,item);
-        addPeopleFragment.show(getSupportFragmentManager(), "DialogFragment_AddPeople");
+        if (expenseGroup == null){
+            Toast.makeText(AddPeople.this, "Please select a group", Toast.LENGTH_LONG).show();
+        }else {
+            Item item = itemArray.get(position); //we are getting the actual item and its position
+            addPeopleFragment = DialogFragment_AddPeople.newInstance(1,expenseGroup,position,item);
+            addPeopleFragment.show(getSupportFragmentManager(), "DialogFragment_AddPeople");
+        }
 
     }
 
@@ -308,7 +312,8 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     // Only navigate after all items are stored
                     runOnUiThread(() -> {
                         Intent intent = new Intent(AddPeople.this, BillSplit.class);
-                        intent.putExtra("Expense", expense);
+                       // intent.putExtra("Items", items);
+                        intent.putExtra("Expense",expense);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
