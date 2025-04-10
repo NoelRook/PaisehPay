@@ -31,7 +31,7 @@ public class BillSplit extends AppCompatActivity {
     RecyclerView summaryView;
     ArrayList<Summary> summaryArray = new ArrayList<>();
     Button homeButton;
-    ArrayList<Item> itemArray;
+    ArrayList<Item> itemArray = new ArrayList<>();
     TextView expenseName;
     Expense expense;
 
@@ -94,6 +94,8 @@ public class BillSplit extends AppCompatActivity {
 
     //will be changed later
     private void showSummaryList() {
+
+
         //get item array here by database call
 
         //for (Item item: itemArray){

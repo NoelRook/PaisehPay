@@ -22,12 +22,14 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
     Context context;
     ArrayList<Item> itemArray;
     private final RecycleViewInterface recycleViewInterface;
+    private String queryFrom;
 
 
-    public RecycleViewAdapter_Item(Context context, ArrayList<Item> itemArray, RecycleViewInterface recycleViewInterface){
+    public RecycleViewAdapter_Item(Context context, ArrayList<Item> itemArray, RecycleViewInterface recycleViewInterface, String queryFrom){
         this.context = context;
         this.itemArray = itemArray;
         this.recycleViewInterface = recycleViewInterface;
+        this.queryFrom = queryFrom;
     }
 
     @NonNull
@@ -50,7 +52,7 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
         //since we are using the Item RecycleView multiple times but showcasing different attributes of class Item each time
         //we will use a common layout but hide some of the widgets based on where we are instantiating from
         //we will also need a way to differentiate where we are instantiating from
-        if (recycleViewInterface != null){
+        if (queryFrom.equals("AddPeople")){
             //if we are adding people to items on AddPeople.java, RecycleView -> DialogFragment -> RecycleView
             //thus we require recycleViewInterface
             //We don't want users to delete items, only add people
@@ -64,7 +66,7 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
                     }
                 }
             });
-        } else {
+        } else if (queryFrom.equals("ReceiptOverview")) {
             //if we are adding items on ReceiptOverview.java, DialogFragment -> RecycleView
             //we don't need recycleViewInterface, and we can't have users add people
             holder.peopleText.setVisibility(View.GONE);
@@ -85,6 +87,29 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, itemArray.size());
                     }
+                }
+            });
+        } else if (queryFrom.equals("SettleUp")){
+            holder.itemButton.setVisibility(View.GONE);
+            holder.deleteItemButton.setImageResource(R.drawable.add_icon);
+            if (itemArray.get(position).isSelected()) {
+                holder.deleteItemButton.setImageResource(R.drawable.added_icon);
+            } else {
+                holder.deleteItemButton.setImageResource(R.drawable.add_icon);
+            }
+            holder.deleteItemButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean currentlySelected = itemArray.get(position).isSelected();
+                    if(currentlySelected){
+                        holder.deleteItemButton.setImageResource(R.drawable.add_icon);
+                        holder.deleteItemButton.setSelected(false);
+                    } else {
+                        holder.deleteItemButton.setImageResource(R.drawable.added_icon);
+                        holder.deleteItemButton.setSelected(true);
+                    }
+                    itemArray.get(position).setSelected(!currentlySelected);
+                    holder.deleteItemButton.requestLayout();;
                 }
             });
         }

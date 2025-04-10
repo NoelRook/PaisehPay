@@ -53,7 +53,6 @@ public class ExpenseFragment extends Fragment {
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(getActivity()));
         expenseView.setHasFixedSize(true);
-
         showExpenseList();
         return rootView;
     }

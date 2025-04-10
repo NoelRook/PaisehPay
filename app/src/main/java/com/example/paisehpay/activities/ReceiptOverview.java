@@ -117,7 +117,7 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
 
         //show item list
         itemView = findViewById(R.id.recycle_view_items);
-        adapter_items = new RecycleViewAdapter_Item(this,itemArray,null);
+        adapter_items = new RecycleViewAdapter_Item(this,itemArray,null,"ReceiptOverview");
         itemView.setAdapter(adapter_items);
         itemView.setLayoutManager(new LinearLayoutManager(this));
         adapter_items.notifyDataSetChanged();

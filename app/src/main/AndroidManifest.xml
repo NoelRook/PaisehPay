@@ -7,7 +7,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PaisehPay_Iris"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.SettleUp"
+            android:exported="false" />
         <activity
             android:name=".activities.BillSplit"
             android:exported="false" />

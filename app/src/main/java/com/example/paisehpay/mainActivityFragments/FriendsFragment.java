@@ -18,8 +18,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.paisehpay.blueprints.Group;
-import com.example.paisehpay.blueprints.GroupMember;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.blueprints.User;

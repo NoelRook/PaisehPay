@@ -17,11 +17,11 @@ public class Item implements Parcelable {
     private String itemId;
     private String itemName;
     private double itemPrice;
-    private String itemPeopleString; // not stored in DB
+    private String itemPeopleString = ""; // not stored in DB
     private double itemIndividualPrice = 0.0; // remove this later on
     private String expenseId;
-    private ArrayList<String> itemPeopleArray; // not stored in DB
-    private boolean isSelected;
+    private ArrayList<User> itemPeopleArray = new ArrayList<>(); // not stored in DB
+    private boolean isSelected = false;
     private HashMap<String, Double> debtPeople ;// {userid: settled or not settled}, not paid
     // if for all items in totalOwed == 0, user is settled
 
@@ -48,7 +48,6 @@ public class Item implements Parcelable {
         itemPeopleString = in.readString();
         itemIndividualPrice = in.readDouble();
         expenseId = in.readString();
-        itemPeopleArray = in.createStringArrayList();
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -72,26 +71,26 @@ public class Item implements Parcelable {
         return itemPeopleString;
     }
 
-    public void setItemPeopleString(String itemPeopleString) {
-        this.itemPeopleString = itemPeopleString;
+    public void setItemPeopleString(ArrayList<User> itemPeopleArray) {
+        StringBuilder sb = new StringBuilder();
+        for (User user:itemPeopleArray){
+            sb.append(user.getUsername());
+            sb.append(", ");
+        }
+        itemPeopleString = sb.substring(0,sb.length()-2);
+
     }
 
-    public ArrayList<String> setItemPeopleArray(){
-        String people = getItemPeopleString();
-        if (people != null){
-            itemPeopleArray = new ArrayList<>(Arrays.asList(people.split(",")));
-        }
-        return itemPeopleArray;
+    public void setItemPeopleArray(ArrayList<User> arrayList){
+        itemPeopleArray = arrayList;
+        setItemPeopleString(itemPeopleArray);
     }
 
-    public ArrayList<String> getItemPeopleArray() {
-        if (itemPeopleArray != null) {
-            setItemPeopleArray();
-        }
+    public ArrayList<User> getItemPeopleArray() {
         return itemPeopleArray;
     }
     public boolean hasPeople(){
-        return setItemPeopleArray() != null && setItemPeopleArray().isEmpty();
+        return getItemPeopleArray() != null && getItemPeopleArray().isEmpty();
     }
 
     public String getItemPriceString() {
@@ -122,10 +121,6 @@ public class Item implements Parcelable {
         this.expenseId = expenseId;
     }
 
-    public void setItemIndividualPrice(double itemIndividualPrice) {
-        this.itemIndividualPrice = itemIndividualPrice;
-    }
-
     public boolean isSelected() {
         return isSelected;
     }
@@ -146,7 +141,6 @@ public class Item implements Parcelable {
         parcel.writeDouble(itemPrice);
         parcel.writeString(itemPeopleString);
         parcel.writeDouble(itemIndividualPrice);
-        parcel.writeStringList(itemPeopleArray);
     }
 
     // users array needs to be a hashmap, not an arraylist
@@ -173,7 +167,8 @@ public class Item implements Parcelable {
     public void calculateDebts() {
         if (itemPeopleArray != null && !itemPeopleArray.isEmpty()) {
             double splitAmount = itemPrice / itemPeopleArray.size();
-            for (String userId : itemPeopleArray) {
+            for (int i = 0; i<itemPeopleArray.size(); i++) {
+                String userId = itemPeopleArray.get(i).getId();
                 debtPeople.put(userId, splitAmount);
             }
         }

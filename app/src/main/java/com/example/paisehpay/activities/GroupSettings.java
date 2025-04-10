@@ -21,7 +21,6 @@ import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddPeople;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
-import com.example.paisehpay.blueprints.GroupMember;
 
 import java.util.ArrayList;
 

@@ -68,11 +68,11 @@
 
     <ImageButton
         android:id="@+id/delete_item"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:src="@drawable/delete"
-        android:scaleType="fitXY"
-        app:tint="@color/highlight_1"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/delete_expense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_layout"
         app:layout_constraintTop_toTopOf="@id/item_layout"

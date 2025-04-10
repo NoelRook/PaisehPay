@@ -85,6 +85,8 @@
     <string name="settle_up">Select Item to Settle Up</string>
     <string name="edit_expense">Edit Expense</string>
     <string name="settle_all">Settle All</string>
+    <string name="delete_expense">Delete Expense</string>
+    <string name="settle_expense">Settle Expense</string>
 
 
     //toolbar
@@ -206,8 +208,6 @@
     <string name="user_code">User Code</string>
     <string name="user_code_test">12345678</string>
     <string name="phone_test">+65 0000 0000</string>
-
-
 
 
 

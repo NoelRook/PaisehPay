@@ -1,12 +1,12 @@
 package com.example.paisehpay.recycleviewAdapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,16 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.GroupHomepage;
+import com.example.paisehpay.activities.SettleUp;
 import com.example.paisehpay.blueprints.Expense;
-import com.example.paisehpay.dialogFragments.DialogFragment_Expense;
-import com.example.paisehpay.dialogFragments.DialogFragment_Owe;
 
 import java.util.ArrayList;
 
 public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleViewAdapter_Expense.MyViewHolder> {
-    Context context;
+    private Context context;
     ArrayList<Expense> expenseArray;
-    static DialogFragment_Expense dialogFragmentExpense;
 
 
 
@@ -39,7 +37,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.expense_recycle_view_row,parent,false);
 
-        return new RecycleViewAdapter_Expense.MyViewHolder(view);
+        return new RecycleViewAdapter_Expense.MyViewHolder(view,context);
     }
 
     @Override
@@ -71,7 +69,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         TextView expensePaidByText;
         TextView expenseActionText;
         TextView expenseAmountText;
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView,Context context) {
             super(itemView);
 
 
@@ -80,6 +78,19 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
             expensePaidByText = itemView.findViewById(R.id.expense_paid_by);
             expenseActionText = itemView.findViewById(R.id.expense_action);
             expenseAmountText = itemView.findViewById(R.id.expense_amount);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, SettleUp.class);
+                    context.startActivity(intent);
+
+                    if (context instanceof GroupHomepage) {
+                        ((GroupHomepage) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        ((GroupHomepage) context).finish();
+                    }
+                }
+            });
 
 
         }

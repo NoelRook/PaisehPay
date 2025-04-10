@@ -166,8 +166,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
                 if (expenseNameText == null) {
                     Toast.makeText(AddPeople.this, "Please enter expense name", Toast.LENGTH_LONG).show();
-                } else if (expenseGroup == null) {
-                    Toast.makeText(AddPeople.this, "Please select a group", Toast.LENGTH_LONG).show();
                 } else if (!(checkItemHasUsers())) {
                     Toast.makeText(AddPeople.this, "Please add people to your items", Toast.LENGTH_LONG).show();
                 } else {
@@ -194,7 +192,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         //show item list
         //we will link the adapter used for the item scroll bar
         itemView = findViewById(R.id.recycle_view_items);
-        adapter_items = new RecycleViewAdapter_Item(this,itemArray,this);
+        adapter_items = new RecycleViewAdapter_Item(this,itemArray,this,"AddPeople");
         itemView.setAdapter(adapter_items);
         itemView.setLayoutManager(new LinearLayoutManager(this));
         showItemList();
@@ -231,8 +229,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
         for (int i = 0; i < nameList.length; i++) {
             int imageResId = imageArray.getResourceId(i, 0);
-
-
             categoryArray.add(new Category(nameList[i], imageResId));
         }
         imageArray.recycle();
@@ -259,7 +255,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     //used to populate RecycleView Items peopleSelected, where selectedNames is the names chosen in the DialogFragment
     //we are overriding the DialogFragmentListener.onDataSelected method, which attaches our DialogFragment back to the particular position on the RecycleView
     //thru this, we can send data, receive data from both the RecycleView and DialogFragment
-
     @Override
     public void onDataSelected(int position, Item item) {
         //Receipts instance = ReceiptInstance.getInstance();
@@ -283,7 +278,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             if (peopleStr == null || peopleStr.trim().isEmpty()) {
                 return false;
             }
-            ArrayList<String> peopleArray = item.setItemPeopleArray();
+            ArrayList<User> peopleArray = item.getItemPeopleArray();
             if (peopleArray == null || peopleArray.isEmpty()) {
                 return false;
             }
@@ -354,9 +349,5 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         }
     }
 
-
-    //general
-    // <!-- TODO: 4. store expense name, category, group, and item info in db after pressing confirm button  -->
-    // <!-- TODO: 8. query item name, price from db -->
 
 }

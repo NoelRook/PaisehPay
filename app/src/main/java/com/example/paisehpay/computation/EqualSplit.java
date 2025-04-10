@@ -3,6 +3,7 @@ package com.example.paisehpay.computation;
 import android.util.Log;
 
 import com.example.paisehpay.blueprints.Item;
+import com.example.paisehpay.blueprints.User;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,7 +35,8 @@ public class EqualSplit implements Split{ // implements a parent precent split t
             BigDecimal splitAmount = BigDecimal.valueOf(item.getItemPrice() / Double.valueOf(item.getItemPeopleArray().size()));
             HashMap<String, Double> debts = new HashMap<>();
 
-            for (String userId : item.getItemPeopleArray()) {
+            for (User user : item.getItemPeopleArray()) {
+                String userId = user.getId();
                 debts.put(userId, (splitAmount).doubleValue());
             }
 

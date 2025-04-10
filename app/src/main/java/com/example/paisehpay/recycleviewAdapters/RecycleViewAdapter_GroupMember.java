@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.activities.ReceiptOverview;
-import com.example.paisehpay.blueprints.GroupMember;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.computation.ReceiptInstance;
 

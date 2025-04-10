@@ -42,10 +42,10 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
     View rootView;
     RecyclerView userView;
     ArrayList<User> userArray = new ArrayList<>();
-    ArrayList<String> selectedPeople = new ArrayList<>();
+
+    ArrayList<User> selectedUserArray = new ArrayList<>();
     Button confirmButton;
     private static final String DATA_TO_QUERY = "data_to_query";
-    private int query_from;
     private DialogFragmentListener listener;
     private static final String POSITION = "position";
     private int pos;
@@ -86,14 +86,12 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
 
         if (getArguments() != null){
             //we will need the pos argument as we are populating RecycleView
-            query_from = getArguments().getInt(DATA_TO_QUERY);
             pos = getArguments().getInt(POSITION);
             item = getArguments().getParcelable(ITEM);
             groupId = getArguments().getString(GROUP_ID);
         }
 
         userView = rootView.findViewById(R.id.select_group_recycle);
-        //todo need to get groupid here somehoiw
 
         showPersonList(groupId);
         adapter = new RecycleViewAdapter_UserSelect(getActivity(),userArray,this);
@@ -112,14 +110,6 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
         }
     }
 
-    //currently populating with fake data
-    //get group member
-
-    //userArray.clear();
-    //        String[] nameList = getResources().getStringArray(R.array.dummy_person_name_list);
-//        for (String s : nameList) {
-//            userArray.add(new User(null,null,s,null,null));
-//            }
     private void showPersonList(String groupId) {
         userArray.clear();
 
@@ -141,6 +131,8 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
                                     null,            // phone (if not available)
                                     null             // other fields
                             ));
+
+                            //Log.d("UserID",entry.getKey());
                         }
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
@@ -181,10 +173,8 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
             @Override
             public void onClick(View view) {
                 updateSelectedPeopleList();
-                Log.d("DialogFragment",selectedPeople.toString());
                 if (listener != null){
-                    item.setItemPeopleString(formatSelectedPeople());
-                    item.setItemPeopleArray();
+                    item.setItemPeopleArray(selectedUserArray);
                     listener.onDataSelected(pos,item);
                 }
                 dismiss();
@@ -194,17 +184,14 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
 
 
     private void updateSelectedPeopleList() {
-        selectedPeople.clear();
+        selectedUserArray.clear();
         for (User user : userArray) {
             if (user.isSelected()) {
-                selectedPeople.add(user.getUsername());
+                selectedUserArray.add(user);
             }
         }
     }
 
-    private String formatSelectedPeople(){
-        return String.join(",",selectedPeople);
-    }
 
     //get members from group
 
