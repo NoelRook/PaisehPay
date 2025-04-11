@@ -64,7 +64,7 @@ public class ExpenseFragment extends Fragment {
         expenseView = rootView.findViewById(R.id.recycle_view_expense);
 
         // Initialize with empty list, will be updated in onResume
-        adapter = new RecycleViewAdapter_Expense(getActivity(), new ArrayList<>());
+        adapter = new RecycleViewAdapter_Expense(getActivity(), new ArrayList<>(),groupId);
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(getActivity()));
         expenseView.setHasFixedSize(true);

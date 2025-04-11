@@ -111,6 +111,7 @@
         <item name="android:textColor">@color/text_colour_dark_mode</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:soundEffectsEnabled">false</item>
     </style>
 
     <style name="ButtonDarkMode">
@@ -119,6 +120,7 @@
         <item name="android:textColor">@color/text_colour_dark_mode</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:soundEffectsEnabled">false</item>
     </style>
 
     <style name="ButtonBordelessLightMode" parent="Widget.MaterialComponents.Button.TextButton">
@@ -128,6 +130,7 @@
         <item name="android:textColor">@color/text_colour_light_mode</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:soundEffectsEnabled">false</item>
     </style>
 
     <style name="ButtonBordelessDarkMode" parent="Widget.MaterialComponents.Button.TextButton">
@@ -137,6 +140,7 @@
         <item name="android:textColor">@color/text_colour_dark_mode</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:soundEffectsEnabled">false</item>
     </style>
 
     <style name="ImageViewCircular">
@@ -165,6 +169,8 @@
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:popupBackground">@color/highlight_4</item>
     </style>
+
+
 
     <style name="TransparentBottomNav" parent="Theme.MaterialComponents.Light">
         <item name="android:windowTranslucentNavigation">true</item>

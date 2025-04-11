@@ -8,21 +8,17 @@ import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ExpenseSingleton {
     private static ExpenseSingleton instance = null;
-    static ArrayList<Expense> expenseArrayList ;
+    private ArrayList<Expense> expenseArrayList;
 
-
-    protected ExpenseSingleton() {
-        // Exists only to defeat instantiation.
+    private ExpenseSingleton() {
         expenseArrayList = new ArrayList<>();
     }
 
     public static ExpenseSingleton getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ExpenseSingleton();
         }
         return instance;
@@ -36,20 +32,20 @@ public class ExpenseSingleton {
         this.expenseArrayList.clear();
         this.expenseArrayList.addAll(expenses);
     }
+
     public void getExpensesByGroupId(String groupId, BaseDatabase.ListCallback<Expense> callback) {
-            ExpenseAdapter expenseAdapter = new ExpenseAdapter();
-            expenseAdapter.getByGroupId(groupId, new BaseDatabase.ListCallback<Expense>() {
-                @Override
-                public void onListLoaded(List<Expense> expenses) {
-                    setExpenses(expenses);
-                    callback.onListLoaded(expenses);
-                }
+        ExpenseAdapter expenseAdapter = new ExpenseAdapter();
+        expenseAdapter.getByGroupId(groupId, new BaseDatabase.ListCallback<Expense>() {
+            @Override
+            public void onListLoaded(List<Expense> expenses) {
+                setExpenses(expenses);
+                callback.onListLoaded(expenses);
+            }
 
-                @Override
-                public void onError(DatabaseError error) {
-                    callback.onError(error);
-                }
-            });
+            @Override
+            public void onError(DatabaseError error) {
+                callback.onError(error);
+            }
+        });
     }
-
 }

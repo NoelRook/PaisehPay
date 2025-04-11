@@ -79,6 +79,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
             }
         });
 
+        //press add members button leads to being able to add members
         addMembersButton= findViewById(R.id.add_members);
         addMembersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +88,20 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
                 addMembersFragment.show(getSupportFragmentManager(), "DialogFragment_AddMembers");
             }
         });
+
+        //press delete group button
+        deleteGroupButton = findViewById(R.id.delete_group);
+        deleteGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //groupAdapter.delete(groupId,);
+                Intent intent = new Intent(GroupSettings.this, MainActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                finish();
+            }
+        });
+
 
         //show groupMember list
         groupMemberView = findViewById(R.id.recycle_view_members);

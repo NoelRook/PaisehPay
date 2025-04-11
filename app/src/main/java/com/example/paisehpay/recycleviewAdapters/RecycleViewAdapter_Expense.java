@@ -22,12 +22,14 @@ import java.util.ArrayList;
 public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleViewAdapter_Expense.MyViewHolder> {
     private Context context;
     ArrayList<Expense> expenseArray;
+    String groupId;
 
 
 
-    public RecycleViewAdapter_Expense(Context context, ArrayList<Expense> expenseArray){
+    public RecycleViewAdapter_Expense(Context context, ArrayList<Expense> expenseArray,String groupId){
         this.context = context;
         this.expenseArray = expenseArray;
+        this.groupId = groupId;
     }
 
     @NonNull
@@ -37,7 +39,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.expense_recycle_view_row,parent,false);
 
-        return new RecycleViewAdapter_Expense.MyViewHolder(view,context);
+        return new RecycleViewAdapter_Expense.MyViewHolder(view,context,groupId);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         TextView expensePaidByText;
         TextView expenseActionText;
         TextView expenseAmountText;
-        public MyViewHolder(@NonNull View itemView,Context context) {
+        public MyViewHolder(@NonNull View itemView,Context context,String groupId) {
             super(itemView);
 
 
@@ -83,6 +85,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, SettleUp.class);
+                    intent.putExtra("GROUP_ID",groupId);
                     context.startActivity(intent);
 
                     if (context instanceof GroupHomepage) {

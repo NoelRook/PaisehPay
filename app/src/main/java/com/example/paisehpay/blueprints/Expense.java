@@ -21,7 +21,6 @@ public class Expense implements Parcelable {
     String expenseAction;
     String expenseAmount;
     String expenseCategory;
-    //ArrayList<Item> expenseItems; // can we get rid of this?
 
     public Expense(){
 

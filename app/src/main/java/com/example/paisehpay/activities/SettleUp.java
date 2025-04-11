@@ -37,6 +37,7 @@ public class SettleUp extends AppCompatActivity {
     Button settleExpenseButton;
     Button deleteExpenseButton;
     RecycleViewAdapter_Item adapter;
+    String groupId;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -50,6 +51,10 @@ public class SettleUp extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Intent intent = getIntent();
+        groupId = intent.getStringExtra("GROUP_ID");
+
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -111,7 +116,6 @@ public class SettleUp extends AppCompatActivity {
         adapter = new RecycleViewAdapter_Item(this,itemArray,null, "SettleUp");
         itemView.setAdapter(adapter);
         itemView.setLayoutManager(new LinearLayoutManager(this));
-        String groupId = "PUT GROUP ID HERE";
         showItemList(groupId);
     }
 
@@ -129,7 +133,7 @@ public class SettleUp extends AppCompatActivity {
         itemAdapter itemadapter = new itemAdapter();
 
         executorService.execute(()->{
-            itemadapter.getItemByExpense(groupid, new BaseDatabase.ListCallback<Item>() {
+            itemadapter.getItemByExpense(groupId, new BaseDatabase.ListCallback<Item>() {
                 @Override
                 public void onListLoaded(List<Item> object) {
                     itemArray.addAll(object);

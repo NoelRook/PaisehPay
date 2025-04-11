@@ -56,6 +56,7 @@
                     app:layout_constraintBottom_toTopOf="@id/group_owe"
                     style="@style/textViewMediumLightMode"/>
 
+
                 <TextView
                     android:id="@+id/people_owe"
                     android:layout_width="wrap_content"
