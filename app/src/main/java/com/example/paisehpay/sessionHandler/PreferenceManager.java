@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.paisehpay.blueprints.User;
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -73,11 +73,11 @@ public class PreferenceManager {
         sharedPreferences.edit().clear().apply();
     }
 
-    public void saveGroups(ArrayList groupList){
-        Gson gson = new Gson();
-        String json = gson.toJson(groupList);
-        sharedPreferences.edit().putString(KEY_GROUP, json).apply();
-    }
+//    public void saveGroups(ArrayList groupList){
+//        Gson gson = new Gson();
+//        String json = gson.toJson(groupList);
+//        sharedPreferences.edit().putString(KEY_GROUP, json).apply();
+//    }
 
     public ArrayList getGroups(){
 

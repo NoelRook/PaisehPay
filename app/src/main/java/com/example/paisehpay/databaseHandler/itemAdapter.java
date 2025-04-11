@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,8 +70,27 @@ public class itemAdapter extends BaseDatabase{
     }
 
     @Override
-    public <T> void update(String Id, T userObj, OperationCallback callback) {
-        //todo. 3 update an item associated to a group
+    public <T> void update(String ExpenseId, T object, OperationCallback callback) {
+        if (!(object instanceof Item)){
+            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
+            return;
+        }
+        if (ExpenseId == null || ExpenseId.isEmpty()) {
+            callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
+            return;
+        }
+        User user = (User) object;
+        databaseRef.child(ExpenseId).setValue(user.toMap())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override @NonNull
+                    public void onComplete(Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onError(DatabaseError.fromException(task.getException()));
+                        }
+                    }
+                });
 
     }
 
@@ -110,6 +131,10 @@ public class itemAdapter extends BaseDatabase{
         for(Item item : items){
             // loop through the item list here,
         }
+    }
+
+    public void getUserSummary(){
+        //todo query the database for all expenses that the user is in
     }
 
 
