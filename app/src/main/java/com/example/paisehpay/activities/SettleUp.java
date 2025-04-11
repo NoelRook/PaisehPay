@@ -17,8 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.itemAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
 import com.google.firebase.database.DatabaseError;
@@ -38,6 +40,7 @@ public class SettleUp extends AppCompatActivity {
     Button deleteExpenseButton;
     RecycleViewAdapter_Item adapter;
     String expenseId;
+    ExpenseAdapter expAdapter;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -60,6 +63,7 @@ public class SettleUp extends AppCompatActivity {
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.settle_expense);
+        expAdapter = new ExpenseAdapter();
 
 
         //press back arrow lead back to home fragment
@@ -106,7 +110,21 @@ public class SettleUp extends AppCompatActivity {
         deleteExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                expAdapter.delete(expenseId, new BaseDatabase.OperationCallback(){
+                    @Override
+                    public void onSuccess() {
+                        // User deleted successfully
+                        Log.d("Success", "expense deleted");
+                        Intent intent= new Intent(SettleUp.this, GroupHomepage.class);
+                        startActivity(intent);
+                    }
 
+                    @Override
+                    public void onError(DatabaseError error) {
+                        // Handle error
+                        Log.e("FirebaseError", error.getMessage());
+                    }
+                });
             }
         });
 
