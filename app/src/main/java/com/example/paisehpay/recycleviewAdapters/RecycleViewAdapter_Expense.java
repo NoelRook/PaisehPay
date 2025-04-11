@@ -96,4 +96,8 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         }
     }
 
+    public void updateData(ArrayList<Expense> newData) {
+        this.expenseArray = newData;
+    }
+
 }

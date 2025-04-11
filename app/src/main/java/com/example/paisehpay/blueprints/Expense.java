@@ -23,6 +23,10 @@ public class Expense implements Parcelable {
     String expenseCategory;
     //ArrayList<Item> expenseItems; // can we get rid of this?
 
+    public Expense(){
+
+    }
+
     public Expense(String description,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, String GroupId ){
         this.description = description;
         this.expenseDate = expenseDate;
@@ -89,6 +93,7 @@ public class Expense implements Parcelable {
         result.put("created_at", expenseDate);
         result.put("creator_id", expensePaidBy);
         result.put("currency", "SGD");
+        result.put("category", expenseCategory);
         result.put("group_id", associatedGroup);
         result.put("totalAmount", expenseAmount);
         return result;
