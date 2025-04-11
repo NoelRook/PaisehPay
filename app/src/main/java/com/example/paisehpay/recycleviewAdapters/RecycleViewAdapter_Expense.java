@@ -60,7 +60,6 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
 
             if (context instanceof GroupHomepage) {
                 ((GroupHomepage) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                ((GroupHomepage) context).finish();
             }
         });
 

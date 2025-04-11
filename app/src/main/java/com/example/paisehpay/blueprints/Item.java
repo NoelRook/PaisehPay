@@ -21,7 +21,7 @@ public class Item implements Parcelable {
     private String expenseId;
     private ArrayList<User> itemPeopleArray = new ArrayList<>(); // not stored in DB
     private boolean settled = false;
-    private HashMap<String, Double> debtPeople ;// {userid: settled or not settled}, not paid
+    private HashMap<String, Double> debtPeople = new HashMap<>() ;// {userid: settled or not settled}, not paid
     // if for all items in totalOwed == 0, user is settled
 
 

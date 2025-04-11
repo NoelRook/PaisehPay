@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.itemAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Settle;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -38,9 +38,12 @@ public class SettleUp extends AppCompatActivity {
     Button editExpenseButton;
     Button settleExpenseButton;
     Button deleteExpenseButton;
-    RecycleViewAdapter_Item adapter;
+    //RecycleViewAdapter_Item adapter;
+
+    RecycleViewAdapter_Settle adapter;
     String expenseId;
     ExpenseAdapter expAdapter;
+
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -71,10 +74,8 @@ public class SettleUp extends AppCompatActivity {
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SettleUp.this, GroupHomepage.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             }
         });
 
@@ -99,7 +100,6 @@ public class SettleUp extends AppCompatActivity {
             public void onClick(View view) {
                 for (Item item: itemArray){
                     item.setSettled(true);
-                    //Log.d("SettleUp", "Item: " + item.getItemName() + " selected? " + item.isSelected());
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -115,8 +115,8 @@ public class SettleUp extends AppCompatActivity {
                     public void onSuccess() {
                         // User deleted successfully
                         Log.d("Success", "expense deleted");
-                        Intent intent= new Intent(SettleUp.this, GroupHomepage.class);
-                        startActivity(intent);
+                        finish();
+
                     }
 
                     @Override
@@ -132,22 +132,13 @@ public class SettleUp extends AppCompatActivity {
         //show item list
         //we will link the adapter used for the item scroll bar
         itemView = findViewById(R.id.recycle_view_items);
-        adapter = new RecycleViewAdapter_Item(this,itemArray,null, "SettleUp");
+        adapter = new RecycleViewAdapter_Settle(this,itemArray);
         itemView.setAdapter(adapter);
         itemView.setLayoutManager(new LinearLayoutManager(this));
 
         showItemList(expenseId);
     }
 
-
-    //currently doesn't allow the item to save whether settled or not, need see db implementation
-    @Override
-    protected void onResume(){
-        super.onResume();
-        for (Item item : itemArray) {
-            Log.d("ResumeState", "Item: " + item.getItemName() + " selected: " + item.isSettled());
-        }
-    }
 
     private void showItemList(String expenseId) {
         itemAdapter itemadapter = new itemAdapter();
@@ -173,5 +164,4 @@ public class SettleUp extends AppCompatActivity {
         });
         adapter.notifyDataSetChanged();
     }
-
 }

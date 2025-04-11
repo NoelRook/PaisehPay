@@ -16,16 +16,9 @@ import android.widget.Toast;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.ExpenseSingleton;
-import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
-import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Expense;
-import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ExpenseFragment extends Fragment {
     private static final String CATEGORY = "category";
@@ -68,6 +61,7 @@ public class ExpenseFragment extends Fragment {
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(getActivity()));
         expenseView.setHasFixedSize(true);
+        updateExpenseList();
 
         return rootView;
     }
@@ -81,6 +75,7 @@ public class ExpenseFragment extends Fragment {
     private void updateExpenseList() {
         ArrayList<Expense> filteredExpenses = new ArrayList<>();
         ArrayList<Expense> allExpenses = expenseSaver.getExpenseArrayList();
+        Log.d("expense",allExpenses.toString());
 
         if (allExpenses == null) {
             allExpenses = new ArrayList<>(); // Ensure we don't get NPE
@@ -91,13 +86,13 @@ public class ExpenseFragment extends Fragment {
         } else {
             for (Expense expense : allExpenses) {
                 String expenseCategory = expense.getExpenseCategory();
+                Log.d("category", expenseCategory + categoryToLoad);
                 // Handle null category - you might want to skip or include these
                 if (expenseCategory != null && expenseCategory.equalsIgnoreCase(categoryToLoad)) {
                     filteredExpenses.add(expense);
                 }
             }
         }
-
         adapter.updateData(filteredExpenses);
         adapter.notifyDataSetChanged();
     }

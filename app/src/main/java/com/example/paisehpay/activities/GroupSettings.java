@@ -76,10 +76,8 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GroupSettings.this, GroupHomepage.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             }
         });
 

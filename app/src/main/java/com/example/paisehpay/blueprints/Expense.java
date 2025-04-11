@@ -116,6 +116,38 @@ public class Expense implements Parcelable {
     public String getexpenseId() {
         return expenseId;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "description='" + description + '\'' +
+                ", category='" + expenseCategory + '\'' +
+                ", id='" + expenseId + '\'' +
+                "date='" + expenseDate + '\'' +
+                ", action='" + expenseAction + '\'' +
+                ", paid by='" + expensePaidBy + '\'' +
+                '}';
+    }
+
+    public void setDescription(String description) {
+    }
+
+    public void setExpenseDate(String createdAt) {
+    }
+
+    public void setExpensePaidBy(String creatorId) {
+    }
+
+    public void setAssociatedGroup(String groupId) {
+    }
+
+    public void setExpenseAmount(String totalAmount) {
+    }
+
+    public void setExpenseCategory(String category) {
+
+    }
 }
 
 
