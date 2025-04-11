@@ -48,7 +48,10 @@ public class Item implements Parcelable {
         itemPeopleString = in.readString();
         itemIndividualPrice = in.readDouble();
         expenseId = in.readString();
+        settled = in.readByte() != 0;
+        debtPeople = (HashMap<String, Double>) in.readSerializable();
     }
+
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
         @Override
@@ -88,9 +91,6 @@ public class Item implements Parcelable {
 
     public ArrayList<User> getItemPeopleArray() {
         return itemPeopleArray;
-    }
-    public boolean hasPeople(){
-        return getItemPeopleArray() != null && getItemPeopleArray().isEmpty();
     }
 
     public String getItemPriceString() {
@@ -141,6 +141,9 @@ public class Item implements Parcelable {
         parcel.writeDouble(itemPrice);
         parcel.writeString(itemPeopleString);
         parcel.writeDouble(itemIndividualPrice);
+        parcel.writeString(expenseId);
+        parcel.writeByte((byte) (settled ? 1 : 0));
+        parcel.writeSerializable(debtPeople); // safest way if you're using a HashMap
     }
 
     // users array needs to be a hashmap, not an arraylist

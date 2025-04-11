@@ -169,7 +169,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                 } else if (!(checkItemHasUsers())) {
                     Toast.makeText(AddPeople.this, "Please add people to your items", Toast.LENGTH_LONG).show();
                 } else {
-                    Expense expense = new Expense(expenseName, expenseDate, id, null, expenseAmount, expenseCategory, expenseGroup);
+                    Expense expense = new Expense(expenseId,expenseName,expenseDate,id,expenseGroup,null,expenseAmount,expenseCategory);
 
                     // Store expense first
                     StoreExpenseAndItems(expense, itemArray);
@@ -298,7 +298,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             expAdapter.create(expense, new ExpenseAdapter.OperationCallback() {
                 @Override
                 public void onSuccess() {
-                    String expenseId = expense.getexpenseId(); // Make sure this gets the generated ID
+                    String expenseId = expense.getExpenseId(); // Make sure this gets the generated ID
                     Log.d("Saved expense", "ID: " + expenseId);
 
                     // Now store items with this expenseId

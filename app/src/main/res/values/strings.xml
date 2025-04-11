@@ -57,8 +57,8 @@
     <string name="today">Today, 20 March 2025</string>
     <string name="owe">You owe</string>
     <string name="owed">You are owed</string>
-    <string name="owe_amount">$ XXX</string>
-    <string name="owed_amount">$ YYY</string>
+    <string name="owe_amount">$155.27</string>
+    <string name="owed_amount">$27.84</string>
     <string name="more_details">More details</string>
     <string name="group_name">Group Name</string>
     <string name="group_created">Created 12/12/2024</string>

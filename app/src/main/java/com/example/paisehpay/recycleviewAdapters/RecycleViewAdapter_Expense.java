@@ -55,7 +55,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         holder.itemView.setOnClickListener(view -> {
             Context context = view.getContext();
             Intent intent = new Intent(context, SettleUp.class);
-            intent.putExtra("EXPENSE_ID", currentExpense.getexpenseId());
+            intent.putExtra("EXPENSE_ID", currentExpense.getExpenseId());
             context.startActivity(intent);
 
             if (context instanceof GroupHomepage) {

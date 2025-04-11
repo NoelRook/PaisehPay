@@ -5,49 +5,50 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
+import com.google.firebase.database.PropertyName;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Expense implements Parcelable {
-    //expense object used in recycleview of grouphomepage
+    private String expenseId;
+    private String description;
+    private String expenseDate;
+    private String expensePaidBy;
+    private String associatedGroup;
+    private String expenseAction; // Optional field
+    private String expenseAmount;
+    private String expenseCategory;
 
-    String expenseId;
-    String description;
-    String expenseDate;
-    String expensePaidBy;
-    String associatedGroup;
-    String expenseAction;
-    String expenseAmount;
-    String expenseCategory;
-
-    public Expense(){
-
+    public Expense() {
+        // Default constructor required for Firebase
     }
 
-    public Expense(String description,String expenseDate, String expensePaidBy, String expenseAction, String expenseAmount,String expenseCategory, String GroupId ){
+    public Expense(String expenseId, String description, String expenseDate,
+                   String expensePaidBy, String associatedGroup, String expenseAction,
+                   String expenseAmount, String expenseCategory) {
+        this.expenseId = expenseId;
         this.description = description;
         this.expenseDate = expenseDate;
         this.expensePaidBy = expensePaidBy;
+        this.associatedGroup = associatedGroup;
         this.expenseAction = expenseAction;
-        this.associatedGroup = GroupId;
         this.expenseAmount = expenseAmount;
         this.expenseCategory = expenseCategory;
-        //this.expenseItems = expenseItems;
     }
 
     protected Expense(Parcel in) {
+        expenseId = in.readString();
         description = in.readString();
         expenseDate = in.readString();
         expensePaidBy = in.readString();
+        associatedGroup = in.readString();
         expenseAction = in.readString();
         expenseAmount = in.readString();
         expenseCategory = in.readString();
-        //expenseItems = in.createTypedArrayList(Item.CREATOR);
     }
 
-    public static final Parcelable.Creator<Expense> CREATOR = new Parcelable.Creator<Expense>() {
+    public static final Creator<Expense> CREATOR = new Creator<Expense>() {
         @Override
         public Expense createFromParcel(Parcel in) {
             return new Expense(in);
@@ -59,12 +60,13 @@ public class Expense implements Parcelable {
         }
     };
 
-    public String getExpenseAction() {
-        return expenseAction;
+    // Getters
+    public String getExpenseId() {
+        return expenseId;
     }
 
-    public String getExpenseAmount() {
-        return expenseAmount;
+    public String getDescription() {
+        return description;
     }
 
     public String getExpenseDate() {
@@ -75,15 +77,54 @@ public class Expense implements Parcelable {
         return expensePaidBy;
     }
 
-    public String getDescription() {
-        return description;
+    public String getAssociatedGroup() {
+        return associatedGroup;
     }
 
-    public String getExpenseCategory() {return expenseCategory;}
+    public String getExpenseAction() {
+        return expenseAction;
+    }
+
+    public String getExpenseAmount() {
+        return expenseAmount;
+    }
+
+    public String getExpenseCategory() {
+        return expenseCategory != null ? expenseCategory : "Uncategorized";
+    }
+
+    // Setters
+    public void setExpenseId(String expenseId) {
+        this.expenseId = expenseId;
+    }
 
 
-    public void setExpenseId(String key) {
-        this.expenseId = key;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setExpenseDate(String expenseDate) {
+        this.expenseDate = expenseDate;
+    }
+
+    public void setExpensePaidBy(String expensePaidBy) {
+        this.expensePaidBy = expensePaidBy;
+    }
+
+    public void setAssociatedGroup(String associatedGroup) {
+        this.associatedGroup = associatedGroup;
+    }
+
+    public void setExpenseAction(String expenseAction) {
+        this.expenseAction = expenseAction;
+    }
+
+    public void setExpenseAmount(String expenseAmount) {
+        this.expenseAmount = expenseAmount;
+    }
+
+    public void setExpenseCategory(String expenseCategory) {
+        this.expenseCategory = expenseCategory;
     }
 
     public Map<String, Object> toMap() {
@@ -104,50 +145,29 @@ public class Expense implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeString(description);
-        parcel.writeString(expenseDate);
-        parcel.writeString(expensePaidBy);
-        parcel.writeString(expenseAction);
-        parcel.writeString(expenseAmount);
-        parcel.writeString(expenseCategory);
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(expenseId);
+        dest.writeString(description);
+        dest.writeString(expenseDate);
+        dest.writeString(expensePaidBy);
+        dest.writeString(associatedGroup);
+        dest.writeString(expenseAction);
+        dest.writeString(expenseAmount);
+        dest.writeString(expenseCategory);
     }
 
-    public String getexpenseId() {
-        return expenseId;
-    }
-
-    @NonNull
     @Override
     public String toString() {
         return "Expense{" +
-                "description='" + description + '\'' +
-                ", category='" + expenseCategory + '\'' +
-                ", id='" + expenseId + '\'' +
-                "date='" + expenseDate + '\'' +
-                ", action='" + expenseAction + '\'' +
-                ", paid by='" + expensePaidBy + '\'' +
+                "expenseId='" + expenseId + '\'' +
+                ", description='" + description + '\'' +
+                ", expenseDate='" + expenseDate + '\'' +
+                ", expensePaidBy='" + expensePaidBy + '\'' +
+                ", associatedGroup='" + associatedGroup + '\'' +
+                ", expenseAction='" + expenseAction + '\'' +
+                ", expenseAmount='" + expenseAmount + '\'' +
+                ", expenseCategory='" + expenseCategory + '\'' +
                 '}';
     }
-
-    public void setDescription(String description) {
-    }
-
-    public void setExpenseDate(String createdAt) {
-    }
-
-    public void setExpensePaidBy(String creatorId) {
-    }
-
-    public void setAssociatedGroup(String groupId) {
-    }
-
-    public void setExpenseAmount(String totalAmount) {
-    }
-
-    public void setExpenseCategory(String category) {
-
-    }
 }
-
 

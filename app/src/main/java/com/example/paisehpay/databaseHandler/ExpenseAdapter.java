@@ -114,6 +114,29 @@ public class ExpenseAdapter extends BaseDatabase{
         }
     }
 
+    public void getByExpenseId(String expenseId, ListCallback callback){ // used on update
+        databaseRef.equalTo(expenseId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        List<Expense> expenses = new ArrayList<>();
+                        for (DataSnapshot expenseSnapshot : dataSnapshot.getChildren()) {
+                            Expense expense = expenseSnapshot.getValue(Expense.class);
+                            if (expense != null) {
+                                expense.setExpenseId(expenseSnapshot.getKey());
+                                expenses.add(expense);
+                            }
+                        }
+                        callback.onListLoaded(expenses);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        callback.onError(databaseError);
+                    }
+                });
+    }
+
     @Override
     public <T> void update(String expenseId, T object, OperationCallback callback) {
         if (!(object instanceof Expense)) {

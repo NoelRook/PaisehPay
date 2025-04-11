@@ -85,6 +85,7 @@ public class SettleUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettleUp.this, ReceiptOverview.class);
+                intent.putExtra("Items",itemArray);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
