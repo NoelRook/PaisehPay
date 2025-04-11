@@ -37,7 +37,7 @@ public class SettleUp extends AppCompatActivity {
     Button settleExpenseButton;
     Button deleteExpenseButton;
     RecycleViewAdapter_Item adapter;
-    String groupId;
+    String expenseId;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -53,7 +53,8 @@ public class SettleUp extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        groupId = intent.getStringExtra("GROUP_ID");
+        expenseId = intent.getStringExtra("EXPENSE_ID");
+        Log.d("test",expenseId);
 
 
         //modify toolbar text based on page
@@ -116,7 +117,8 @@ public class SettleUp extends AppCompatActivity {
         adapter = new RecycleViewAdapter_Item(this,itemArray,null, "SettleUp");
         itemView.setAdapter(adapter);
         itemView.setLayoutManager(new LinearLayoutManager(this));
-        showItemList(groupId);
+
+        showItemList(expenseId);
     }
 
 
@@ -129,11 +131,11 @@ public class SettleUp extends AppCompatActivity {
         }
     }
 
-    private void showItemList(String groupId) { //need figure out how to call expense item from db
+    private void showItemList(String expenseId) {
         itemAdapter itemadapter = new itemAdapter();
 
         executorService.execute(()->{
-            itemadapter.getItemByExpense(groupId, new BaseDatabase.ListCallback<Item>() {
+            itemadapter.getItemByExpense(expenseId, new BaseDatabase.ListCallback<Item>() {
                 @Override
                 public void onListLoaded(List<Item> object) {
                     itemArray.addAll(object);
@@ -151,10 +153,6 @@ public class SettleUp extends AppCompatActivity {
                 }
             });
         });
-
-
-
-
         adapter.notifyDataSetChanged();
     }
 
