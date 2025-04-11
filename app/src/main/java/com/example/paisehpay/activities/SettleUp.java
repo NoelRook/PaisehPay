@@ -116,7 +116,8 @@ public class SettleUp extends AppCompatActivity {
         adapter = new RecycleViewAdapter_Item(this,itemArray,null, "SettleUp");
         itemView.setAdapter(adapter);
         itemView.setLayoutManager(new LinearLayoutManager(this));
-        showItemList(groupId);
+        String expenseId = "-ONZ4Qau--4pKeUKJSGp";
+        showItemList(expenseId);
     }
 
 
@@ -129,11 +130,11 @@ public class SettleUp extends AppCompatActivity {
         }
     }
 
-    private void showItemList(String groupId) { //need figure out how to call expense item from db
+    private void showItemList(String expenseId) { //need figure out how to call expense item from db
         itemAdapter itemadapter = new itemAdapter();
 
         executorService.execute(()->{
-            itemadapter.getItemByExpense(groupId, new BaseDatabase.ListCallback<Item>() {
+            itemadapter.getItemByExpense(expenseId, new BaseDatabase.ListCallback<Item>() {
                 @Override
                 public void onListLoaded(List<Item> object) {
                     itemArray.addAll(object);
