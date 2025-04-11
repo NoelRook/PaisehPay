@@ -25,6 +25,7 @@ public class Item implements Parcelable {
     // if for all items in totalOwed == 0, user is settled
 
 
+    public Item(){}
 
     public Item(String itemId,
                 String itemName,
