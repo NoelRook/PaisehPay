@@ -332,6 +332,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         for (Item item : items) {
             item.calculateDebts();
             item.setExpenseId(expenseId); // Set the expense ID for each item
+            item.setSettled(false);
 
             executorService.execute(() -> {
                 itemadapter.create(item, new ExpenseAdapter.OperationCallback() {

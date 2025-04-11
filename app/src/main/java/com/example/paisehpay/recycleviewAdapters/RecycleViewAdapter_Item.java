@@ -92,7 +92,7 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
         } else if (queryFrom.equals("SettleUp")){
             holder.itemButton.setVisibility(View.GONE);
             holder.deleteItemButton.setImageResource(R.drawable.add_icon);
-            if (itemArray.get(position).isSelected()) {
+            if (itemArray.get(position).isSettled()) {
                 holder.deleteItemButton.setImageResource(R.drawable.added_icon);
             } else {
                 holder.deleteItemButton.setImageResource(R.drawable.add_icon);
@@ -100,7 +100,7 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
             holder.deleteItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    boolean currentlySelected = itemArray.get(position).isSelected();
+                    boolean currentlySelected = itemArray.get(position).isSettled();
                     if(currentlySelected){
                         holder.deleteItemButton.setImageResource(R.drawable.add_icon);
                         holder.deleteItemButton.setSelected(false);
@@ -108,7 +108,7 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
                         holder.deleteItemButton.setImageResource(R.drawable.added_icon);
                         holder.deleteItemButton.setSelected(true);
                     }
-                    itemArray.get(position).setSelected(!currentlySelected);
+                    itemArray.get(position).setSettled(!currentlySelected);
                     holder.deleteItemButton.requestLayout();;
                 }
             });

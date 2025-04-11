@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public class Item implements Parcelable {
     private double itemIndividualPrice = 0.0; // remove this later on
     private String expenseId;
     private ArrayList<User> itemPeopleArray = new ArrayList<>(); // not stored in DB
-    private boolean isSelected = false;
+    private boolean settled = false;
     private HashMap<String, Double> debtPeople ;// {userid: settled or not settled}, not paid
     // if for all items in totalOwed == 0, user is settled
 
@@ -121,12 +120,12 @@ public class Item implements Parcelable {
         this.expenseId = expenseId;
     }
 
-    public boolean isSelected() {
-        return isSelected;
+    public boolean isSettled() {
+        return settled;
     }
 
-    public void setSelected(boolean selected) {
-        this.isSelected = selected;
+    public void setSettled(boolean settled) {
+        this.settled = settled;
     }
 
     @Override
@@ -160,6 +159,7 @@ public class Item implements Parcelable {
         result.put("itemName", itemName);
         result.put("itemPrice", itemPrice);
         result.put("expenseId", expenseId);
+        result.put("settled", settled);
         result.put("debtpeople", debtPeople);
         return result;
     }

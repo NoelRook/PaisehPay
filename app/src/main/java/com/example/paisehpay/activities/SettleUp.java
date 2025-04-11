@@ -18,9 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Item;
+import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.itemAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SettleUp extends AppCompatActivity {
     TextView toolbarTitleText;
@@ -31,6 +37,8 @@ public class SettleUp extends AppCompatActivity {
     Button settleExpenseButton;
     Button deleteExpenseButton;
     RecycleViewAdapter_Item adapter;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +88,7 @@ public class SettleUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 for (Item item: itemArray){
-                    item.setSelected(true);
+                    item.setSettled(true);
                     //Log.d("SettleUp", "Item: " + item.getItemName() + " selected? " + item.isSelected());
                 }
                 adapter.notifyDataSetChanged();
@@ -103,7 +111,8 @@ public class SettleUp extends AppCompatActivity {
         adapter = new RecycleViewAdapter_Item(this,itemArray,null, "SettleUp");
         itemView.setAdapter(adapter);
         itemView.setLayoutManager(new LinearLayoutManager(this));
-        showItemList();
+        String groupId = "PUT GROUP ID HERE";
+        showItemList(groupId);
     }
 
 
@@ -112,19 +121,36 @@ public class SettleUp extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         for (Item item : itemArray) {
-            Log.d("ResumeState", "Item: " + item.getItemName() + " selected: " + item.isSelected());
+            Log.d("ResumeState", "Item: " + item.getItemName() + " selected: " + item.isSettled());
         }
     }
 
-    private void showItemList() { //need figure out how to call expense item from db
-        if (!itemArray.isEmpty()) return;
-        String []itemNameArray = getResources().getStringArray(R.array.dummy_item_name_list);
-        String [] itemPriceArray = getResources().getStringArray(R.array.dummy_expense_amount_list);
+    private void showItemList(String groupId) { //need figure out how to call expense item from db
+        itemAdapter itemadapter = new itemAdapter();
+
+        executorService.execute(()->{
+            itemadapter.getItemByExpense(groupid, new BaseDatabase.ListCallback<Item>() {
+                @Override
+                public void onListLoaded(List<Item> object) {
+                    itemArray.addAll(object);
+                    Log.d("friends", object.toString());
+
+                    // Notify your adapter that data has changed
+                    if (itemadapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+
+                }
+            });
+        });
 
 
-        for (int i = 0; i<itemPriceArray.length;i++){
-            itemArray.add(new Item(null,itemNameArray[i],Double.valueOf(itemPriceArray[i]),null,"Add People to Item", null));
-        }
+
+
         adapter.notifyDataSetChanged();
     }
 
