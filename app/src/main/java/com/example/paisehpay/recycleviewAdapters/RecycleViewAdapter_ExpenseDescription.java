@@ -1,11 +1,9 @@
 package com.example.paisehpay.recycleviewAdapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,39 +11,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.activities.ReceiptOverview;
 import com.example.paisehpay.blueprints.DebtPersonHelper;
-import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.blueprints.Owe;
-import com.example.paisehpay.computation.ReceiptInstance;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class RecycleViewAdapter_Settle extends RecyclerView.Adapter<RecycleViewAdapter_Settle.MyViewHolder> {
+public class RecycleViewAdapter_ExpenseDescription extends RecyclerView.Adapter<RecycleViewAdapter_ExpenseDescription.MyViewHolder> {
 
     Context context;
     ArrayList<Item> itemArray;
 
 
-    public RecycleViewAdapter_Settle(Context context, ArrayList<Item> itemArray){
+    public RecycleViewAdapter_ExpenseDescription(Context context, ArrayList<Item> itemArray){
         this.context = context;
         this.itemArray = itemArray;
     }
 
     @NonNull
     @Override
-    public RecycleViewAdapter_Settle.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecycleViewAdapter_ExpenseDescription.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.settle_recycle_view_row,parent,false);
+        View view = inflater.inflate(R.layout.item_description_recycle_view_row,parent,false);
 
-        return new RecycleViewAdapter_Settle.MyViewHolder(view);
+        return new RecycleViewAdapter_ExpenseDescription.MyViewHolder(view);
     }
 
-    public void onBindViewHolder(@NonNull RecycleViewAdapter_Settle.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecycleViewAdapter_ExpenseDescription.MyViewHolder holder, int position) {
         Item item = itemArray.get(position);
 
         holder.nameText.setText(item.getItemName());
@@ -55,12 +49,12 @@ public class RecycleViewAdapter_Settle extends RecyclerView.Adapter<RecycleViewA
         if (item.getDebtPeople() != null) {
             for (Map.Entry<String, Double> entry : item.getDebtPeople().entrySet()) {
                 String username = entry.getKey(); //need replace with username, current user id
-                Double individualPrice = BigDecimal.valueOf(entry.getValue()).setScale(BigDecimal.ROUND_UP).doubleValue();
+                Double individualPrice = BigDecimal.valueOf(entry.getValue()).setScale(3,BigDecimal.ROUND_UP).doubleValue();
                 localDebtList.add(new DebtPersonHelper(username,individualPrice));
             }
         }
 
-        RecycleViewAdapter_SettleUser adapterSettleUser = new RecycleViewAdapter_SettleUser(context, localDebtList);
+        RecycleViewAdapter_ExpenseItems adapterSettleUser = new RecycleViewAdapter_ExpenseItems(context, localDebtList);
         holder.peopleView.setLayoutManager(new LinearLayoutManager(context));
         holder.peopleView.setAdapter(adapterSettleUser);
         //Log.d("debtList", "Item: " + item.getItemName() + ", Debtors: " + item.getDebtPeople());

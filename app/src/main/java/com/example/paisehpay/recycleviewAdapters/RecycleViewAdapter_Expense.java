@@ -13,9 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.activities.ExpenseDescription;
 import com.example.paisehpay.activities.GroupHomepage;
 import com.example.paisehpay.activities.SettleUp;
 import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.example.paisehpay.tabBar.ExpenseFragment;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
     private Context context;
     ArrayList<Expense> expenseArray;
     private String expenseId;
+    private PreferenceManager preferenceManager;
 
 
 
@@ -39,6 +42,8 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.expense_recycle_view_row,parent,false);
 
+        preferenceManager = new PreferenceManager(context);
+
         return new RecycleViewAdapter_Expense.MyViewHolder(view,context,expenseId);
     }
 
@@ -46,15 +51,24 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
     public void onBindViewHolder(@NonNull RecycleViewAdapter_Expense.MyViewHolder holder, int position) {
         //assign values to the views
         Expense currentExpense = expenseArray.get(position);
-        holder.expenseTitleText.setText(expenseArray.get(position).getDescription());
-        holder.expenseDateText.setText(expenseArray.get(position).getExpenseDate());
-        holder.expensePaidByText.setText(expenseArray.get(position).getExpensePaidBy());
-        holder.expenseActionText.setText(expenseArray.get(position).getExpenseAction());
-        holder.expenseAmountText.setText(expenseArray.get(position).getExpenseAmount());
+        holder.expenseTitleText.setText(currentExpense.getDescription());
+        holder.expenseDateText.setText(currentExpense.getExpenseDate());
+
+        String userId = currentExpense.getExpensePaidBy();
+        String username = preferenceManager.getOneFriend(userId);
+        //Log.d("username",username + userId);
+        holder.expensePaidByText.setText(username + " paid");
+
+
+
+
+        //holder.expensePaidByText.setText(currentExpense.getExpensePaidBy());
+        holder.expenseActionText.setText(currentExpense.getExpenseAction());
+        holder.expenseAmountText.setText(currentExpense.getExpenseAmount());
 
         holder.itemView.setOnClickListener(view -> {
             Context context = view.getContext();
-            Intent intent = new Intent(context, SettleUp.class);
+            Intent intent = new Intent(context, ExpenseDescription.class);
             intent.putExtra("EXPENSE_ID", currentExpense.getExpenseId());
             context.startActivity(intent);
 

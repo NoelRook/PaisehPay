@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.Expense;
-import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
@@ -32,23 +30,20 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SettleUp extends AppCompatActivity {
+public class ExpenseDescription extends AppCompatActivity {
+    //page that clicks that shows u ur expense description
     TextView toolbarTitleText;
     ImageView backArrow;
     RecyclerView itemView;
     ArrayList<Item> itemArray = new ArrayList<>();
-
-    Button settleExpenseButton;
+    Button editExpenseButton;
+    Button deleteExpenseButton;
 
     RecycleViewAdapter_ExpenseDescription adapter;
     String expenseId;
-    ExpenseAdapter expAdapter;
-    itemAdapter itemAdapter;
-    PreferenceManager preferenceManager;
-    private ExpenseSingleton expenseSaver;
+    ExpenseAdapter expAdapter;;
 
-    String groupId;
-    String friendId;
+    PreferenceManager preferenceManager;
 
 
 
@@ -59,7 +54,7 @@ public class SettleUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_settle_up);
+        setContentView(R.layout.activity_expense_description);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -67,18 +62,13 @@ public class SettleUp extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String groupId = intent.getStringExtra("GROUP_ID");
-        String friendId = intent.getStringExtra("FRIEND_ID");
+        expenseId = intent.getStringExtra("EXPENSE_ID");
+        Log.d("test",expenseId);
 
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
-
-        //if (expense_is_settled){
-            toolbarTitleText.setText(R.string.all_settled);
-        //}else{
-        //    toolbarTitleText.setText(R.string.settle_expense);
-        //}
+        toolbarTitleText.setText(R.string.expense_description);
 
 
 
@@ -97,16 +87,46 @@ public class SettleUp extends AppCompatActivity {
             }
         });
 
+        //press edit expense button needs
+        editExpenseButton = findViewById(R.id.edit_expense);
+        editExpenseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ExpenseDescription.this, ReceiptOverview.class);
+                intent.putExtra("Items",itemArray);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                finish();
+
+            }
+        });
+
+
 
         //get pref
         preferenceManager = new PreferenceManager(this);
-        expenseSaver = ExpenseSingleton.getInstance();
 
-        settleExpenseButton = findViewById(R.id.settle_up);
-        settleExpenseButton.setOnClickListener(new View.OnClickListener() {
+
+        //press delete expense button
+        deleteExpenseButton = findViewById(R.id.delete_expense);
+        deleteExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                expAdapter.delete(expenseId, new BaseDatabase.OperationCallback(){
+                    @Override
+                    public void onSuccess() {
+                        // User deleted successfully
+                        Log.d("Success", "expense deleted");
+                        finish();
 
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        // Handle error
+                        Log.e("FirebaseError", error.getMessage());
+                    }
+                });
             }
         });
 
@@ -118,11 +138,37 @@ public class SettleUp extends AppCompatActivity {
         itemView.setAdapter(adapter);
         itemView.setLayoutManager(new LinearLayoutManager(this));
 
-        showItemList(friendId);
+        showItemList(expenseId);
     }
 
 
-    private void showItemList(String friendId) {
+    private void showItemList(String expenseId) {
+        itemAdapter itemadapter = new itemAdapter();
 
+        executorService.execute(()->{
+            itemadapter.getItemByExpense(expenseId, new BaseDatabase.ListCallback<Item>() {
+                @Override
+                public void onListLoaded(List<Item> object) {
+                    //itemArray.addAll(object);
+                   // Log.d("friends", object.toString());
+
+                    // Notify your adapter that data has changed
+                    //if (itemadapter != null) {
+                    //    adapter.notifyDataSetChanged();
+                    //}
+
+                    runOnUiThread(() ->{
+                        itemArray.clear();
+                        itemArray.addAll(object);
+                        adapter.notifyDataSetChanged();
+                    });
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+
+                }
+            });
+        });
     }
 }

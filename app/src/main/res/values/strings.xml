@@ -86,7 +86,10 @@
     <string name="edit_expense">Edit Expense</string>
     <string name="settle_all">Settle All</string>
     <string name="delete_expense">Delete Expense</string>
-    <string name="settle_expense">Settle Expense</string>
+    <string name="settle">Settle</string>
+    <string name="all_settled">All Settled!</string>
+    <string name="expense_description">Expense Description</string>
+    <string name="expenses">Expenses</string>
 
 
     //toolbar

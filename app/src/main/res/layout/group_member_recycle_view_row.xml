@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/group_members_layout"
-    android:layout_width="350dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_margin="10dp"
@@ -14,6 +14,7 @@
         android:layout_height="50dp"
         android:src="@drawable/avatar"
         app:tint="@color/background_light_mode"
+        android:contentDescription="@string/avatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/member_email"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:text="@string/name_test"
         style="@style/textViewMediumDarkMode"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/member_avatar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/member_email"/>
@@ -35,6 +37,7 @@
         android:layout_height="wrap_content"
         android:text="@string/email_test"
         style="@style/textViewSmallDarkMode"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/member_avatar"
         app:layout_constraintTop_toBottomOf="@id/member_name"
         app:layout_constraintBottom_toBottomOf="parent"/>

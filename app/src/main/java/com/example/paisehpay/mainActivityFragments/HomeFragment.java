@@ -63,6 +63,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     RecycleViewAdapter_Group adapter;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    PreferenceManager preferenceManager;
 
 
 
@@ -77,14 +78,13 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        PreferenceManager preferenceManager = new PreferenceManager(getContext());
+        preferenceManager = new PreferenceManager(getContext());
 
         friendAdapter friendadapter = new friendAdapter();
 
         User savedUser = preferenceManager.getUser();
         if (savedUser != null) {
             getFriendsList();
-            preferenceManager.mapManyFriends(userArray);
             id = savedUser.getId();
             Username = savedUser.getUsername();
             Email = savedUser.getEmail();
@@ -235,6 +235,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
             public void onListLoaded(List<User> friends) {
                 // Add all friends to your array
                 userArray.addAll(friends);
+                preferenceManager.mapManyFriends(userArray);
                 Log.d("friends", friends.toString());
 
                 // Notify your adapter that data has changed

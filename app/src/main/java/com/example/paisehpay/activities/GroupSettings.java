@@ -110,7 +110,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         //show groupMember list
         groupMemberView = findViewById(R.id.recycle_view_members);
         showGroupMemberList();
-        adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray);
+        adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray,"GroupSettings",groupId);
         groupMemberView.setAdapter(adapter);
         groupMemberView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -136,7 +136,6 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     }
 
     private void showGroupMemberList() {
-        //gotta call from db nvm jin can do
         executorService.execute(()->{
             groupAdapter.getGroupMates(groupId, new BaseDatabase.ListCallback<Map<String, String>>() {
                 @Override

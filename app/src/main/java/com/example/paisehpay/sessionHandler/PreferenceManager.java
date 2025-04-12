@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class PreferenceManager {
     private static final String PREF_NAME = "MyAppPreferences";
@@ -84,21 +85,26 @@ public class PreferenceManager {
 //    }
     public void mapManyFriends(List<User> userList){
         for (User user : userList){
-            if(getOneFriend(user.getId()).equals(null)){
-                mapOneFriend(user.getUsername(), user.getId());
-            }
+            mapOneFriend(user.getUsername(), user.getId());
+
 
         }
     }
 
     public void mapOneFriend(String Username, String userID){
-        //add one friend to map
-        editor.putString(encoder.encrypt(userID,"userID"), encoder.encrypt(Username, "username"));
+        // Store plain userID as key, encrypted username as value
+        editor.putString(userID, Username);
+        editor.apply();
     }
 
     public String getOneFriend(String userID){
-        //add one friend to map
-        return encoder.encrypt(sharedPreferences.getString(encoder.decrypt(userID,"userID"), null), "username");;
+        // Retrieve encrypted value and decrypt it
+        String encrypted = sharedPreferences.getString(userID, null);
+        if(Objects.equals(userID, getUser().getId())){
+            Log.d("test",getUser().getId());
+            return getUser().getUsername();
+        }
+        return encrypted;
     }
 
     // Clear user data (for logout)

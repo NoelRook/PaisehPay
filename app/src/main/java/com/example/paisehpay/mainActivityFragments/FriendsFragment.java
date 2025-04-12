@@ -67,7 +67,7 @@ public class FriendsFragment extends Fragment {
         //show notification
         friendsView = rootView.findViewById(R.id.recycle_view_friends);
         showFriendList();
-        adapter = new RecycleViewAdapter_GroupMember(getActivity(),friendsArray);
+        adapter = new RecycleViewAdapter_GroupMember(getActivity(),friendsArray,"FriendsFragment",null);
         friendsView.setAdapter(adapter);
         friendsView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

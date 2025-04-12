@@ -17,7 +17,7 @@
         android:id="@+id/expense_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/expenses"
+        android:text="@string/items"
         style="@style/textViewMediumDarkMode"
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,16 +30,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/expense_item"
-        app:layout_constraintBottom_toTopOf="@id/settle_up"/>
-
+        app:layout_constraintBottom_toTopOf="@id/edit_expense"/>
 
     <Button
-        android:id="@+id/settle_up"
+        android:id="@+id/edit_expense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settle_all"
+        android:text="@string/edit_expense"
         style="@style/ButtonLightMode"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/delete_expense"
+        app:layout_constraintTop_toBottomOf="@id/recycle_view_items"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/delete_expense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_expense"
+        style="@style/ButtonLightMode"
+        app:layout_constraintStart_toEndOf="@id/edit_expense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycle_view_items"
         app:layout_constraintBottom_toBottomOf="parent"/>

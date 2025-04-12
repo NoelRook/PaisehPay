@@ -12,35 +12,41 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.DebtPersonHelper;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 
 import java.util.ArrayList;
 
-public class RecycleViewAdapter_SettleUser extends RecyclerView.Adapter<RecycleViewAdapter_SettleUser.MyViewHolder> {
+public class RecycleViewAdapter_ExpenseItems extends RecyclerView.Adapter<RecycleViewAdapter_ExpenseItems.MyViewHolder> {
 
     Context context;
     ArrayList<DebtPersonHelper> personArray;
+    PreferenceManager preferenceManager;
 
 
-    public RecycleViewAdapter_SettleUser(Context context, ArrayList<DebtPersonHelper> personArray){
+    public RecycleViewAdapter_ExpenseItems(Context context, ArrayList<DebtPersonHelper> personArray){
         this.context = context;
         this.personArray = personArray;
     }
 
     @NonNull
     @Override
-    public RecycleViewAdapter_SettleUser.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecycleViewAdapter_ExpenseItems.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.debt_recycle_view_row,parent,false);
-
-        return new RecycleViewAdapter_SettleUser.MyViewHolder(view);
+        preferenceManager = new PreferenceManager(context);
+        return new RecycleViewAdapter_ExpenseItems.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapter_SettleUser.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecycleViewAdapter_ExpenseItems.MyViewHolder holder, int position) {
         //assign values to the views
+
         DebtPersonHelper person = personArray.get(position);
-        holder.nameText.setText(person.getUserId());
+        String userId = person.getUserId();
+        String username = preferenceManager.getOneFriend(userId);
+        holder.nameText.setText(username + " owes");
+
         holder.priceText.setText(Double.toString(person.getAmount()));
 
 

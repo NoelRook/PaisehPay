@@ -23,6 +23,9 @@
             android:name=".activities.SettleUp"
             android:exported="false" />
         <activity
+            android:name=".activities.ExpenseDescription"
+            android:exported="false" />
+        <activity
             android:name=".activities.BillSplit"
             android:exported="false" />
         <activity
