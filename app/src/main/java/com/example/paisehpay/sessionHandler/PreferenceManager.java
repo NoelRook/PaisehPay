@@ -8,6 +8,9 @@ import com.example.paisehpay.blueprints.User;
 //import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PreferenceManager {
     private static final String PREF_NAME = "MyAppPreferences";
@@ -78,11 +81,25 @@ public class PreferenceManager {
 //        String json = gson.toJson(groupList);
 //        sharedPreferences.edit().putString(KEY_GROUP, json).apply();
 //    }
+    public void mapManyFriends(List<User> userList){
+        for (User user : userList){
+            if(getOneFriend(user.getId()).equals(null)){
+                mapOneFriend(user.getUsername(), user.getId());
+            }
 
-    public ArrayList getGroups(){
-
-        return null;
+        }
     }
+
+    public void mapOneFriend(String Username, String userID){
+        //add one friend to map
+        editor.putString(userID, Username);
+    }
+
+    public String getOneFriend(String userID){
+        //add one friend to map
+        return sharedPreferences.getString(userID, null);
+    }
+
 
 
     // Clear user data (for logout)
