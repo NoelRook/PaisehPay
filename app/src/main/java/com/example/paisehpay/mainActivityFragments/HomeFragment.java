@@ -21,6 +21,7 @@ import com.example.paisehpay.blueprints.Notification;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.databaseHandler.UserAdapter;
+import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_CreateGroup;
 import com.example.paisehpay.dialogFragments.DialogFragment_Owe;
@@ -37,6 +38,7 @@ import android.widget.Toast;
 
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
 
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
     String id;
 
     RecyclerView groupView;
+    ArrayList<User> userArray = new ArrayList<>();
     ArrayList<Group> groupArray = new ArrayList<>();
     RecycleViewAdapter_Group adapter;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -76,10 +79,12 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 
         PreferenceManager preferenceManager = new PreferenceManager(getContext());
 
-
+        friendAdapter friendadapter = new friendAdapter();
 
         User savedUser = preferenceManager.getUser();
         if (savedUser != null) {
+            getFriendsList();
+            preferenceManager.mapManyFriends(userArray);
             id = savedUser.getId();
             Username = savedUser.getUsername();
             Email = savedUser.getEmail();
@@ -210,6 +215,49 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         Log.d("MainActivity", "Received new group: " + data);
         groupArray.add(data);
         adapter.notifyItemInserted(groupArray.size() - 1);
+
+    }
+
+
+
+    private void getFriendsList() {
+        // Clear the existing list (if any)
+        userArray.clear();
+
+        friendAdapter friendAdapter = new friendAdapter();
+
+        // Get the current user's ID
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Create callback for handling the friend list data
+        BaseDatabase.ListCallback friendsCallback = new BaseDatabase.ListCallback<User>() {
+            @Override
+            public void onListLoaded(List<User> friends) {
+                // Add all friends to your array
+                userArray.addAll(friends);
+                Log.d("friends", friends.toString());
+
+                // Notify your adapter that data has changed
+                if (friendAdapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+                // Show error message
+                Toast.makeText(getContext(), "Failed to load friends: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                Log.e("FriendsList", "Error loading friends", error.toException());
+
+                // You might want to show the dummy data as fallback
+                // showDummyDataAsFallback();
+            }
+        };
+
+        // Call the database function to get real friend data
+        friendAdapter.getFriendsForUser(currentUserId, friendsCallback);
 
     }
 
