@@ -250,9 +250,6 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
                 Toast.makeText(getContext(), "Failed to load friends: " + error.getMessage(),
                         Toast.LENGTH_SHORT).show();
                 Log.e("FriendsList", "Error loading friends", error.toException());
-
-                // You might want to show the dummy data as fallback
-                // showDummyDataAsFallback();
             }
         };
 

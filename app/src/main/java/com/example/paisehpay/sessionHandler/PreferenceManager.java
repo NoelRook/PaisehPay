@@ -21,11 +21,12 @@ public class PreferenceManager {
 
     private static final String KEY_GROUP = "group_list";
 
-
+    private StringCrypto encoder = new StringCrypto();
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     public PreferenceManager(Context context) {
+
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
@@ -92,15 +93,13 @@ public class PreferenceManager {
 
     public void mapOneFriend(String Username, String userID){
         //add one friend to map
-        editor.putString(userID, Username);
+        editor.putString(encoder.encrypt(userID,"userID"), encoder.encrypt(Username, "username"));
     }
 
     public String getOneFriend(String userID){
         //add one friend to map
-        return sharedPreferences.getString(userID, null);
+        return encoder.encrypt(sharedPreferences.getString(encoder.decrypt(userID,"userID"), null), "username");;
     }
-
-
 
     // Clear user data (for logout)
     public void clearUser() {
