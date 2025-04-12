@@ -20,6 +20,7 @@ import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.Owe;
 import com.example.paisehpay.computation.ReceiptInstance;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -53,14 +54,16 @@ public class RecycleViewAdapter_Settle extends RecyclerView.Adapter<RecycleViewA
         ArrayList<DebtPersonHelper> localDebtList = new ArrayList<>();
         if (item.getDebtPeople() != null) {
             for (Map.Entry<String, Double> entry : item.getDebtPeople().entrySet()) {
-                localDebtList.add(new DebtPersonHelper(entry.getKey(), entry.getValue()));
+                String username = entry.getKey(); //need replace with username, current user id
+                Double individualPrice = BigDecimal.valueOf(entry.getValue()).setScale(BigDecimal.ROUND_UP).doubleValue();
+                localDebtList.add(new DebtPersonHelper(username,individualPrice));
             }
         }
 
         RecycleViewAdapter_SettleUser adapterSettleUser = new RecycleViewAdapter_SettleUser(context, localDebtList);
         holder.peopleView.setLayoutManager(new LinearLayoutManager(context));
         holder.peopleView.setAdapter(adapterSettleUser);
-        Log.d("debtList", "Item: " + item.getItemName() + ", Debtors: " + item.getDebtPeople());
+        //Log.d("debtList", "Item: " + item.getItemName() + ", Debtors: " + item.getDebtPeople());
     }
 
     @Override

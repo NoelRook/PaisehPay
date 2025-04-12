@@ -23,6 +23,7 @@ import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.itemAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Settle;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -43,6 +44,11 @@ public class SettleUp extends AppCompatActivity {
     RecycleViewAdapter_Settle adapter;
     String expenseId;
     ExpenseAdapter expAdapter;
+    itemAdapter itemAdapter;
+
+    PreferenceManager preferenceManager;
+
+
 
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -94,15 +100,28 @@ public class SettleUp extends AppCompatActivity {
         });
 
 
+
+        //get pref
+        preferenceManager = new PreferenceManager(this);
+
+
         //press settle all button
         settleExpenseButton = findViewById(R.id.settle_all);
         settleExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (Item item: itemArray){
-                    item.setSettled(true);
-                }
-                adapter.notifyDataSetChanged();
+                itemAdapter = new itemAdapter();
+                itemAdapter.updateSettledUser(preferenceManager.getUser().getId(), expenseId, new BaseDatabase.OperationCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("UpdateSettled", "User debt updated successfully");
+                        itemArray.clear();
+                        showItemList(expenseId);
+                    }
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Log.e("UpdateSettled", "Error updating user debt: " + error.getMessage());                        }
+                });
             }
         });
 
@@ -148,13 +167,19 @@ public class SettleUp extends AppCompatActivity {
             itemadapter.getItemByExpense(expenseId, new BaseDatabase.ListCallback<Item>() {
                 @Override
                 public void onListLoaded(List<Item> object) {
-                    itemArray.addAll(object);
-                    Log.d("friends", object.toString());
+                    //itemArray.addAll(object);
+                   // Log.d("friends", object.toString());
 
                     // Notify your adapter that data has changed
-                    if (itemadapter != null) {
+                    //if (itemadapter != null) {
+                    //    adapter.notifyDataSetChanged();
+                    //}
+
+                    runOnUiThread(() ->{
+                        itemArray.clear();
+                        itemArray.addAll(object);
                         adapter.notifyDataSetChanged();
-                    }
+                    });
                 }
 
                 @Override
@@ -163,6 +188,5 @@ public class SettleUp extends AppCompatActivity {
                 }
             });
         });
-        adapter.notifyDataSetChanged();
     }
 }

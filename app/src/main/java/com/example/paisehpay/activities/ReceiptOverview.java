@@ -69,8 +69,10 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         });
 
         Intent intent = getIntent();
-        itemArray = intent.getParcelableArrayListExtra("Items");
-        Log.d("items",itemArray.toString());
+        if (intent.hasExtra("Items")){
+            itemArray = intent.getParcelableArrayListExtra("Items");
+            //Log.d("items",itemArray.toString());
+        }
 
 
         //modify toolbar text based on page

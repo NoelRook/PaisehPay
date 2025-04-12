@@ -40,6 +40,11 @@ public abstract class BaseDatabase {
         void onError(DatabaseError error);
     }
 
+    public interface ValueCallback<T> {
+        void onValueLoaded(T value);
+        void onError(DatabaseError error);
+    }
+
     //todo possible implementation of valid checker for each create and update call
 
 }

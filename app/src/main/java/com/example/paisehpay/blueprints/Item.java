@@ -6,6 +6,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,7 @@ public class Item implements Parcelable {
     private String expenseId;
     private ArrayList<User> itemPeopleArray = new ArrayList<>(); // not stored in DB
     private boolean settled = false;
-    private HashMap<String, Double> debtPeople = new HashMap<>() ;// {userid: settled or not settled}, not paid
+    private HashMap<String, Double> debtPeople ;// {userid: settled or not settled}, not paid
     // if for all items in totalOwed == 0, user is settled
 
 
@@ -49,9 +51,18 @@ public class Item implements Parcelable {
         itemIndividualPrice = in.readDouble();
         expenseId = in.readString();
         settled = in.readByte() != 0;
-        debtPeople = (HashMap<String, Double>) in.readSerializable();
-    }
 
+        // Read the size of the debtPeople map first
+        int size = in.readInt();
+        if (size > 0) {
+            debtPeople = new HashMap<>(size);
+            for (int i = 0; i < size; i++) {
+                String key = in.readString();
+                double value = in.readDouble();
+                debtPeople.put(key, value);
+            }
+        }
+    }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
         @Override
@@ -91,6 +102,9 @@ public class Item implements Parcelable {
 
     public ArrayList<User> getItemPeopleArray() {
         return itemPeopleArray;
+    }
+    public boolean hasPeople(){
+        return getItemPeopleArray() != null && getItemPeopleArray().isEmpty();
     }
 
     public String getItemPriceString() {
@@ -143,7 +157,17 @@ public class Item implements Parcelable {
         parcel.writeDouble(itemIndividualPrice);
         parcel.writeString(expenseId);
         parcel.writeByte((byte) (settled ? 1 : 0));
-        parcel.writeSerializable(debtPeople); // safest way if you're using a HashMap
+
+        // Write debtPeople map
+        if (debtPeople == null) {
+            parcel.writeInt(0);
+        } else {
+            parcel.writeInt(debtPeople.size());
+            for (Map.Entry<String, Double> entry : debtPeople.entrySet()) {
+                parcel.writeString(entry.getKey());
+                parcel.writeDouble(entry.getValue());
+            }
+        }
     }
 
     // users array needs to be a hashmap, not an arraylist
@@ -157,14 +181,21 @@ public class Item implements Parcelable {
 
 
 
-    public Map<String, Object> ToMap(){
+    public Map<String, Object> ToMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", itemId);
         result.put("itemName", itemName);
         result.put("itemPrice", itemPrice);
         result.put("expenseId", expenseId);
         result.put("settled", settled);
-        result.put("debtpeople", debtPeople);
+
+        // Ensure debtPeople is properly converted to a Map
+        if (debtPeople != null) {
+            result.put("debtpeople", new HashMap<>(debtPeople));
+        } else {
+            result.put("debtpeople", new HashMap<>());
+        }
+
         return result;
     }
 
@@ -184,5 +215,45 @@ public class Item implements Parcelable {
 
     public void setItemPrice(double itemPrice) {
         this.itemPrice = itemPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "itemId='" + itemId + '\'' +
+                ", itemName='" + itemName + '\'' +
+                ", itemPrice=" + itemPrice +
+                ", itemPeopleString='" + itemPeopleString + '\'' +
+                ", itemIndividualPrice=" + itemIndividualPrice +
+                ", expenseId='" + expenseId + '\'' +
+                ", itemPeopleArray=" + itemPeopleArray +
+                ", settled=" + settled +
+                ", debtPeople=" + debtPeople +
+                '}';
+    }
+
+
+    @NonNull
+    public static Item fromDataSnapshot(@NonNull DataSnapshot snapshot) {
+        Item item = new Item();
+        item.itemId = snapshot.getKey();
+        item.itemName = snapshot.child("itemName").getValue(String.class);
+        item.itemPrice = snapshot.child("itemPrice").getValue(Double.class);
+        item.expenseId = snapshot.child("expenseId").getValue(String.class);
+        item.settled = Boolean.TRUE.equals(snapshot.child("settled").getValue(Boolean.class));
+
+        // Handle debtpeople
+        DataSnapshot debtPeopleSnapshot = snapshot.child("debtpeople");
+        if (debtPeopleSnapshot.exists()) {
+            item.debtPeople = new HashMap<>();
+            for (DataSnapshot child : debtPeopleSnapshot.getChildren()) {
+                Double amount = child.getValue(Double.class);
+                if (amount != null) {
+                    item.debtPeople.put(child.getKey(), amount);
+                }
+            }
+        }
+
+        return item;
     }
 }
