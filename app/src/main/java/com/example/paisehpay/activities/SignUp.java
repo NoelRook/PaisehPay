@@ -109,10 +109,10 @@ public class SignUp extends AppCompatActivity {
             }
 
             checkUsernameUnique(username, isUnique -> {
-                if (!isUnique) {
+                /*if (!isUnique) {
                     usernameinp.setError("Username already exists");
                     return;
-                }
+                }*/
                 //Create user in Firebase Auth
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -177,7 +177,7 @@ public class SignUp extends AppCompatActivity {
             //also store a reverse mapping for username uniqueness checks
             DatabaseReference usernamesRef = FirebaseDatabase.getInstance().getReference("Username");
 
-            usernamesRef.child(username).setValue(user.getUid()).addOnSuccessListener(aVoid2 -> {
+            usernamesRef.child(user.getUid()).setValue(username).addOnSuccessListener(aVoid2 -> {
 
                 //navigate to login screen
                 startActivity(new Intent(SignUp.this, SignIn.class));
