@@ -1,7 +1,5 @@
 package com.example.paisehpay.activities;
 
-import static android.icu.text.DisplayOptions.DisplayLength.LENGTH_SHORT;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,16 +23,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,10 +104,10 @@ public class SignUp extends AppCompatActivity {
             }
 
             checkUsernameUnique(username, isUnique -> {
-                if (!isUnique) {
+                /*if (!isUnique) {
                     usernameinp.setError("Username already exists");
                     return;
-                }
+                }*/
                 //Create user in Firebase Auth
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -177,7 +172,7 @@ public class SignUp extends AppCompatActivity {
             //also store a reverse mapping for username uniqueness checks
             DatabaseReference usernamesRef = FirebaseDatabase.getInstance().getReference("Username");
 
-            usernamesRef.child(username).setValue(user.getUid()).addOnSuccessListener(aVoid2 -> {
+            usernamesRef.child(user.getUid()).setValue(username).addOnSuccessListener(aVoid2 -> {
 
                 //navigate to login screen
                 startActivity(new Intent(SignUp.this, SignIn.class));
