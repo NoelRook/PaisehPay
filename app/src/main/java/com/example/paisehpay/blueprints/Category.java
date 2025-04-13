@@ -4,6 +4,7 @@ public class Category {
     String categoryName;
     int categoryIcon;
 
+
     public Category(String categoryName, int categoryIcon){
         this.categoryName = categoryName;
         this.categoryIcon =categoryIcon;

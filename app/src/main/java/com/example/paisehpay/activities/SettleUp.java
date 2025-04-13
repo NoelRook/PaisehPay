@@ -1,5 +1,7 @@
 package com.example.paisehpay.activities;
 
+import static android.view.View.GONE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,11 +31,16 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_ExpenseDescr
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SettleUp extends AppCompatActivity {
     TextView toolbarTitleText;
@@ -51,6 +58,7 @@ public class SettleUp extends AppCompatActivity {
     ConstraintLayout totalLayout;
     TextView overallPriceText;
     TextView overallPersonText;
+    AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);
 
 
 
@@ -75,12 +83,9 @@ public class SettleUp extends AppCompatActivity {
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
-
-        //if (expense_is_settled){
-            toolbarTitleText.setText(R.string.all_settled);
-        //}else{
-        //    toolbarTitleText.setText(R.string.settle_expense);
-        //}
+        totalLayout = findViewById(R.id.total_layout);
+        overallPriceText = totalLayout.findViewById(R.id.final_amount);
+        overallPersonText = totalLayout.findViewById(R.id.to_person);
 
 
         //press back arrow lead back to home fragment
@@ -108,7 +113,7 @@ public class SettleUp extends AppCompatActivity {
         //show item list
         //we will link the adapter used for the item scroll bar
         expenseView = findViewById(R.id.recycle_view_items);
-        adapter = new RecycleViewAdapter_Expense(this,expenseArray);
+        adapter = new RecycleViewAdapter_Expense(this,filteredArray,"SettleUp");
         showExpenseList();
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(this));
@@ -130,6 +135,10 @@ public class SettleUp extends AppCompatActivity {
                         if (value > 0) {
                             filteredArray.add(expense);
                             adapter.updateData(filteredArray);
+                            expense.setExpenseOwed(value);
+                            double updatedTotal = totalAmount.get() + value;
+                            totalAmount.set(updatedTotal);
+                            updateTotalDisplay(updatedTotal);
                             adapter.notifyDataSetChanged();
                             Log.d("AmountOwed", "Friend: " + friendId + " owes " + value + " in expense " + expense.getExpenseId());
                         }
@@ -147,18 +156,53 @@ public class SettleUp extends AppCompatActivity {
                         if (value > 0) {
                             filteredArray.add(expense);
                             adapter.updateData(filteredArray);
+                            expense.setExpenseOwed(value);
+                            double updatedTotal = totalAmount.get() - value;
+                            totalAmount.set(updatedTotal);
+                            updateTotalDisplay(updatedTotal);
                             adapter.notifyDataSetChanged();
-                            Log.d("uowefriend", "you owe friend: " + value);
+                            Log.d("AmountOwed", "you owe friend: " + value);
                         }
                     }
 
                     @Override
                     public void onError(DatabaseError error) {
-                        Log.e("uowefriend", "Error: " + error.getMessage());
+                        Log.e("AmountOwed", "Error: " + error.getMessage());
                     }
                 });
             }
+
+        }
+        double finalAmount = totalAmount.get();
+        if (finalAmount == 0.0){
+            overallPersonText.setVisibility(GONE);
+        } else if (finalAmount > 0.0){
+            overallPersonText.setText("To " + preferenceManager.getUser().getUsername());
+            BigDecimal bigDecimal = new BigDecimal(finalAmount).setScale(2, RoundingMode.HALF_UP);
+            overallPriceText.setText(String.format(Locale.ENGLISH,"$ %s",bigDecimal));
+        } else if (finalAmount < 0.0){
+            overallPersonText.setText(R.string.to_friend);
+            finalAmount = -finalAmount;
+            BigDecimal bigDecimal = new BigDecimal(finalAmount).setScale(2, RoundingMode.HALF_UP);
+            overallPriceText.setText(String.format(Locale.ENGLISH,"$ %s",bigDecimal));
         }
     }
+
+    private void updateTotalDisplay(double amount) {
+        if (amount == 0.0){
+            overallPersonText.setVisibility(GONE);
+        } else {
+            overallPersonText.setVisibility(View.VISIBLE);
+            BigDecimal bigDecimal = BigDecimal.valueOf(Math.abs(amount)).setScale(2, RoundingMode.HALF_UP);
+            overallPriceText.setText(String.format(Locale.ENGLISH,"$ %s", bigDecimal));
+
+            if (amount > 0.0){
+                overallPersonText.setText("To " + preferenceManager.getUser().getUsername());
+            } else {
+                overallPersonText.setText(R.string.to_friend);
+            }
+        }
+    }
+
 
 }

@@ -3,10 +3,12 @@ package com.example.paisehpay.recycleviewAdapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,19 +22,24 @@ import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.example.paisehpay.tabBar.ExpenseFragment;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
 
 public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleViewAdapter_Expense.MyViewHolder> {
     private Context context;
     ArrayList<Expense> expenseArray;
-    private String expenseId;
+    private String queryFrom;
     private PreferenceManager preferenceManager;
 
 
 
-    public RecycleViewAdapter_Expense(Context context, ArrayList<Expense> expenseArray){
+    public RecycleViewAdapter_Expense(Context context, ArrayList<Expense> expenseArray,String queryFrom){
         this.context = context;
         this.expenseArray = expenseArray;
+        this.queryFrom = queryFrom;
     }
 
     @NonNull
@@ -44,7 +51,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
 
         preferenceManager = new PreferenceManager(context);
 
-        return new RecycleViewAdapter_Expense.MyViewHolder(view,context,expenseId);
+        return new RecycleViewAdapter_Expense.MyViewHolder(view,context,queryFrom);
     }
 
     @Override
@@ -54,22 +61,59 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         holder.expenseTitleText.setText(currentExpense.getDescription());
         holder.expenseDateText.setText(currentExpense.getExpenseDate());
 
+        // retrieve the category icon
+        String category = currentExpense.getExpenseCategory();
+        String[] categoryNames = context.getResources().getStringArray(R.array.category_name_array);
+        TypedArray categoryIcons = context.getResources().obtainTypedArray(R.array.category_item_array);
+
+        int index = -1;
+        for (int i = 0; i < categoryNames.length; i++) {
+            if (categoryNames[i].equalsIgnoreCase(category)) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            int imageResId = categoryIcons.getResourceId(index, -1);
+            holder.expenseCategoryImage.setImageResource(imageResId);
+        } else {
+            holder.expenseCategoryImage.setImageResource(R.drawable.nav_groups);
+        }
+        categoryIcons.recycle();
+
+        //set name of person paid
         String userId = currentExpense.getExpensePaidBy();
         String username = preferenceManager.getOneFriend(userId);
         holder.expensePaidByText.setText(username + " paid");
-        holder.expenseActionText.setText(R.string.amount);
-        holder.expenseAmountText.setText("$ " + currentExpense.getExpenseAmount());
 
-        holder.itemView.setOnClickListener(view -> {
-            Context context = view.getContext();
-            Intent intent = new Intent(context, ExpenseDescription.class);
-            intent.putExtra("EXPENSE_ID", currentExpense.getExpenseId());
-            context.startActivity(intent);
 
-            if (context instanceof GroupHomepage) {
-                ((GroupHomepage) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        if (queryFrom.equals("SettleUp")){
+            if (!Objects.equals(userId, preferenceManager.getUser().getId())){
+                holder.expenseActionText.setText(R.string.you_borrowed);
+            } else{
+                holder.expenseActionText.setText(R.string.you_lent);
             }
-        });
+
+            BigDecimal bigDecimal = BigDecimal.valueOf(currentExpense.getExpenseOwed()).setScale(2, RoundingMode.HALF_UP);
+            holder.expenseAmountText.setText(String.format(Locale.ENGLISH,"$ %s",bigDecimal));
+
+
+        }else if (queryFrom.equals("ExpenseFragment")) {
+
+            holder.expenseActionText.setText(R.string.amount);
+            holder.expenseAmountText.setText("$ " + currentExpense.getExpenseAmount());
+
+            holder.itemView.setOnClickListener(view -> {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, ExpenseDescription.class);
+                intent.putExtra("EXPENSE_ID", currentExpense.getExpenseId());
+                context.startActivity(intent);
+
+                if (context instanceof GroupHomepage) {
+                    ((GroupHomepage) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }
+            });
+        }
 
 
 
@@ -94,6 +138,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
         TextView expensePaidByText;
         TextView expenseActionText;
         TextView expenseAmountText;
+        ImageView expenseCategoryImage;
         public MyViewHolder(@NonNull View itemView,Context context,String expenseId) {
             super(itemView);
 
@@ -103,6 +148,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
             expensePaidByText = itemView.findViewById(R.id.expense_paid_by);
             expenseActionText = itemView.findViewById(R.id.expense_action);
             expenseAmountText = itemView.findViewById(R.id.expense_amount);
+            expenseCategoryImage = itemView.findViewById(R.id.category_icon);
 
         }
     }

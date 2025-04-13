@@ -19,6 +19,7 @@ public class Expense implements Parcelable {
     private String expenseAction; // Optional field
     private String expenseAmount;
     private String expenseCategory;
+    private double expenseOwed = 0.0;
 
     public Expense() {
         // Default constructor required for Firebase
@@ -93,11 +94,14 @@ public class Expense implements Parcelable {
         return expenseCategory != null ? expenseCategory : "Uncategorized";
     }
 
+    public double getExpenseOwed() {
+        return expenseOwed;
+    }
+
     // Setters
     public void setExpenseId(String expenseId) {
         this.expenseId = expenseId;
     }
-
 
     public void setDescription(String description) {
         this.description = description;
@@ -115,6 +119,7 @@ public class Expense implements Parcelable {
         this.associatedGroup = associatedGroup;
     }
 
+
     public void setExpenseAction(String expenseAction) {
         this.expenseAction = expenseAction;
     }
@@ -125,6 +130,10 @@ public class Expense implements Parcelable {
 
     public void setExpenseCategory(String expenseCategory) {
         this.expenseCategory = expenseCategory;
+    }
+
+    public void setExpenseOwed(double expenseOwed) {
+        this.expenseOwed = expenseOwed;
     }
 
     public Map<String, Object> toMap() {

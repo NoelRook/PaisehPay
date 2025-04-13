@@ -59,7 +59,7 @@
             android:id="@+id/final_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/owe_amount"
+            android:text="@string/zero"
             style="@style/textViewMediumDarkMode"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
