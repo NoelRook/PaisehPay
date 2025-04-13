@@ -86,6 +86,7 @@ public class SettleUp extends AppCompatActivity {
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
+        toolbarTitleText.setText(R.string.expenses);
         totalLayout = findViewById(R.id.total_layout);
         overallPriceText = totalLayout.findViewById(R.id.final_amount);
         overallPersonText = totalLayout.findViewById(R.id.to_person);
@@ -107,7 +108,6 @@ public class SettleUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 settleAllExpensesForFriend(friendId);
-
             }
         });
 
@@ -115,7 +115,7 @@ public class SettleUp extends AppCompatActivity {
         //show item list
         //we will link the adapter used for the item scroll bar
         expenseView = findViewById(R.id.recycle_view_items);
-        adapter = new RecycleViewAdapter_Expense(this,filteredArray,"SettleUp");
+        adapter = new RecycleViewAdapter_Expense(this,filteredArray,"SettleUp",null);
         showExpenseList();
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(this));
@@ -172,7 +172,7 @@ public class SettleUp extends AppCompatActivity {
                         Log.e("AmountOwed", "Error: " + error.getMessage());
                     }
                 });
-            }
+            }                          
 
         }
         double finalAmount = totalAmount.get();
@@ -210,29 +210,32 @@ public class SettleUp extends AppCompatActivity {
 
     private void settleAllExpensesForFriend(String friendId) {
         String myId = preferenceManager.getUser().getId();
-        Log.d("test",myId + " : "+ friendId);
+        AtomicInteger updatesCompleted = new AtomicInteger(0);
+        List<Expense> expensesToSettle = new ArrayList<>();
 
         for (Expense expense : singleton.getExpenseArrayList()) {
-            Log.d("test2",expense.getExpenseId());
             if (expense.getExpensePaidBy().equals(myId)) {
                 itemAdapter.getTotalAmountOwedByUser(friendId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
                     @Override
                     public void onValueLoaded(Double value) {
                         if (value > 0) {
-                            Log.d("SettleAll", "Calling updateSettledUser for " + friendId + " in expense " + expense.getExpenseId());
-                            // Only call updateSettledUser if the friend actually owes something
-                            itemAdapter.updateSettledUser(myId,friendId,expense.getExpenseId(),new BaseDatabase.OperationCallback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
-                                        }
+                            synchronized (expensesToSettle) {
+                                expensesToSettle.add(expense);
+                            }
 
-                                        @Override
-                                        public void onError(DatabaseError error) {
-                                            Log.e("SettleAll", "Failed for " + expense.getExpenseId() + ": " + error.getMessage());
-                                        }
-                                    }
-                            );
+                            itemAdapter.updateSettledUser(myId, friendId, expense.getExpenseId(), new BaseDatabase.OperationCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
+                                    checkIfAllUpdatesDone(expensesToSettle, updatesCompleted);
+                                }
+
+                                @Override
+                                public void onError(DatabaseError error) {
+                                    Log.e("SettleAll", "Failed for " + expense.getExpenseId() + ": " + error.getMessage());
+                                    checkIfAllUpdatesDone(expensesToSettle, updatesCompleted);
+                                }
+                            });
                         }
                     }
 
@@ -241,25 +244,28 @@ public class SettleUp extends AppCompatActivity {
                         Log.e("SettleAll", "Error checking total owed: " + error.getMessage());
                     }
                 });
-            }else if (expense.getExpensePaidBy().equals(friendId)){
+            } else if (expense.getExpensePaidBy().equals(friendId)) {
                 itemAdapter.getTotalAmountOwedByUser(myId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
                     @Override
                     public void onValueLoaded(Double value) {
                         if (value > 0) {
-                            Log.d("SettleAll", "Calling updateSettledUser for " + friendId + " in expense " + expense.getExpenseId());
-                            // Only call updateSettledUser if the friend actually owes something
-                            itemAdapter.updateSettledUser(friendId,myId,expense.getExpenseId(),new BaseDatabase.OperationCallback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
-                                        }
+                            synchronized (expensesToSettle) {
+                                expensesToSettle.add(expense);
+                            }
 
-                                        @Override
-                                        public void onError(DatabaseError error) {
-                                            Log.e("SettleAll", "Failed for " + expense.getExpenseId() + ": " + error.getMessage());
-                                        }
-                                    }
-                            );
+                            itemAdapter.updateSettledUser(friendId, myId, expense.getExpenseId(), new BaseDatabase.OperationCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
+                                    checkIfAllUpdatesDone(expensesToSettle, updatesCompleted);
+                                }
+
+                                @Override
+                                public void onError(DatabaseError error) {
+                                    Log.e("SettleAll", "Failed for " + expense.getExpenseId() + ": " + error.getMessage());
+                                    checkIfAllUpdatesDone(expensesToSettle, updatesCompleted);
+                                }
+                            });
                         }
                     }
 
@@ -270,8 +276,21 @@ public class SettleUp extends AppCompatActivity {
                 });
             }
         }
-        adapter.notifyDataSetChanged();
     }
+
+    private void checkIfAllUpdatesDone(List<Expense> expensesToSettle, AtomicInteger updatesCompleted) {
+        int done = updatesCompleted.incrementAndGet();
+        if (done == expensesToSettle.size()) {
+            runOnUiThread(() -> {
+                Log.d("SettleAll", "All settlements done");
+                showExpenseList();                      // Refresh data
+                expenseView.setVisibility(View.GONE);
+                settleExpenseButton.setVisibility(View.GONE);// Hide RecyclerView
+                toolbarTitleText.setText(R.string.all_settled);
+            });
+        }
+    }
+
 
 
 

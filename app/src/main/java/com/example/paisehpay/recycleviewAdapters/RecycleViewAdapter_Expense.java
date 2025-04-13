@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,13 +34,15 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
     ArrayList<Expense> expenseArray;
     private String queryFrom;
     private PreferenceManager preferenceManager;
+    private final ActivityResultLauncher<Intent> launcher;
 
 
 
-    public RecycleViewAdapter_Expense(Context context, ArrayList<Expense> expenseArray,String queryFrom){
+    public RecycleViewAdapter_Expense(Context context, ArrayList<Expense> expenseArray,String queryFrom,ActivityResultLauncher<Intent> launcher){
         this.context = context;
         this.expenseArray = expenseArray;
         this.queryFrom = queryFrom;
+        this.launcher = launcher;
     }
 
     @NonNull
@@ -107,7 +110,7 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ExpenseDescription.class);
                 intent.putExtra("EXPENSE_ID", currentExpense.getExpenseId());
-                context.startActivity(intent);
+                launcher.launch(intent);
 
                 if (context instanceof GroupHomepage) {
                     ((GroupHomepage) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

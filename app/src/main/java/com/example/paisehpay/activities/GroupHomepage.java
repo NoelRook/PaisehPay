@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -57,6 +59,7 @@ public class GroupHomepage extends AppCompatActivity {
     RecyclerView userView;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private PreferenceManager preferenceManager;
+    private ActivityResultLauncher<Intent> expenseActivityLauncher;
 
 
     @Override
@@ -80,6 +83,21 @@ public class GroupHomepage extends AppCompatActivity {
         //for expenses
         singleExpense = ExpenseSingleton.getInstance();
 
+
+        //preserve state
+        expenseActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        boolean deleted = result.getData().getBooleanExtra("expense_deleted", false);
+                        if (deleted) {
+                            loadExpenses(); // Refresh expenses!
+                        }
+                    }
+                }
+        );
+
+
         // Initialize UI components
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.group_homepage);
@@ -101,6 +119,8 @@ public class GroupHomepage extends AppCompatActivity {
         userView.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
     }
+
+
 
     private void loadExpenses() {
         singleExpense.getExpensesByGroupId(groupID, new BaseDatabase.ListCallback<Expense>() {

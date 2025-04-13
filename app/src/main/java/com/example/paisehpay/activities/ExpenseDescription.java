@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
@@ -44,10 +46,6 @@ public class ExpenseDescription extends AppCompatActivity {
     ExpenseAdapter expAdapter;;
 
     PreferenceManager preferenceManager;
-
-
-
-
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
@@ -64,6 +62,8 @@ public class ExpenseDescription extends AppCompatActivity {
         Intent intent = getIntent();
         expenseId = intent.getStringExtra("EXPENSE_ID");
         Log.d("test",expenseId);
+
+
 
 
         //modify toolbar text based on page
@@ -117,6 +117,9 @@ public class ExpenseDescription extends AppCompatActivity {
                     public void onSuccess() {
                         // User deleted successfully
                         Log.d("Success", "expense deleted");
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("expense_deleted", true);
+                        setResult(RESULT_OK, resultIntent);
                         finish();
 
                     }
@@ -140,6 +143,8 @@ public class ExpenseDescription extends AppCompatActivity {
 
         showItemList(expenseId);
     }
+
+
 
 
     private void showItemList(String expenseId) {

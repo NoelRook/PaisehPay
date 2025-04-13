@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -12,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ExpenseAdapter extends BaseDatabase{
@@ -160,11 +162,25 @@ public class ExpenseAdapter extends BaseDatabase{
         databaseRef.child(expenseId).removeValue()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        callback.onSuccess();
+                        // Update the singleton so future loads are correct
+                        ExpenseSingleton singleton = ExpenseSingleton.getInstance();
+                        List<Expense> currentList = singleton.getExpenseArrayList();
+
+                        Iterator<Expense> iterator = currentList.iterator();
+                        while (iterator.hasNext()) {
+                            Expense e = iterator.next();
+                            if (e.getExpenseId().equals(expenseId)) {
+                                iterator.remove();
+                                break;
+                            }
+                        }
+
+                        callback.onSuccess();  // Notify UI
                     } else {
                         callback.onError(DatabaseError.fromException(task.getException()));
                     }
                 });
     }
+
 
 }

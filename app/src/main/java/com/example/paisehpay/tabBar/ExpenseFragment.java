@@ -1,9 +1,12 @@
 // ExpenseFragment.java - Modified to handle data better
 package com.example.paisehpay.tabBar;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +33,8 @@ public class ExpenseFragment extends Fragment {
     private RecyclerView expenseView;
     private RecycleViewAdapter_Expense adapter;
     private ExpenseSingleton expenseSaver;
+    private ActivityResultLauncher<Intent> expenseActivityLauncher;
+
 
     public static ExpenseFragment newInstance(String category, String groupId) {
         ExpenseFragment fragment = new ExpenseFragment();
@@ -48,6 +53,17 @@ public class ExpenseFragment extends Fragment {
             groupId = getArguments().getString(GROUP_ID);
         }
         expenseSaver = ExpenseSingleton.getInstance();
+        expenseActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        boolean deleted = result.getData().getBooleanExtra("expense_deleted", false);
+                        if (deleted) {
+                            updateExpenseList(); // Refresh RV inside this fragment
+                        }
+                    }
+                }
+        );
 
 
     }
@@ -58,7 +74,7 @@ public class ExpenseFragment extends Fragment {
         expenseView = rootView.findViewById(R.id.recycle_view_expense);
 
         // Initialize with empty list, will be updated in onResume
-        adapter = new RecycleViewAdapter_Expense(getActivity(), new ArrayList<>(),"ExpenseFragment");
+        adapter = new RecycleViewAdapter_Expense(getActivity(), new ArrayList<>(),"ExpenseFragment",expenseActivityLauncher);
         expenseView.setAdapter(adapter);
         expenseView.setLayoutManager(new LinearLayoutManager(getActivity()));
         expenseView.setHasFixedSize(true);

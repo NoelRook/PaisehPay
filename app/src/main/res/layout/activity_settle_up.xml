@@ -27,10 +27,11 @@
         android:id="@+id/recycle_view_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/total_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/expense_item"
-        app:layout_constraintBottom_toTopOf="@id/total_layout"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/expense_item" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/total_layout"
@@ -90,7 +91,6 @@
         android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/total_layout"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 

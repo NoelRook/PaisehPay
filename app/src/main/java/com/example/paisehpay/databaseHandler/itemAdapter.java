@@ -261,56 +261,54 @@ public class itemAdapter extends BaseDatabase {
 
 
 
-    public void updateSettledUser(String payeriD, String userid, String expenseId, OperationCallback callback) {
+    public void updateSettledUser(String payerId, String userid, String expenseId, OperationCallback callback) {
         if (userid == null || userid.isEmpty() || expenseId == null || expenseId.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID or Expense ID cannot be null or empty")));
             return;
         }
 
-        // First filter by creator_id (payeriD)
-        databaseRef.orderByChild("creator_id").equalTo(payeriD)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean anyUpdates = false;
-                        int totalItems = 0;
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean anyUpdates = false;
+                int totalItems = 0;
 
-                        for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                            // Then filter by expenseId in code
-                            String itemExpenseId = itemSnapshot.child("expenseId").getValue(String.class);
-                            if (expenseId.equals(itemExpenseId)) {
-                                totalItems++;
-                                // Check if user exists in debtpeople
-                                DataSnapshot debtPeopleSnapshot = itemSnapshot.child("debtpeople");
-                                if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) {
-                                    // Update the user's debt to 0
-                                    databaseRef.child(itemSnapshot.getKey())
-                                            .child("debtpeople")
-                                            .child(userid)
-                                            .setValue(0)
-                                            .addOnCompleteListener(task -> {
-                                                if (!task.isSuccessful()) {
-                                                    Log.e("updateSettledUser", "Failed to update user debt for item: " + itemSnapshot.getKey());
-                                                }
-                                            });
-                                    anyUpdates = true;
-                                }
-                            }
-                        }
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    String itemExpenseId = itemSnapshot.child("expenseId").getValue(String.class);
+                    if (!expenseId.equals(itemExpenseId)) continue;
 
-                        if (totalItems == 0) {
-                            callback.onError(DatabaseError.fromException(new Exception("No items found with specified payer and expenseId")));
-                        } else if (!anyUpdates) {
-                            callback.onError(DatabaseError.fromException(new Exception("User not in debtpeople for any matching items")));
-                        } else {
-                            callback.onSuccess();
-                        }
+                    totalItems++;
+
+                    DataSnapshot debtPeopleSnapshot = itemSnapshot.child("debtpeople");
+                    if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) {
+                        // Update the user's debt to 0
+                        databaseRef.child(itemSnapshot.getKey())
+                                .child("debtpeople")
+                                .child(userid)
+                                .setValue(0)
+                                .addOnCompleteListener(task -> {
+                                    if (!task.isSuccessful()) {
+                                        Log.e("updateSettledUser", "Failed to update user debt for item: " + itemSnapshot.getKey());
+                                    }
+                                });
+                        anyUpdates = true;
                     }
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callback.onError(error);
-                    }
-                });
+                if (totalItems == 0) {
+                    callback.onError(DatabaseError.fromException(new Exception("No items found with specified expenseId")));
+                } else if (!anyUpdates) {
+                    callback.onError(DatabaseError.fromException(new Exception("User not in debtpeople for any matching items")));
+                } else {
+                    callback.onSuccess();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error);
+            }
+        });
     }
+
 }
