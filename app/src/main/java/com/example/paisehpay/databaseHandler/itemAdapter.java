@@ -17,12 +17,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class itemAdapter extends BaseDatabase{
+public class itemAdapter extends BaseDatabase {
 
     private DatabaseReference databaseRef;
-    private  static final String ITEMS_TABLE = "Items";
+    private static final String ITEMS_TABLE = "Items";
 
-    public itemAdapter(){
+    public itemAdapter() {
         super(ITEMS_TABLE);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         databaseRef = database.getReference(ITEMS_TABLE);
@@ -30,9 +30,9 @@ public class itemAdapter extends BaseDatabase{
 
     @Override
     public <T> void create(T itemObj, OperationCallback callback) {
-        Log.d("itemAdapter","create"+itemObj);
+        Log.d("itemAdapter", "create" + itemObj);
 
-        if (!(itemObj instanceof Item)){
+        if (!(itemObj instanceof Item)) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("Invalid data type - expected Item")));
             return;
         }
@@ -70,7 +70,7 @@ public class itemAdapter extends BaseDatabase{
 
     @Override
     public <T> void update(String ExpenseId, T object, OperationCallback callback) {
-        if (!(object instanceof Item)){
+        if (!(object instanceof Item)) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
             return;
         }
@@ -81,7 +81,8 @@ public class itemAdapter extends BaseDatabase{
         User user = (User) object;
         databaseRef.child(ExpenseId).setValue(user.toMap())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override @NonNull
+                    @Override
+                    @NonNull
                     public void onComplete(Task<Void> task) {
                         if (task.isSuccessful()) {
                             callback.onSuccess();
@@ -105,7 +106,7 @@ public class itemAdapter extends BaseDatabase{
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<Item> Items = new ArrayList<>();
-                        for (DataSnapshot itemSnapshot: snapshot.getChildren()) {
+                        for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                             Item item = Item.fromDataSnapshot(itemSnapshot);
                             Items.add(item);
                         }
@@ -120,14 +121,14 @@ public class itemAdapter extends BaseDatabase{
     }
 
 
-    public void addMultipleItems(ArrayList<Item> items, ListCallback<Item> callback){
+    public void addMultipleItems(ArrayList<Item> items, ListCallback<Item> callback) {
         // call the create for the number of items in arraylist
-        for(Item item : items){
+        for (Item item : items) {
             // loop through the item list here,
             update(item.getItemId(), item, new OperationCallback() {
                 @Override
                 public void onSuccess() {
-                    Log.d("item updated", item.getItemId()+ "was updated");
+                    Log.d("item updated", item.getItemId() + "was updated");
                 }
 
                 @Override
@@ -137,9 +138,10 @@ public class itemAdapter extends BaseDatabase{
             });
         }
     }
-    public void UpdateItemList(String expenseId,List<Item> itemList){
-        for(Item item: itemList){
-            update(expenseId,item, new OperationCallback(){
+
+    public void UpdateItemList(String expenseId, List<Item> itemList) {
+        for (Item item : itemList) {
+            update(expenseId, item, new OperationCallback() {
                 @Override
                 public void onSuccess() {
                     Log.d("update items", "items successfully updated");
@@ -215,32 +217,32 @@ public class itemAdapter extends BaseDatabase{
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID or Expense ID cannot be null or empty")));
             return;
         }
-                databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        double totalOwed = 0.0;
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double totalOwed = 0.0;
 
-                        for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                            String thisExpenseId = itemSnapshot.child("expenseId").getValue(String.class);
-                            if (!expenseId.equals(thisExpenseId)) continue;
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    String thisExpenseId = itemSnapshot.child("expenseId").getValue(String.class);
+                    if (!expenseId.equals(thisExpenseId)) continue;
 
-                            DataSnapshot debtPeopleSnapshot = itemSnapshot.child("debtpeople");
-                            if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) {
-                                Double amount = debtPeopleSnapshot.child(userid).getValue(Double.class);
-                                if (amount != null) {
-                                    totalOwed += amount;
-                                }
-                            }
+                    DataSnapshot debtPeopleSnapshot = itemSnapshot.child("debtpeople");
+                    if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) {
+                        Double amount = debtPeopleSnapshot.child(userid).getValue(Double.class);
+                        if (amount != null) {
+                            totalOwed += amount;
                         }
-
-                        callback.onValueLoaded(totalOwed);
                     }
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callback.onError(error);
-                    }
-                });
+                callback.onValueLoaded(totalOwed);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error);
+            }
+        });
     }
 
     // how to use
@@ -256,6 +258,7 @@ public class itemAdapter extends BaseDatabase{
 //            Log.e("TotalOwed", "Error getting total: " + error.getMessage());
 //        }
 //    });
+
 
 
     public void updateSettledUser(String payeriD, String userid, String expenseId, OperationCallback callback) {
@@ -310,8 +313,4 @@ public class itemAdapter extends BaseDatabase{
                     }
                 });
     }
-
-
-
-
 }

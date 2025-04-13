@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,6 +80,8 @@ public class SettleUp extends AppCompatActivity {
         groupId = intent.getStringExtra("GROUP_ID");
         friendId = intent.getStringExtra("FRIEND_ID");
         preferenceManager = new PreferenceManager(this);
+        singleton = ExpenseSingleton.getInstance();
+        itemAdapter = new itemAdapter();
 
 
         //modify toolbar text based on page
@@ -103,11 +106,10 @@ public class SettleUp extends AppCompatActivity {
         settleExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                settleAllExpensesForFriend(friendId);
 
             }
         });
-        singleton = ExpenseSingleton.getInstance();
-        itemAdapter = new itemAdapter();
 
 
         //show item list
@@ -202,7 +204,77 @@ public class SettleUp extends AppCompatActivity {
                 overallPersonText.setText(R.string.to_friend);
             }
         }
+        adapter.notifyDataSetChanged();
+
     }
+
+    private void settleAllExpensesForFriend(String friendId) {
+        String myId = preferenceManager.getUser().getId();
+        Log.d("test",myId + " : "+ friendId);
+
+        for (Expense expense : singleton.getExpenseArrayList()) {
+            Log.d("test2",expense.getExpenseId());
+            if (expense.getExpensePaidBy().equals(myId)) {
+                itemAdapter.getTotalAmountOwedByUser(friendId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                    @Override
+                    public void onValueLoaded(Double value) {
+                        if (value > 0) {
+                            Log.d("SettleAll", "Calling updateSettledUser for " + friendId + " in expense " + expense.getExpenseId());
+                            // Only call updateSettledUser if the friend actually owes something
+                            itemAdapter.updateSettledUser(myId,friendId,expense.getExpenseId(),new BaseDatabase.OperationCallback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
+                                        }
+
+                                        @Override
+                                        public void onError(DatabaseError error) {
+                                            Log.e("SettleAll", "Failed for " + expense.getExpenseId() + ": " + error.getMessage());
+                                        }
+                                    }
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Log.e("SettleAll", "Error checking total owed: " + error.getMessage());
+                    }
+                });
+            }else if (expense.getExpensePaidBy().equals(friendId)){
+                itemAdapter.getTotalAmountOwedByUser(myId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                    @Override
+                    public void onValueLoaded(Double value) {
+                        if (value > 0) {
+                            Log.d("SettleAll", "Calling updateSettledUser for " + friendId + " in expense " + expense.getExpenseId());
+                            // Only call updateSettledUser if the friend actually owes something
+                            itemAdapter.updateSettledUser(friendId,myId,expense.getExpenseId(),new BaseDatabase.OperationCallback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
+                                        }
+
+                                        @Override
+                                        public void onError(DatabaseError error) {
+                                            Log.e("SettleAll", "Failed for " + expense.getExpenseId() + ": " + error.getMessage());
+                                        }
+                                    }
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Log.e("SettleAll", "Error checking total owed: " + error.getMessage());
+                    }
+                });
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+
+
 
 
 }
