@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.DebtPersonHelper;
+import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
 
 import java.math.BigDecimal;
@@ -83,5 +84,6 @@ public class RecycleViewAdapter_ExpenseDescription extends RecyclerView.Adapter<
 
         }
     }
+
 
 }

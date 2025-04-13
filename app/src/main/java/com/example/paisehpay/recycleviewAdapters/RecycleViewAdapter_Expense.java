@@ -56,15 +56,9 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
 
         String userId = currentExpense.getExpensePaidBy();
         String username = preferenceManager.getOneFriend(userId);
-        //Log.d("username",username + userId);
         holder.expensePaidByText.setText(username + " paid");
-
-
-
-
-        //holder.expensePaidByText.setText(currentExpense.getExpensePaidBy());
-        holder.expenseActionText.setText(currentExpense.getExpenseAction());
-        holder.expenseAmountText.setText(currentExpense.getExpenseAmount());
+        holder.expenseActionText.setText(R.string.amount);
+        holder.expenseAmountText.setText("$ " + currentExpense.getExpenseAmount());
 
         holder.itemView.setOnClickListener(view -> {
             Context context = view.getContext();

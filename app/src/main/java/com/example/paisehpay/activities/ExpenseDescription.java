@@ -152,7 +152,7 @@ public class ExpenseDescription extends AppCompatActivity {
                     //itemArray.addAll(object);
                    // Log.d("friends", object.toString());
 
-                    // Notify your adapter that data has changed
+                    // Notify your adapter that data has c  hanged
                     //if (itemadapter != null) {
                     //    adapter.notifyDataSetChanged();
                     //}

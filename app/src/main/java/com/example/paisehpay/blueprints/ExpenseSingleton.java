@@ -48,4 +48,12 @@ public class ExpenseSingleton {
             }
         });
     }
+
+    public ArrayList<String> returnExpId(){
+        ArrayList<String> expId = new ArrayList<>();
+        for (Expense expense: expenseArrayList){
+            expId.add(expense.getExpenseId());
+        }
+        return expId;
+    }
 }

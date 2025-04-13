@@ -221,7 +221,9 @@ public class itemAdapter extends BaseDatabase{
                         double totalOwed = 0.0;
 
                         for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                            // Get the debtpeople map for each item
+                            String thisExpenseId = itemSnapshot.child("expenseId").getValue(String.class);
+                            if (!expenseId.equals(thisExpenseId)) continue;
+
                             DataSnapshot debtPeopleSnapshot = itemSnapshot.child("debtpeople");
                             if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) {
                                 Double amount = debtPeopleSnapshot.child(userid).getValue(Double.class);

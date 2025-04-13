@@ -90,6 +90,7 @@
     <string name="all_settled">All Settled!</string>
     <string name="expense_description">Expense Description</string>
     <string name="expenses">Expenses</string>
+    <string name="to">To XXXXXX </string>
 
 
     //toolbar

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,33 +24,33 @@ import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Expense;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_ExpenseDescription;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SettleUp extends AppCompatActivity {
     TextView toolbarTitleText;
     ImageView backArrow;
-    RecyclerView itemView;
-    ArrayList<Item> itemArray = new ArrayList<>();
-
+    RecyclerView expenseView;
+    ArrayList<Expense> expenseArray = new ArrayList<>();
     Button settleExpenseButton;
-
-    RecycleViewAdapter_ExpenseDescription adapter;
-    String expenseId;
-    ExpenseAdapter expAdapter;
-    itemAdapter itemAdapter;
-    PreferenceManager preferenceManager;
-    private ExpenseSingleton expenseSaver;
-
+    RecycleViewAdapter_Expense adapter;
+    ExpenseSingleton singleton;
     String groupId;
     String friendId;
-
+    itemAdapter itemAdapter;
+    ArrayList<Expense> filteredArray = new ArrayList<>();
+    PreferenceManager preferenceManager;
+    ConstraintLayout totalLayout;
+    TextView overallPriceText;
+    TextView overallPersonText;
 
 
 
@@ -67,8 +68,9 @@ public class SettleUp extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String groupId = intent.getStringExtra("GROUP_ID");
-        String friendId = intent.getStringExtra("FRIEND_ID");
+        groupId = intent.getStringExtra("GROUP_ID");
+        friendId = intent.getStringExtra("FRIEND_ID");
+        preferenceManager = new PreferenceManager(this);
 
 
         //modify toolbar text based on page
@@ -79,12 +81,6 @@ public class SettleUp extends AppCompatActivity {
         //}else{
         //    toolbarTitleText.setText(R.string.settle_expense);
         //}
-
-
-
-
-        //adapter
-        expAdapter = new ExpenseAdapter();
 
 
         //press back arrow lead back to home fragment
@@ -98,10 +94,6 @@ public class SettleUp extends AppCompatActivity {
         });
 
 
-        //get pref
-        preferenceManager = new PreferenceManager(this);
-        expenseSaver = ExpenseSingleton.getInstance();
-
         settleExpenseButton = findViewById(R.id.settle_up);
         settleExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,20 +101,64 @@ public class SettleUp extends AppCompatActivity {
 
             }
         });
+        singleton = ExpenseSingleton.getInstance();
+        itemAdapter = new itemAdapter();
 
 
         //show item list
         //we will link the adapter used for the item scroll bar
-        itemView = findViewById(R.id.recycle_view_items);
-        adapter = new RecycleViewAdapter_ExpenseDescription(this,itemArray);
-        itemView.setAdapter(adapter);
-        itemView.setLayoutManager(new LinearLayoutManager(this));
-
-        showItemList(friendId);
+        expenseView = findViewById(R.id.recycle_view_items);
+        adapter = new RecycleViewAdapter_Expense(this,expenseArray);
+        showExpenseList();
+        expenseView.setAdapter(adapter);
+        expenseView.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
-    private void showItemList(String friendId) {
+    private void showExpenseList() {
+        filteredArray.clear();
+        String yourID = preferenceManager.getUser().getId();
 
+        for (Expense expense : singleton.getExpenseArrayList()) {
+            boolean paidByYou = expense.getExpensePaidBy().equals(yourID);
+            boolean paidByFriend = expense.getExpensePaidBy().equals(friendId);
+
+            if (paidByYou) {
+                itemAdapter.getTotalAmountOwedByUser(friendId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                    @Override
+                    public void onValueLoaded(Double value) {
+                        if (value > 0) {
+                            filteredArray.add(expense);
+                            adapter.updateData(filteredArray);
+                            adapter.notifyDataSetChanged();
+                            Log.d("AmountOwed", "Friend: " + friendId + " owes " + value + " in expense " + expense.getExpenseId());
+                        }
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Log.e("FriendOwesYou", "Error: " + error.getMessage());
+                    }
+                });
+            } else if (paidByFriend) {
+                itemAdapter.getTotalAmountOwedByUser(yourID, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                    @Override
+                    public void onValueLoaded(Double value) {
+                        if (value > 0) {
+                            filteredArray.add(expense);
+                            adapter.updateData(filteredArray);
+                            adapter.notifyDataSetChanged();
+                            Log.d("uowefriend", "you owe friend: " + value);
+                        }
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Log.e("uowefriend", "Error: " + error.getMessage());
+                    }
+                });
+            }
+        }
     }
+
 }

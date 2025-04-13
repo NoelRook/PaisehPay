@@ -30,7 +30,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/expense_item"
-        app:layout_constraintBottom_toTopOf="@id/settle_up"/>
+        app:layout_constraintBottom_toTopOf="@id/total_layout"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/total_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycle_view_items"
+        app:layout_constraintBottom_toTopOf="@id/settle_up"
+        android:background="@drawable/layout_border_highlight2_mode">
+
+        <TextView
+            android:id="@+id/final_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total"
+            style="@style/textViewMediumDarkMode"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/final_amount"/>
+
+        <TextView
+            android:id="@+id/final_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/owe_amount"
+            style="@style/textViewMediumDarkMode"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/final_amount_text"
+            app:layout_constraintEnd_toStartOf="@id/to_person"/>
+
+        <TextView
+            android:id="@+id/to_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/to"
+            style="@style/textViewMediumDarkMode"
+            app:layout_constraintStart_toEndOf="@id/final_amount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <Button
@@ -39,9 +87,11 @@
         android:layout_height="wrap_content"
         android:text="@string/settle_all"
         style="@style/ButtonLightMode"
+        android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycle_view_items"
+        app:layout_constraintTop_toBottomOf="@id/total_layout"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
