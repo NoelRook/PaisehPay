@@ -1,9 +1,13 @@
 package com.example.paisehpay.activities;
 
 
+import static android.content.ContentValues.TAG;
+
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -13,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
@@ -24,6 +30,8 @@ import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -66,7 +74,7 @@ public class SignIn extends AppCompatActivity {
         });
 
         // Initialize firebase
-         // get preference manager to save the user preferenace
+        // get preference manager to save the user preferenace
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         preferenceManager = new PreferenceManager(this);
@@ -121,12 +129,32 @@ public class SignIn extends AppCompatActivity {
 
         //change password button to lead to change password page
         changePasswordButton = loginLayout.findViewById(R.id.forget_password_button);
-        changePasswordButton.setOnClickListener(view ->{
-            Intent intent = new Intent(SignIn.this, ChangePassword.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-            finish();
+        changePasswordButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignIn.this);
+            builder.setTitle("Reset Password");
+            builder.setMessage("Enter your email to receive a password reset link");
+
+            // Set up the input
+            final EditText input = new EditText(SignIn.this);
+            input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+            input.setHint("Email");
+            builder.setView(input);
+
+            // Set up the buttons
+            builder.setPositiveButton("Send", (dialog, which) -> {
+                String email = input.getText().toString().trim();
+                if (!email.isEmpty()) {
+                    sendPasswordResetEmail(email);
+                } else {
+                    Toast.makeText(SignIn.this, "Please enter your email", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
+
 
 
         // remember me function
@@ -168,55 +196,26 @@ public class SignIn extends AppCompatActivity {
         });
 
 
-        /*User newUser = new User("new id","John Doe", "john@example.com");
-        adapter.createUser(newUser, new FirebaseAdapter.OperationCallback() {
-            @Override
-            public void onSuccess() {
-                // User created successfully
-                Log.d("Success", "User created");
-            }
-
-            @Override
-            public void onError(DatabaseError error) {
-                // Handle error
-                Log.e("FirebaseError", error.getMessage());
-            }
-        });
-
-        User updatedUser = new User("id here","John Updated", "john.updated@example.com");
-        adapter.updateUser("existingUserId", updatedUser, new FirebaseAdapter.OperationCallback() {
-            @Override
-            public void onSuccess() {
-                // User updated successfully
-                Log.d("Success", "User updated");
-            }
-
-            @Override
-            public void onError(DatabaseError error) {
-                // Handle error
-                Log.e("FirebaseError", error.getMessage());
-            }
-        });
-
-        //delete
-        adapter.deleteUser(updatedUser, new FirebaseAdapter.UserOperationCallback() {
-            @Override
-            public void onSuccess() {
-                // User deleted successfully
-                Log.d("Success", "User deleted");
-            }
-
-            @Override
-            public void onError(DatabaseError error) {
-                // Handle error
-                Log.e("FirebaseError", error.getMessage());
-            }
-        });*/
-        // end testing
 
     }
 
+
+
     // todo. seperate login functionality to invoke remember me functionality
+
+    // Helper method to send password reset email
+    private void sendPasswordResetEmail(String email) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(SignIn.this, "Password reset email sent to " + email, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Email sent.");
+                    } else {
+                        Toast.makeText(SignIn.this, "Failed to send reset email", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Error sending email", task.getException());
+                    }
+                });
+    }
 
     private void userLogin(String email, String password){
 
