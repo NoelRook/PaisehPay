@@ -22,7 +22,6 @@ public class PreferenceManager {
 
     private static final String KEY_GROUP = "group_list";
 
-    private StringCrypto encoder = new StringCrypto();
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 

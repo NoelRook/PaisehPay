@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
+import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
@@ -41,6 +43,11 @@ public class ExpenseDescription extends AppCompatActivity {
 
     RecycleViewAdapter_ExpenseDescription adapter;
     String expenseId;
+    String expenseName;
+    String expenseDate;
+    String expenseCategory;
+    String expenseGroup;
+    String expensePaidBy;
     ExpenseAdapter expAdapter;
     ItemAdapter itmAdapter;
 
@@ -60,7 +67,12 @@ public class ExpenseDescription extends AppCompatActivity {
 
         Intent intent = getIntent();
         expenseId = intent.getStringExtra("EXPENSE_ID");
-        Log.d("test",expenseId);
+        expenseDate = intent.getStringExtra("EXPENSE_DATE");
+        expenseName = intent.getStringExtra("EXPENSE_NAME");
+        expenseCategory = intent.getStringExtra("EXPENSE_CATEGORY");
+        expenseGroup = intent.getStringExtra("EXPENSE_GROUP");
+        expensePaidBy = intent.getStringExtra("EXPENSE_PAID_BY");
+
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -88,6 +100,13 @@ public class ExpenseDescription extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ExpenseDescription.this, ReceiptOverview.class);
                 intent.putExtra("Items",itemArray);
+                intent.putExtra("ExpenseId",expenseId);
+                intent.putExtra("ExpenseCategory",expenseCategory);
+                intent.putExtra("ExpenseName",expenseName);
+                intent.putExtra("ExpenseGroup",expenseGroup);
+                intent.putExtra("ExpensePaidBy",expensePaidBy);
+                intent.putExtra("ExpenseDate",expenseDate);
+                intent.putExtra("QueryFrom","ExpenseDescription");
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
@@ -156,18 +175,21 @@ public class ExpenseDescription extends AppCompatActivity {
         ItemAdapter itemadapter = new ItemAdapter();
 
         executorService.execute(()->{
-
             itemadapter.getItemByExpense(expenseId, new OperationCallbacks.ListCallback<Item>() {
                 @Override
                 public void onListLoaded(List<Item> object) {
-
+                    runOnUiThread(() ->{
+                        itemArray.clear();
+                        itemArray.addAll(object);
+                        adapter.notifyDataSetChanged();
+                    });
                 }
 
                 @Override
                 public void onError(DatabaseError error) {
 
                 }
-        });
+            });
         });
     }
 }

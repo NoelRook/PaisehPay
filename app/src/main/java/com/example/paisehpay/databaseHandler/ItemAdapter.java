@@ -109,19 +109,20 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
     }
 
 
-    public void addMultipleItems(ArrayList<Item> items, OperationCallbacks.ListCallback<Item> callback) {
+    public void addMultipleItems(ArrayList<Item> items, OperationCallbacks.OperationCallback callback) {
         // call the create for the number of items in arraylist
         for (Item item : items) {
             // loop through the item list here,
-            update(item.getItemId(), item, new OperationCallbacks.OperationCallback() {
+            create( item, new OperationCallbacks.OperationCallback() {
                 @Override
                 public void onSuccess() {
                     Log.d("item updated", item.getItemId() + "was updated");
+                    callback.onSuccess();
                 }
 
                 @Override
                 public void onError(DatabaseError error) {
-
+                    callback.onError(error);
                 }
             });
         }
