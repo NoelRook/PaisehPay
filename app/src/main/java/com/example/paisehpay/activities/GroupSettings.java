@@ -123,30 +123,34 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     }
 
     private void deleteGroup(String groupId) {
-        groupAdapter.delete(groupId, new BaseDatabase.OperationCallback(){
-            @Override
-            public void onSuccess() {
-                // User deleted successfully
-                expAdapter.deleteExpenseByGroupID(groupId, new BaseDatabase.OperationCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d("Success", "expense deleted");
-                        Intent intent= new Intent(GroupSettings.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                    @Override
-                    public void onError(DatabaseError error) {
-                        Log.d("groupSetting", error.toString());
-                    }
-                });
-            }
+        executorService.execute(()->{
 
-            @Override
-            public void onError(DatabaseError error) {
-                // Handle error
-                Log.e("FirebaseError", error.getMessage());
-            }
+            groupAdapter.delete(groupId, new BaseDatabase.OperationCallback(){
+                @Override
+                public void onSuccess() {
+                    // User deleted successfully
+                    expAdapter.deleteExpenseByGroupID(groupId, new BaseDatabase.OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d("Success", "expense deleted");
+                            Intent intent= new Intent(GroupSettings.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                        @Override
+                        public void onError(DatabaseError error) {
+                            Log.d("groupSetting", error.toString());
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    // Handle error
+                    Log.e("FirebaseError", error.getMessage());
+                }
+            });
         });
+
 
 
 
