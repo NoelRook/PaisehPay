@@ -42,6 +42,8 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
     TextView toolbarTitleText;
     RecyclerView itemView;
     ArrayList<Item> itemArray = new ArrayList<>();
+    double[] itemPrice;
+    String[] itemName;
     String expenseId;
     String expenseDate;
     String expenseGroup;
@@ -51,7 +53,6 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
     DialogFragment_AddItem addItemFragment;
     private RecycleViewAdapter_Item adapter_items;
     ItemAdapter ItemAdapter;
-
     SwitchCompat gstToggle;
     SwitchCompat svcToggle;
     ConstraintLayout subTotalLayout;
@@ -121,6 +122,18 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
                     Log.e("abc", error.getMessage());
                 }
             });
+            updateReceiptComputation();
+        }
+
+        if (intent.hasExtra("itemName")) {
+            itemName = intent.getStringArrayExtra("itemName");
+            itemPrice = intent.getDoubleArrayExtra("itemPrice");
+            for (int i = 0; i < itemName.length; i++) {
+                itemArray.add(new Item(null, itemName[i], itemPrice[i],null,null,null));
+                instance.addToItemArray(itemName[i]);
+                instance.addToItemPrice(itemPrice[i]);
+            }
+            Log.d("dfa",itemArray.toString());
             updateReceiptComputation();
         }
 

@@ -1,5 +1,6 @@
 package com.example.paisehpay.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,16 +37,16 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
         manualButton = view.findViewById(R.id.manual_button);
         scanButton = view.findViewById(R.id.scan_button);
 
-        manualButton.setOnClickListener(v -> {
+        scanButton.setOnClickListener(v -> {
             v.setEnabled(false);
             navigateToAddFragment();
             new Handler(Looper.getMainLooper()).postDelayed(this::dismissAllowingStateLoss, 50);
             //we set a timer so that the add fragment loads in time
         });
 
-        scanButton.setOnClickListener(v -> {
+        manualButton.setOnClickListener(v -> {
             v.setEnabled(false);
-            navigateToAddFragment();
+            navigateToReceiptOverview();
             new Handler(Looper.getMainLooper()).postDelayed(this::dismissAllowingStateLoss, 50);
         });
     }
@@ -59,8 +60,13 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
         }
         dismiss(); // Close Bottom Sheet
     }
-}
 
-// <!-- TODO: 1. if manual scan, skip camera page + reciept overview page and jump straight to expense details page -->
-// <!-- TODO: 2. if auto scan, go to camera page  -->
+    private void navigateToReceiptOverview() {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), ReceiptOverview.class);
+            startActivity(intent);
+        }
+        dismiss();
+    }
+}
 
