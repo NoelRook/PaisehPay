@@ -176,6 +176,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     expenseDate = formattedDate;
                     Receipts instance = ReceiptInstance.getInstance();
                     expenseAmount = instance.getTotal();
+                    expenseName = expenseNameText.getText().toString();
 
                     if (expenseNameText == null) {
                         Toast.makeText(AddPeople.this, "Please enter expense name", Toast.LENGTH_LONG).show();
@@ -191,17 +192,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     Receipts instance = ReceiptInstance.getInstance();
                     expenseAmount = instance.getTotal();
                     Expense expense = new Expense(expenseId, expenseName, expenseDate, id, expenseGroup, null, expenseAmount, expenseCategory);
-                    itemAdapter.addMultipleItems(itemArray, new OperationCallbacks.OperationCallback(){
-                        @Override
-                        public void onSuccess() {
-                            Log.d("additem","yurr");
-                        }
-
-                        @Override
-                        public void onError(DatabaseError error) {
-                            Log.d("additem",error.getMessage());
-                        }
-                    });
+                    storeExpenseItems(itemArray,expenseId);
                     expAdapter.update(expenseId, expense, new OperationCallbacks.OperationCallback() {
                         @Override
                         public void onSuccess() {
@@ -309,7 +300,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             addPeopleFragment = DialogFragment_AddPeople.newInstance(1,expenseGroup,position,item);
             addPeopleFragment.show(getSupportFragmentManager(), "DialogFragment_AddPeople");
         }
-
     }
 
     //used to populate RecycleView Items peopleSelected, where selectedNames is the names chosen in the DialogFragment

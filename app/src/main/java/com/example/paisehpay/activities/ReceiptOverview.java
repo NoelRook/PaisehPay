@@ -100,6 +100,7 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         if (intent.hasExtra("Items")){
             backArrow.setVisibility(View.GONE);
             itemArray = intent.getParcelableArrayListExtra("Items");
+            Log.d("itemarray",itemArray.toString());
             expenseId = intent.getStringExtra("ExpenseId");
             expenseGroup = intent.getStringExtra("ExpenseGroup");
             expensePaidBy = intent.getStringExtra("ExpensePaidBy");
