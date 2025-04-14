@@ -118,7 +118,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AddPeople.this, ReceiptOverview.class);
-
                 instance.clearAll();
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
