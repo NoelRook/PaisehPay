@@ -21,10 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
-    private DatabaseReference databaseRef;
-    private static final String TABLE = "expenses";
-    private static final String ITEM_TABLE = "items";
-    private static final String ITEM__TABLE = "items";
     ItemAdapter itmAdapter;
 
     public ExpenseAdapter() {
@@ -78,6 +74,12 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
         });
     }
     public void getByGroupId(String groupId, OperationCallbacks.ListCallback<Expense> callback) {
+        if (databaseRef == null) {
+            Log.e("ExpenseAdapter", "Database reference is null");
+            callback.onError(DatabaseError.fromException(new NullPointerException("Database reference is null")));
+            return;
+        }
+
         databaseRef.orderByChild("group_id").equalTo(groupId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

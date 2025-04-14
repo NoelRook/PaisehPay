@@ -105,8 +105,9 @@ public class GroupHomepage extends AppCompatActivity {
         tabLayout = findViewById(R.id.expense_tab_layout);
 
         // Load expenses first
-        loadExpenses();
         groupAdapter = new GroupAdapter();
+        loadExpenses();
+
 
 
         //get rv for settle
@@ -121,6 +122,9 @@ public class GroupHomepage extends AppCompatActivity {
 
 
     private void loadExpenses() {
+//        executorService.execute(()->{
+//
+//        });
         singleExpense.getExpensesByGroupId(groupID, new OperationCallbacks.ListCallback<Expense>() {
             @Override
             public void onListLoaded(List<Expense> expenses) {
