@@ -11,14 +11,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Expense implements Parcelable {
+
     private String expenseId;
+    @PropertyName("description")
     private String description;
+    @PropertyName("created_at")
     private String expenseDate;
+    @PropertyName("creator_id")
     private String expensePaidBy;
+    @PropertyName("group_id")
     private String associatedGroup;
     private String expenseAction; // Optional field
+
     private String expenseAmount;
+    @PropertyName("category")
     private String expenseCategory;
+    @PropertyName("totalAmount")
     private double expenseOwed = 0.0;
 
     public Expense() {

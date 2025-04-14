@@ -124,6 +124,7 @@ public class GroupAdapter extends BaseDatabase {
                             userGroups.add(group);
                         }
                     }
+
                 }
                 callback.onListLoaded(userGroups);
             }

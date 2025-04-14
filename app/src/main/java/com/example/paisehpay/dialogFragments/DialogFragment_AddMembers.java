@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
@@ -30,10 +29,10 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -112,7 +111,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         // Create callback for handling the friend list data
         BaseDatabase.ListCallback friendsCallback = new BaseDatabase.ListCallback<User>() {
             @Override
-            public void onListLoaded(List<User> friends) {
+            public HashMap<String, Date> onListLoaded(List<User> friends) {
                 // Add all friends to your array
                 userArray.addAll(friends);
                 Log.d("friends", friends.toString());
@@ -122,6 +121,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
                     adapter.notifyDataSetChanged();
                 }
 
+                return null;
             }
 
             @Override

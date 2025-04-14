@@ -18,7 +18,6 @@ import com.example.paisehpay.R;
 import com.example.paisehpay.activities.AddPeople;
 import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupSelect;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
@@ -27,6 +26,8 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -81,7 +82,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
             // Get groups where user is either creator or member
             grpAdapter.getGroupsForUser(CurUser.getId(), new BaseDatabase.ListCallback<Group>() {
                 @Override
-                public void onListLoaded(List<Group> groups) {
+                public HashMap<String, Date> onListLoaded(List<Group> groups) {
                     ArrayList<Group> tempList = new ArrayList<>();
 
                     for (Group group : groups) {
@@ -114,6 +115,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
                         }
                         adapter.notifyDataSetChanged();
                     });
+                    return null;
                 }
 
                 @Override

@@ -1,13 +1,11 @@
 package com.example.paisehpay.dialogFragments;
 
-import static android.provider.Contacts.GroupMembership.GROUP_ID;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
@@ -29,8 +26,9 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_UserSelect;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 import com.google.firebase.database.DatabaseError;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -117,7 +115,7 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
         executorService.execute(()->{
             grpAdapter.getGroupMates(groupId, new BaseDatabase.ListCallback<Map<String, String>>() {
                 @Override
-                public void onListLoaded(List<Map<String, String>> membersList) {
+                public HashMap<String, Date> onListLoaded(List<Map<String, String>> membersList) {
                     if (membersList != null && !membersList.isEmpty()) {
                         Map<String, String> members = membersList.get(0);
                         userArray.clear(); // Clear again in case dummy data was added
@@ -137,6 +135,7 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
                     }
+                    return null;
                 }
 
                 @Override

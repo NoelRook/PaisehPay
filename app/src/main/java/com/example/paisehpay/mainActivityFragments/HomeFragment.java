@@ -1,6 +1,5 @@
 package com.example.paisehpay.mainActivityFragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,18 +16,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Group;
-import com.example.paisehpay.blueprints.Notification;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
-import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_CreateGroup;
 import com.example.paisehpay.dialogFragments.DialogFragment_Owe;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,7 +35,6 @@ import android.widget.Toast;
 
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
 
@@ -100,8 +96,8 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         oweDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                oweDialogFragment = new DialogFragment_Owe();
-                oweDialogFragment.show(getChildFragmentManager(), "DialogFragment");
+                oweDialogFragment = DialogFragment_Owe.newInstance(getString(R.string.you_owe_who));
+                oweDialogFragment.show(getChildFragmentManager(), "DialogFragment_Owe");
             }
         });
         //view owed details lead to owed details page
@@ -109,8 +105,8 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         owedDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                owedDialogFragment = new DialogFragment_Owe();
-                owedDialogFragment.show(getChildFragmentManager(), "DialogFragment");
+                owedDialogFragment = DialogFragment_Owe.newInstance(getString(R.string.who_owe_you));
+                owedDialogFragment.show(getChildFragmentManager(), "DialogFragment_Owe");
             }
         });
 
@@ -160,7 +156,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
             // Get groups where user is either creator or member
             grpAdapter.getGroupsForUser(currentUser.getId(), new BaseDatabase.ListCallback<Group>() {
                 @Override
-                public void onListLoaded(List<Group> groups) {
+                public HashMap<String, Date> onListLoaded(List<Group> groups) {
                     ArrayList<Group> tempList = new ArrayList<>();
 
                     for (Group group : groups) {
@@ -193,6 +189,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
                         }
                         adapter.notifyDataSetChanged();
                     });
+                    return null;
                 }
 
                 @Override
@@ -227,12 +224,12 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         friendAdapter friendAdapter = new friendAdapter();
 
         // Get the current user's ID
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String currentUserId = preferenceManager.getUser().getId();
 
         // Create callback for handling the friend list data
         BaseDatabase.ListCallback friendsCallback = new BaseDatabase.ListCallback<User>() {
             @Override
-            public void onListLoaded(List<User> friends) {
+            public HashMap<String, Date> onListLoaded(List<User> friends) {
                 // Add all friends to your array
                 userArray.addAll(friends);
                 preferenceManager.mapManyFriends(userArray);
@@ -243,6 +240,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
                     adapter.notifyDataSetChanged();
                 }
 
+                return null;
             }
 
             @Override

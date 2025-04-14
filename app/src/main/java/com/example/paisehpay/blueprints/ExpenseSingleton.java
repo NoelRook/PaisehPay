@@ -1,12 +1,12 @@
 package com.example.paisehpay.blueprints;
 
-import android.util.Log;
-
 import com.example.paisehpay.databaseHandler.BaseDatabase;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class ExpenseSingleton {
@@ -37,9 +37,10 @@ public class ExpenseSingleton {
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
         expenseAdapter.getByGroupId(groupId, new BaseDatabase.ListCallback<Expense>() {
             @Override
-            public void onListLoaded(List<Expense> expenses) {
+            public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
                 setExpenses(expenses);
                 callback.onListLoaded(expenses);
+                return null;
             }
 
             @Override

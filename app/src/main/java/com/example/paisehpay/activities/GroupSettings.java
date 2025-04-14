@@ -26,14 +26,14 @@ import com.example.paisehpay.databaseHandler.itemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -164,7 +164,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         executorService.execute(()->{
             groupAdapter.getGroupMates(groupId, new BaseDatabase.ListCallback<Map<String, String>>() {
                 @Override
-                public void onListLoaded(List<Map<String, String>> membersList) {
+                public HashMap<String, Date> onListLoaded(List<Map<String, String>> membersList) {
                     if (membersList != null && !membersList.isEmpty()) {
                         Map<String, String> members = membersList.get(0);
                         groupMemberArray.clear(); // Clear again in case dummy data was added
@@ -184,6 +184,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
                     }
+                    return null;
                 }
 
                 @Override

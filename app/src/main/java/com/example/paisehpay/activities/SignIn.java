@@ -4,7 +4,6 @@ package com.example.paisehpay.activities;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -33,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class SignIn extends AppCompatActivity {
@@ -155,11 +156,12 @@ public class SignIn extends AppCompatActivity {
         UserAdapter adapter = new UserAdapter();
         adapter.get(new BaseDatabase.ListCallback<User>() {
             @Override
-            public void onListLoaded(List<User> users) {
+            public HashMap<String, Date> onListLoaded(List<User> users) {
                 // Handle the list of users
                 for (User user : users) {
                     Log.d("User", user.getUsername() + " - " + user.getEmail());
                 }
+                return null;
             }
             @Override
             public void onError(DatabaseError error) {
