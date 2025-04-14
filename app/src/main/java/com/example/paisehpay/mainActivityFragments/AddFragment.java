@@ -70,7 +70,7 @@ public class AddFragment extends Fragment {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private String responseBody;
-    private Double[] receiptItemPrice;
+    private double[] receiptItemPrice;
     private String[] receiptItemName;
 
     public AddFragment() {
@@ -258,7 +258,7 @@ public class AddFragment extends Fragment {
                             JSONArray items = receipt.getJSONArray("items");
                             Log.d("gugu",items.toString() + items.length());
 
-                            receiptItemPrice = new Double[items.length()];
+                            receiptItemPrice = new double[items.length()];
                             receiptItemName = new String[items.length()];
 
                             // Loop through each item and extract the necessary data

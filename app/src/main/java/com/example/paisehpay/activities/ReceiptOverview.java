@@ -34,6 +34,7 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ReceiptOverview extends AppCompatActivity implements DialogFragmentListener<Item> {
     //shows receipt details after camera ocr
@@ -128,6 +129,7 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         if (intent.hasExtra("itemName")) {
             itemName = intent.getStringArrayExtra("itemName");
             itemPrice = intent.getDoubleArrayExtra("itemPrice");
+            Log.d("fss", Arrays.toString(itemName) + Arrays.toString(itemPrice));
             for (int i = 0; i < itemName.length; i++) {
                 itemArray.add(new Item(null, itemName[i], itemPrice[i],null,null,null));
                 instance.addToItemArray(itemName[i]);
