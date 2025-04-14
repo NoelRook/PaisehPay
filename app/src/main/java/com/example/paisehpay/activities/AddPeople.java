@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.blueprints.Category;
 import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.computation.EqualSplit;
@@ -50,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -86,6 +88,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     ExpenseAdapter expAdapter;
     ItemAdapter itemAdapter;
+    ExpenseSingleton singleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +122,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
 
         //get current user
+        singleton = ExpenseSingleton.getInstance();
         preferenceManager = new PreferenceManager(AddPeople.this);
         expAdapter = new ExpenseAdapter();
         itemAdapter = new ItemAdapter();
@@ -170,7 +174,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     String formattedDate = formatter.format(today);
                     expenseDate = formattedDate;
-                    expenseName = expenseNameText.getText().toString();
                     Receipts instance = ReceiptInstance.getInstance();
                     expenseAmount = instance.getTotal();
 
@@ -184,6 +187,9 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                         StoreExpenseAndItems(expense, itemArray);
                     }
                 } else if (queryFrom.equals("ExpenseDescription")){
+                    expenseName = expenseNameText.getText().toString();
+                    Receipts instance = ReceiptInstance.getInstance();
+                    expenseAmount = instance.getTotal();
                     Expense expense = new Expense(expenseId, expenseName, expenseDate, id, expenseGroup, null, expenseAmount, expenseCategory);
                     itemAdapter.addMultipleItems(itemArray, new OperationCallbacks.OperationCallback(){
                         @Override
@@ -207,6 +213,18 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                             Log.d("editexpense", error.getMessage());
                         }
                     });
+                    singleton.getExpensesByGroupId(expenseGroup, new OperationCallbacks.ListCallback<Expense>() {
+                        @Override
+                        public void onListLoaded(List<Expense> object) {
+                            Log.d("getexpense","done");
+                        }
+
+                        @Override
+                        public void onError(DatabaseError error) {
+                            Log.d("getexpense",error.getMessage());
+                        }
+                    });
+
                     Intent intent = new Intent(AddPeople.this, BillSplit.class);
                     intent.putExtra("Items", itemArray);
                     intent.putExtra("Expense",expense);
