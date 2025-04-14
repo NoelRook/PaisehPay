@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.ExpenseSingleton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,11 +21,16 @@ import java.util.List;
 public class ExpenseAdapter extends BaseDatabase{
     private DatabaseReference databaseRef;
     private static final String TABLE = "expenses";
+    private static final String ITEM_TABLE = "items";
+    private static final String ITEM__TABLE = "items";
+    itemAdapter itmAdapter;
 
     public ExpenseAdapter() {
         super(TABLE);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         databaseRef = database.getReference(TABLE);
+
+        itmAdapter = new itemAdapter();
     }
 
     @Override
@@ -180,6 +187,39 @@ public class ExpenseAdapter extends BaseDatabase{
                         callback.onError(DatabaseError.fromException(task.getException()));
                     }
                 });
+    }
+
+    public void deleteExpenseByGroupID(String groupId, OperationCallback callback){
+        databaseRef.orderByChild("group_id").equalTo(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    String ExpenseId = itemSnapshot.getKey();
+                    itmAdapter.deleteByExpenseId(ExpenseId, new OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+                        }
+                        @Override
+                        public void onError(DatabaseError error) {
+                        }
+                    });
+                    itemSnapshot.getRef().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (!task.isSuccessful()) {
+                                callback.onError(DatabaseError.fromException(task.getException()));
+                            }
+                        }
+                    });
+                }
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error);
+            }
+        });
     }
 
 

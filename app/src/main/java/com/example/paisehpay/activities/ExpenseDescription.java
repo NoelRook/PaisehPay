@@ -43,7 +43,8 @@ public class ExpenseDescription extends AppCompatActivity {
 
     RecycleViewAdapter_ExpenseDescription adapter;
     String expenseId;
-    ExpenseAdapter expAdapter;;
+    ExpenseAdapter expAdapter;
+    itemAdapter itmAdapter;
 
     PreferenceManager preferenceManager;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -75,6 +76,7 @@ public class ExpenseDescription extends AppCompatActivity {
 
         //adapter
         expAdapter = new ExpenseAdapter();
+        itmAdapter = new itemAdapter();
 
 
         //press back arrow lead back to home fragment
@@ -116,11 +118,22 @@ public class ExpenseDescription extends AppCompatActivity {
                     @Override
                     public void onSuccess() {
                         // User deleted successfully
-                        Log.d("Success", "expense deleted");
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("expense_deleted", true);
-                        setResult(RESULT_OK, resultIntent);
-                        finish();
+                        itmAdapter.deleteByExpenseId(expenseId, new BaseDatabase.OperationCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("Success", "expense deleted");
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra("expense_deleted", true);
+                                setResult(RESULT_OK, resultIntent);
+                                finish();
+
+                            }
+
+                            @Override
+                            public void onError(DatabaseError error) {
+                                Log.e("FirebaseError", error.getMessage());
+                            }
+                        });
 
                     }
 
@@ -154,14 +167,6 @@ public class ExpenseDescription extends AppCompatActivity {
             itemadapter.getItemByExpense(expenseId, new BaseDatabase.ListCallback<Item>() {
                 @Override
                 public void onListLoaded(List<Item> object) {
-                    //itemArray.addAll(object);
-                   // Log.d("friends", object.toString());
-
-                    // Notify your adapter that data has c  hanged
-                    //if (itemadapter != null) {
-                    //    adapter.notifyDataSetChanged();
-                    //}
-
                     runOnUiThread(() ->{
                         itemArray.clear();
                         itemArray.addAll(object);

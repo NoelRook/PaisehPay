@@ -311,4 +311,28 @@ public class itemAdapter extends BaseDatabase {
         });
     }
 
+    public void deleteByExpenseId(String expenseId, OperationCallback callback){
+        databaseRef.orderByChild("expenseId").equalTo(expenseId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    itemSnapshot.getRef().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                         @Override
+                         public void onComplete(@NonNull Task<Void> task) {
+                             if (!task.isSuccessful()) {
+                                 callback.onError(DatabaseError.fromException(task.getException()));
+                             }
+                         }
+                     });
+                }
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error);
+            }
+        });
+    }
+
 }

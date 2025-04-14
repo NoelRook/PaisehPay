@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
+import com.example.paisehpay.databaseHandler.itemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
@@ -48,6 +50,8 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     DialogFragment_AddMembers addMembersFragment;
     RecycleViewAdapter_GroupMember adapter;
     GroupAdapter groupAdapter;
+    ExpenseAdapter expAdapter;
+    itemAdapter itmAdapter;
     String groupId;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -65,6 +69,8 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         Intent intent = getIntent();
         groupId = intent.getStringExtra("GROUP_ID");
         groupAdapter = new GroupAdapter();
+        expAdapter = new ExpenseAdapter();
+        itmAdapter = new itemAdapter();
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -96,7 +102,6 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         deleteGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //groupAdapter.delete(groupId,);
                 deleteGroup(groupId);
 
                 Intent intent = new Intent(GroupSettings.this, MainActivity.class);
@@ -122,9 +127,18 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
             @Override
             public void onSuccess() {
                 // User deleted successfully
-                Log.d("Success", "expense deleted");
-                Intent intent= new Intent(GroupSettings.this, MainActivity.class);
-                startActivity(intent);
+                expAdapter.deleteExpenseByGroupID(groupId, new BaseDatabase.OperationCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("Success", "expense deleted");
+                        Intent intent= new Intent(GroupSettings.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Log.d("groupSetting", error.toString());
+                    }
+                });
             }
 
             @Override
@@ -133,6 +147,13 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
                 Log.e("FirebaseError", error.getMessage());
             }
         });
+
+
+
+
+
+
+
     }
 
     private void showGroupMemberList() {
