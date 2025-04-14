@@ -22,13 +22,11 @@ import java.util.List;
 import java.util.zip.CRC32;
 
 public class UserAdapter extends BaseDatabase  {
-    private DatabaseReference databaseRef;
+
     private  static final String USER_TABLE = "Users";
 
     public UserAdapter(){
         super(USER_TABLE);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        databaseRef = database.getReference(USER_TABLE);
     }
 
 

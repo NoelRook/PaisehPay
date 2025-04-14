@@ -115,10 +115,14 @@ public class GroupAdapter extends BaseDatabase {
                 List<Group> userGroups = new ArrayList<>();
                 for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
                     Group group = groupSnapshot.getValue(Group.class);
-                    if (group != null && (group.getCreatedBy().equals(userId) ||
-                            (group.getMembers() != null && group.getMembers().containsKey(userId)))) {
-                        group.setGroupId(groupSnapshot.getKey());
-                        userGroups.add(group);
+                    if (group != null) {
+                        boolean isCreatedByUser = group.getCreatedBy() != null && group.getCreatedBy().equals(userId);
+                        boolean isMember = group.getMembers() != null && group.getMembers().containsKey(userId);
+
+                        if (isCreatedByUser || isMember) {
+                            group.setGroupId(groupSnapshot.getKey());
+                            userGroups.add(group);
+                        }
                     }
                 }
                 callback.onListLoaded(userGroups);

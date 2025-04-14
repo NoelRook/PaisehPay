@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 public abstract class BaseDatabase {
-    private final DatabaseReference databaseRef;
+    DatabaseReference databaseRef;
 
     public BaseDatabase(String reference) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
