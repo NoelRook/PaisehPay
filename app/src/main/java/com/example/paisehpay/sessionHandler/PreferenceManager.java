@@ -86,8 +86,6 @@ public class PreferenceManager {
     public void mapManyFriends(List<User> userList){
         for (User user : userList){
             mapOneFriend(user.getUsername(), user.getId());
-
-
         }
     }
 

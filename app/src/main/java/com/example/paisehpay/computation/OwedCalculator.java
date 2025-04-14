@@ -13,93 +13,79 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-//how much others owed to you
 public class OwedCalculator {
     private String currentUserId;
-    HashMap<String, Double> owedMap = new HashMap<>();
+
     public OwedCalculator(String currentUserId) {
         this.currentUserId = currentUserId;
     }
 
-    public HashMap<String, Double> calculateTotalOwed(){
-        //HashMap<String, Double> owedMap = new HashMap<>();
+    public void calculateTotalOwed(BaseDatabase.OwedCallback callback) {
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
         expenseAdapter.get(new BaseDatabase.ListCallback<Expense>() {
             @Override
             public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+                HashMap<String, Double> owedMap = new HashMap<>();
+                final int[] pendingOperations = {expenses.size()};
+
+                if (expenses.isEmpty()) {
+                    callback.onOwedCalculated(owedMap);
+                    return null;
+                }
+
                 for (Expense expense : expenses) {
-                    if (expense.getExpensePaidBy() == currentUserId){
-                        //do item logic
-                        itemlogiking(expense);
+                    if (expense.getExpensePaidBy().equals(currentUserId)) {
+                        processItemsForExpense(expense, owedMap, new BaseDatabase.OperationComplete() {
+                            @Override
+                            public void onComplete() {
+                                pendingOperations[0]--;
+                                if (pendingOperations[0] == 0) {
+                                    callback.onOwedCalculated(owedMap);
+                                }
+                            }
+                        });
+                    } else {
+                        pendingOperations[0]--;
+                        if (pendingOperations[0] == 0) {
+                            callback.onOwedCalculated(owedMap);
+                        }
                     }
                 }
-
                 return null;
             }
 
             @Override
             public void onError(DatabaseError error) {
-                Log.e("Firebase", "Failed to load expenses");
+                Log.e("Firebase", "Failed to load expenses", error.toException());
+                callback.onError(error);
             }
         });
-
-        return owedMap;
     }
 
-
-
-    /*public HashMap<String, Double> calculateGroupOwed(List<Pair<Expense, List<Item>>> expenseItemPairs, String groupId){
-        HashMap<String, Double> owedMap = new HashMap<>();
-        return owedMap;
-    }*/
-
-    public double getTotalOwedAmount(HashMap<String, Double> owedMap){
-        double total = 0.0;
-        for (double amount: owedMap.values()){
-            total += amount;
-        }
-        return total;
-    }
-
-
-    /*private void addDebtsToMap(HashMap<String, Double> owedMap, HashMap<String, Double> debtPeople) {
-        if (debtPeople != null) {
-            return;
-        }
-        for (Map.Entry<String, Double> entry : debtPeople.entrySet()) {
-            String userId = entry.getKey();
-            double amount = entry.getValue();
-            owedMap.put(userId, owedMap.getOrDefault(userId, 0.0) + amount);
-        }
-    }*/
-
-    public void itemlogiking(Expense expense){
-        itemAdapter itemadapter = new itemAdapter();
-        itemadapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
+    private void processItemsForExpense(Expense expense, HashMap<String, Double> owedMap,
+                                        BaseDatabase.OperationComplete completeCallback) {
+        itemAdapter itemAdapter = new itemAdapter();
+        itemAdapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
             @Override
             public HashMap<String, Date> onListLoaded(List<Item> items) {
-                for (Item item: items){
-                   for (HashMap.Entry<String, Double> entry: item.getDebtPeople().entrySet()){
-                       if (!owedMap.containsKey(entry.getKey())&& entry.getValue()!=0){
-                           owedMap.put(entry.getKey(), entry.getValue());
-                       }
-                       else{
-                           owedMap.put(entry.getKey(), owedMap.get(entry.getKey())+entry.getValue());
-                       }
-                   }
+                for (Item item : items) {
+                    for (HashMap.Entry<String, Double> entry : item.getDebtPeople().entrySet()) {
+                        if (entry.getValue() != 0) {
+                            String userId = entry.getKey();
+                            double amount = entry.getValue();
+                            owedMap.put(userId, owedMap.getOrDefault(userId, 0.0) + amount);
+                        }
+                    }
                 }
+                completeCallback.onComplete();
                 return null;
             }
 
             @Override
             public void onError(DatabaseError error) {
-                Log.e("Firebase", "Failed to load expenses");
+                Log.e("Firebase", "Failed to load items", error.toException());
+                completeCallback.onComplete(); // Continue even if one item fails
             }
         });
     }
-
-
-
-
-
 }

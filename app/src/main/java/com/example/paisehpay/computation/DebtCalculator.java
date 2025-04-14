@@ -15,87 +15,70 @@ import java.util.List;
 
 public class DebtCalculator {
     private String currentUserId;
-    private boolean check = false;
-
-    private Double tempIndivprice;
-    HashMap<String, Double> debtMap = new HashMap<>();
 
     public DebtCalculator(String currentUserId) {
         this.currentUserId = currentUserId;
     }
 
-    public HashMap<String, Double> calculateTotalDebt() {
-        //HashMap<String, Double> debtMap = new HashMap<>();
+    public void calculateTotalDebt(BaseDatabase.DebtCallback callback) {
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
         expenseAdapter.get(new BaseDatabase.ListCallback<Expense>() {
             @Override
             public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+                HashMap<String, Double> debtMap = new HashMap<>();
+                final int[] pendingOperations = {expenses.size()};
+
+                if (expenses.isEmpty()) {
+                    callback.onDebtCalculated(debtMap);
+                    return null;
+                }
+
                 for (Expense expense : expenses) {
-                    if (checkforYou(expense, currentUserId)){
-                        //do item logic
-                        itemlogiking(expense);
-                        tempIndivprice = 0.0;
-                    }
+                    checkForDebtInExpense(expense, debtMap, new BaseDatabase.OperationComplete() {
+                        @Override
+                        public void onComplete() {
+                            pendingOperations[0]--;
+                            if (pendingOperations[0] == 0) {
+                                callback.onDebtCalculated(debtMap);
+                            }
+                        }
+                    });
                 }
                 return null;
             }
+
             @Override
             public void onError(DatabaseError error) {
-                Log.e("Firebase", "Failed to load expenses");
+                Log.e("Firebase", "Failed to load expenses", error.toException());
+                callback.onError(error);
             }
         });
-
-        return debtMap;
     }
 
-    /*public HashMap<String, Double> calculateGroupDebt(String groupId) {
-        //HashMap<String, Double> debtMap = new HashMap<>();
-        return debtMap;
-    }*/
-
-    public double getTotalDebtAmount(HashMap<String, Double> debtMap) {
-        double total = 0.0;
-        for (double amount : debtMap.values()) {
-            total += amount;
-        }
-        return total;
-    }
-
-    private boolean checkforYou(Expense expense, String userid){
-        itemAdapter itemadapter = new itemAdapter();
-        itemadapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
+    private void checkForDebtInExpense(Expense expense, HashMap<String, Double> debtMap,
+                                       BaseDatabase.OperationComplete completeCallback) {
+        itemAdapter itemAdapter = new itemAdapter();
+        itemAdapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
             @Override
             public HashMap<String, Date> onListLoaded(List<Item> items) {
-                for (Item item: items){
-                    if (item.getDebtPeople().containsKey(userid)){
-                        if (item.getDebtPeople().get(userid) != 0){
-                            check = true;
-                            tempIndivprice = item.getDebtPeople().get(userid);
-                            break;
+                for (Item item : items) {
+                    if (item.getDebtPeople().containsKey(currentUserId)) {
+                        Double amount = item.getDebtPeople().get(currentUserId);
+                        if (amount != null && amount != 0) {
+                            String payerId = expense.getExpensePaidBy();
+                            debtMap.put(payerId, debtMap.getOrDefault(payerId, 0.0) + amount);
                         }
                     }
                 }
+                completeCallback.onComplete();
                 return null;
             }
+
             @Override
             public void onError(DatabaseError error) {
-                Log.e("Firebase", "Failed to load items");
+                Log.e("Firebase", "Failed to load items", error.toException());
+                completeCallback.onComplete(); // Continue even if one item fails
             }
         });
-        return check;
     }
-
-    public void itemlogiking(Expense expense){
-        if (debtMap.containsKey(expense.getExpensePaidBy())){
-            debtMap.put(expense.getExpensePaidBy(), debtMap.get(expense.getExpensePaidBy()) + tempIndivprice);
-        }
-        else{
-            debtMap.put(expense.getExpensePaidBy(), tempIndivprice);
-        }
-    }
-
-
-
-
 }
-

@@ -15,97 +15,89 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-//function2: is to get a list of expense date of each user who you owe with creator id being
-//them and debtpeople involving you
 public class DateDebt {
-    /* initialise hashmap<String, Date> useridDateDEBT
-    get all expenses -> ExpenseAdapter.get()
-    for expense in expenses:
-        checkforYou() -> check whether you are a debtperson
-        if you are a debtperson:
-            check whether useridDateDEBT.containsKey(expense.getExpensePaidBy())
-            if yes:
-                if useridDateDEBT.get(expense.getExpensePaidBy()) < expense.getExpenseDate():
-                    useridDateDEBT.put(expense.getExpensePaidBy(), expense.getExpenseDate())
-                else: continue
-            if not:
-                useridDateDEBT.put(expense.getExpensePaidBy(), expense.getExpenseDate())
-    */
+    public void peopleYouOwe(String userId, BaseDatabase.DateCallback callback) {
+        Log.d("DateDebt", "Starting for user: " + userId);
 
-    HashMap<String, Date> useridDate = new HashMap<>();
-    private boolean check = false;
-
-    public HashMap<String, Date> peopleYouOwe(String userid){
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
         expenseAdapter.get(new BaseDatabase.ListCallback<Expense>() {
             @Override
             public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+                HashMap<String, Date> useridDate = new HashMap<>();
+                final int[] pendingOperations = {0};
+
+                if (expenses.isEmpty()) {
+                    callback.onDateLoaded(useridDate);
+                    return null;
+                }
+
                 for (Expense expense : expenses) {
-                    if (checkforYou(expense, userid)){
-                        //do item logic
-                        itemlogiking(expense);
-                    }
+                    pendingOperations[0]++;
+                    checkForDebtor(expense, userId, useridDate, new BaseDatabase.OperationComplete() {
+                        @Override
+                        public void onComplete() {
+                            pendingOperations[0]--;
+                            if (pendingOperations[0] == 0) {
+                                callback.onDateLoaded(useridDate);
+                            }
+                        }
+                    });
                 }
                 return null;
             }
+
             @Override
             public void onError(DatabaseError error) {
-                Log.e("Firebase", "Failed to load expenses");
+                Log.e("DateDebt", "Error loading expenses", error.toException());
+                callback.onError(error);
             }
         });
-
-        return useridDate;
     }
 
-    public void itemlogiking(Expense expense){
-        //check whether your debtor is in useridDate
-        //expense.getPaidBy() is in useridDate -> if is, compare the dates
-        //if not, add to useridDate
-        if (useridDate.containsKey(expense.getExpensePaidBy())){
-            if (useridDate.get(expense.getExpensePaidBy()).before(dateformatting(expense.getExpenseDate()))){
-                useridDate.put(expense.getExpensePaidBy(), dateformatting(expense.getExpenseDate()));
-            }
-        }
-        else{
-            useridDate.put(expense.getExpensePaidBy(), dateformatting(expense.getExpenseDate()));
-
-        }
-    }
-
-
-
-    public boolean checkforYou(Expense expense, String userid){
-        itemAdapter itemadapter = new itemAdapter();
-        itemadapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
+    private void checkForDebtor(Expense expense, String userId, HashMap<String, Date> useridDate,
+                                BaseDatabase.OperationComplete completeCallback) {
+        itemAdapter itemAdapter = new itemAdapter();
+        itemAdapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
             @Override
             public HashMap<String, Date> onListLoaded(List<Item> items) {
-                for (Item item: items){
-                    if (item.getDebtPeople().containsKey(userid)){
-                        if (item.getDebtPeople().get(userid) != 0){
-                            check = true;
-                            break;
-                        }
+                boolean isDebtor = false;
+                Date expenseDate = dateformatting(expense.getExpenseDate());
+                String payerId = expense.getExpensePaidBy();
+
+                for (Item item : items) {
+                    if (item.getDebtPeople().containsKey(userId) &&
+                            item.getDebtPeople().get(userId) != 0) {
+                        isDebtor = true;
+                        break;
                     }
                 }
+
+                if (isDebtor) {
+                    if (!useridDate.containsKey(payerId) ||
+                            useridDate.get(payerId).before(expenseDate)) {
+                        useridDate.put(payerId, expenseDate);
+                    }
+                }
+
+                completeCallback.onComplete();
                 return null;
             }
+
             @Override
             public void onError(DatabaseError error) {
-                Log.e("Firebase", "Failed to load items");
+                Log.e("DateDebt", "Error loading items", error.toException());
+                completeCallback.onComplete(); // Continue processing other items
             }
         });
-        return check;
     }
 
-
-    public Date dateformatting(String strdate){
+    private Date dateformatting(String strdate) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        try{
-            Date date = formatter.parse(strdate);
-            return date;
-        } catch (ParseException e){
-            e.printStackTrace();
-            return null;
+        try {
+            return formatter.parse(strdate);
+        } catch (ParseException e) {
+            Log.e("DateDebt", "Error parsing date: " + strdate, e);
+            return new Date(); // Return current date as fallback
         }
     }
 }

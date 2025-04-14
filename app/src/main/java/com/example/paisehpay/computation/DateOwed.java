@@ -14,70 +14,40 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-//function: is to get a list of latest expense date with creator id being you for each user who owes you
 
 public class DateOwed {
-    HashMap<String, Date> useridDate = new HashMap<>();
+    public void peopleOweYouLatest(String userId, BaseDatabase.DateCallback callback) {
+        Log.d("DateOwed", "Starting for user: " + userId);
 
-    //the String usesid is the current user's id
-
-    public void peopleOweYouLatest(String userid, BaseDatabase.DateCallback callback) {
-        Log.d("DateOwed", "Start " + userid);
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
-
         expenseAdapter.get(new BaseDatabase.ListCallback<Expense>() {
-            int pending = 0;
-            boolean errorOccurred = false;
-
             @Override
             public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+                HashMap<String, Date> useridDate = new HashMap<>();
+                final int[] pendingOperations = {0};
+
                 if (expenses.isEmpty()) {
-                    callback.onDateLoaded(useridDate); // Nothing to process
+                    callback.onDateLoaded(useridDate);
                     return null;
                 }
 
                 for (Expense expense : expenses) {
-                    if (expense.getExpensePaidBy().equals(userid)) {
-                        pending++;
-                        itemlogikingLATEST(expense, new BaseDatabase.ListCallback<Item>() {
+                    if (expense.getExpensePaidBy().equals(userId)) {
+                        pendingOperations[0]++;
+                        processExpenseItems(expense, useridDate, new BaseDatabase.OperationComplete() {
                             @Override
-                            public HashMap<String, Date> onListLoaded(List<Item> items) {
-                                for (Item item : items) {
-                                    for (HashMap.Entry<String, Double> entry : item.getDebtPeople().entrySet()) {
-                                        if (entry.getValue() != 0) {
-                                            String debtorId = entry.getKey();
-                                            Date expenseDate = dateformatting(expense.getExpenseDate());
-
-                                            if (!useridDate.containsKey(debtorId) ||
-                                                    useridDate.get(debtorId).before(expenseDate)) {
-                                                useridDate.put(debtorId, expenseDate);
-                                                Log.d("DateOwed", "Updated " + debtorId + ": " + expenseDate);
-                                            }
-                                        }
-                                    }
+                            public void onComplete() {
+                                pendingOperations[0]--;
+                                if (pendingOperations[0] == 0) {
+                                    callback.onDateLoaded(useridDate);
                                 }
-
-                                pending--;
-                                if (pending == 0 && !errorOccurred) {
-                                    callback.onDateLoaded(useridDate); // All done
-                                }
-                                return null;
-                            }
-
-                            @Override
-                            public void onError(DatabaseError error) {
-                                errorOccurred = true;
-                                callback.onError(error);
                             }
                         });
                     }
                 }
 
-                // In case no matching expenses were found
-                if (pending == 0) {
+                // Handle case where no matching expenses were found
+                if (pendingOperations[0] == 0) {
                     callback.onDateLoaded(useridDate);
                 }
 
@@ -86,42 +56,49 @@ public class DateOwed {
 
             @Override
             public void onError(DatabaseError error) {
+                Log.e("DateOwed", "Error loading expenses", error.toException());
                 callback.onError(error);
             }
         });
     }
 
-    //itemlogiking is for LATEST expense date
-    public void itemlogikingLATEST(Expense expense, BaseDatabase.ListCallback<Item> callback){
-        itemAdapter itemadapter = new itemAdapter();
-        itemadapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
+    private void processExpenseItems(Expense expense, HashMap<String, Date> useridDate,
+                                     BaseDatabase.OperationComplete completeCallback) {
+        itemAdapter itemAdapter = new itemAdapter();
+        itemAdapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
             @Override
             public HashMap<String, Date> onListLoaded(List<Item> items) {
-                Log.d("DateOwed", "ListItemLoaded"+items);
+                Date expenseDate = dateformatting(expense.getExpenseDate());
 
-                //Log.d("done processing", useridDate.toString());
-                callback.onListLoaded(items);
+                for (Item item : items) {
+                    for (String debtorId : item.getDebtPeople().keySet()) {
+                        if (item.getDebtPeople().get(debtorId) != 0) {
+                            if (!useridDate.containsKey(debtorId) ||
+                                    useridDate.get(debtorId).before(expenseDate)) {
+                                useridDate.put(debtorId, expenseDate);
+                            }
+                        }
+                    }
+                }
+                completeCallback.onComplete();
                 return null;
             }
+
             @Override
             public void onError(DatabaseError error) {
-                Log.e("Firebase", "Failed to load items");
+                Log.e("DateOwed", "Error loading items", error.toException());
+                completeCallback.onComplete(); // Continue processing other items
             }
         });
     }
 
-
-
-    public Date dateformatting(String strdate){
+    private Date dateformatting(String strdate) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        try{
-            Date date = formatter.parse(strdate);
-            return date;
-        } catch (ParseException e){
-            e.printStackTrace();
-            return null;
+        try {
+            return formatter.parse(strdate);
+        } catch (ParseException e) {
+            Log.e("DateOwed", "Error parsing date: " + strdate, e);
+            return new Date(); // Return current date as fallback
         }
     }
-
-
 }

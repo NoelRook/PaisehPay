@@ -17,25 +17,21 @@ public abstract class BaseDatabase {
         databaseRef = database.getReference(reference);
     }
 
-    public abstract<T> void create(T object, final OperationCallback callback) throws IllegalArgumentException;
+    public abstract <T> void create(T object, final OperationCallback callback) throws IllegalArgumentException;
 
     public abstract void get(final ListCallback callback);
 
-    public abstract<T>void update(String Id, T object, OperationCallback callback);
+    public abstract <T> void update(String Id, T object, OperationCallback callback);
 
     public abstract void delete(String Id, final OperationCallback callback);
 
     public interface ListCallback<T> {
         HashMap<String, Date> onListLoaded(List<T> object);
-
         void onError(DatabaseError error);
     }
 
-
-
     public interface OperationCallback {
         void onSuccess();
-
         void onError(DatabaseError error);
     }
 
@@ -49,19 +45,32 @@ public abstract class BaseDatabase {
         void onError(DatabaseError error);
     }
 
-
-    public interface DateCallback{
+    public interface DateCallback {
         void onDateLoaded(HashMap<String, Date> userIdToDateMap);
         void onError(DatabaseError error);
     }
 
-    public interface CheckCallback{
+    public interface OwedCallback {
+        void onOwedCalculated(HashMap<String, Double> owedHashmap);
+        void onError(DatabaseError error);
+    }
+
+    public interface DebtCallback {
+        void onDebtCalculated(HashMap<String, Double> debtHashmap);
+        void onError(DatabaseError error);
+    }
+
+    public interface CheckCallback {
         void onCheckLoaded(boolean check);
         void onError(DatabaseError error);
     }
 
-    //todo possible implementation of valid checker for each create and update call
+    public interface OperationComplete {
+        void onComplete();
+    }
 
-
-
+    // Helper method for counting pending operations
+    public interface PendingOperationsTracker {
+        void onOperationComplete();
+    }
 }
