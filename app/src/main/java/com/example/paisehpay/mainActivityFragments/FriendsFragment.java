@@ -2,7 +2,6 @@ package com.example.paisehpay.mainActivityFragments;
 
 import android.os.Bundle;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
@@ -94,7 +93,7 @@ public class FriendsFragment extends Fragment {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Create callback for handling the friend list data
-        BaseDatabase.ListCallback friendsCallback = new BaseDatabase.ListCallback<User>() {
+        OperationCallbacks.ListCallback friendsCallback = new OperationCallbacks.ListCallback<User>() {
             @Override
             public void onListLoaded(List<User> friends) {
                 // Add all friends to your array
@@ -128,7 +127,7 @@ public class FriendsFragment extends Fragment {
     private void addFriend(String friendId){
 
         executorService.execute(() -> {
-            friendAdapter.addFriendBasedOnKey(curUser, friendId, new BaseDatabase.OperationCallback() {
+            friendAdapter.addFriendBasedOnKey(curUser, friendId, new OperationCallbacks.OperationCallback() {
                 @Override
                 public void onSuccess() {
                     Toast.makeText(getContext(), "Friend added successfully", Toast.LENGTH_SHORT).show();

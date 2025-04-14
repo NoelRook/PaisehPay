@@ -32,7 +32,8 @@ import com.example.paisehpay.computation.EqualSplit;
 import com.example.paisehpay.computation.ReceiptInstance;
 import com.example.paisehpay.computation.Receipts;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddPeople;
 import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
@@ -46,12 +47,9 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -294,7 +292,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     // New method to handle the sequential operations
     private void StoreExpenseAndItems(Expense expense, ArrayList<Item> items) {
         executorService.execute(() -> {
-            expAdapter.create(expense, new ExpenseAdapter.OperationCallback() {
+            expAdapter.create(expense, new OperationCallbacks.OperationCallback() {
                 @Override
                 public void onSuccess() {
                     String expenseId = expense.getExpenseId(); // Make sure this gets the generated ID
@@ -327,14 +325,14 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
     // Modified storeExpenseItems method
     private void storeExpenseItems(ArrayList<Item> items, String expenseId) {
-        itemAdapter itemadapter = new itemAdapter();
+        ItemAdapter itemadapter = new ItemAdapter();
         for (Item item : items) {
             item.calculateDebts();
             item.setExpenseId(expenseId); // Set the expense ID for each item
             item.setSettled(false);
 
             executorService.execute(() -> {
-                itemadapter.create(item, new ExpenseAdapter.OperationCallback() {
+                itemadapter.create(item, new OperationCallbacks.OperationCallback() {
                     @Override
                     public void onSuccess() {
                         Log.d("Saved item", item.getItemName() + " for expense " + expenseId);

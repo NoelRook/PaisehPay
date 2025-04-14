@@ -4,36 +4,30 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.databaseHandler.Interfaces.FirebaseDatabaseAdapter;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.CRC32;
 
-public class UserAdapter extends BaseDatabase  {
-    private DatabaseReference databaseRef;
-    private  static final String USER_TABLE = "Users";
+public class UserAdapter extends FirebaseDatabaseAdapter<User> {
 
-    public UserAdapter(){
-        super(USER_TABLE);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        databaseRef = database.getReference(USER_TABLE);
+    public UserAdapter() {
+        super("Users");
     }
 
 
     @Override
-    public <T> void create(T object, final OperationCallback callback) {
+    public void create(User object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
         if (!(object instanceof User)){
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
             return;
@@ -48,7 +42,6 @@ public class UserAdapter extends BaseDatabase  {
             callback.onError(DatabaseError.fromException(new Exception("Failed to generate user ID")));
             return;
         }
-        //user.setUserId(userId);
 
         user.setFriendKey(genFriendKey(user.getEmail()));
         databaseRef.child(userId).setValue(user.toMap())
@@ -63,9 +56,9 @@ public class UserAdapter extends BaseDatabase  {
                     }
                 });
     }
-    // Get all users
+
     @Override
-    public void get(final ListCallback callback) {
+    public void get(OperationCallbacks.ListCallback<User> callback) {
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -73,7 +66,7 @@ public class UserAdapter extends BaseDatabase  {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if (user != null) {
-                        user.setUserId(userSnapshot.getKey()); // Set the Firebase-generated ID
+                        user.setUserId(userSnapshot.getKey());
                         users.add(user);
                     }
                 }
@@ -87,19 +80,18 @@ public class UserAdapter extends BaseDatabase  {
         });
     }
 
-    // Update a user
     @Override
-    public <T> void update(String userId, T object, final OperationCallback callback) {
+    public void update(String id, User object, OperationCallbacks.OperationCallback callback) {
         if (!(object instanceof User)){
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
             return;
         }
-        if (userId == null || userId.isEmpty()) {
+        if (id == null || id.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;
         }
         User user = (User) object;
-        databaseRef.child(userId).setValue(user.toMap())
+        databaseRef.child(id).setValue(user.toMap())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override @NonNull
                     public void onComplete(Task<Void> task) {
@@ -112,15 +104,15 @@ public class UserAdapter extends BaseDatabase  {
                 });
     }
 
-    // Delete a user
+
     @Override
-    public void delete(String userId, final OperationCallback callback) {
-        if (userId == null || userId.isEmpty()) {
+    public void delete(String id, OperationCallbacks.OperationCallback callback) {
+        if (id == null || id.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;
         }
 
-        databaseRef.child(userId).removeValue()
+        databaseRef.child(id).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(Task<Void> task) {
@@ -132,6 +124,7 @@ public class UserAdapter extends BaseDatabase  {
                     }
                 });
     }
+
     public String genFriendKey(String email){
         Date now = Calendar.getInstance().getTime();
         String key = now.getTime() + email;
@@ -153,6 +146,8 @@ public class UserAdapter extends BaseDatabase  {
             return String.format("%8s", base36).replace(' ', '0');
         }
     }
+
+
 
     //get single user
 }

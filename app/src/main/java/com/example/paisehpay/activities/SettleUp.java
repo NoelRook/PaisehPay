@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,12 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.ExpenseSingleton;
-import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
-import com.example.paisehpay.databaseHandler.ExpenseAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Expense;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_ExpenseDescription;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
@@ -37,7 +33,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,7 +48,7 @@ public class SettleUp extends AppCompatActivity {
     ExpenseSingleton singleton;
     String groupId;
     String friendId;
-    itemAdapter itemAdapter;
+    ItemAdapter itemAdapter;
     ArrayList<Expense> filteredArray = new ArrayList<>();
     PreferenceManager preferenceManager;
     ConstraintLayout totalLayout;
@@ -81,7 +76,7 @@ public class SettleUp extends AppCompatActivity {
         friendId = intent.getStringExtra("FRIEND_ID");
         preferenceManager = new PreferenceManager(this);
         singleton = ExpenseSingleton.getInstance();
-        itemAdapter = new itemAdapter();
+        itemAdapter = new ItemAdapter();
 
 
         //modify toolbar text based on page
@@ -131,7 +126,7 @@ public class SettleUp extends AppCompatActivity {
             boolean paidByFriend = expense.getExpensePaidBy().equals(friendId);
 
             if (paidByYou) {
-                itemAdapter.getTotalAmountOwedByUser(friendId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                itemAdapter.getTotalAmountOwedByUser(friendId, expense.getExpenseId(), new OperationCallbacks.ValueCallback<Double>() {
                     @Override
                     public void onValueLoaded(Double value) {
                         if (value > 0) {
@@ -152,7 +147,7 @@ public class SettleUp extends AppCompatActivity {
                     }
                 });
             } else if (paidByFriend) {
-                itemAdapter.getTotalAmountOwedByUser(yourID, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                itemAdapter.getTotalAmountOwedByUser(yourID, expense.getExpenseId(), new OperationCallbacks.ValueCallback<Double>() {
                     @Override
                     public void onValueLoaded(Double value) {
                         if (value > 0) {
@@ -215,7 +210,7 @@ public class SettleUp extends AppCompatActivity {
 
         for (Expense expense : singleton.getExpenseArrayList()) {
             if (expense.getExpensePaidBy().equals(myId)) {
-                itemAdapter.getTotalAmountOwedByUser(friendId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                itemAdapter.getTotalAmountOwedByUser(friendId, expense.getExpenseId(), new OperationCallbacks.ValueCallback<Double>() {
                     @Override
                     public void onValueLoaded(Double value) {
                         if (value > 0) {
@@ -223,7 +218,7 @@ public class SettleUp extends AppCompatActivity {
                                 expensesToSettle.add(expense);
                             }
 
-                            itemAdapter.updateSettledUser(myId, friendId, expense.getExpenseId(), new BaseDatabase.OperationCallback() {
+                            itemAdapter.updateSettledUser(myId, friendId, expense.getExpenseId(), new OperationCallbacks.OperationCallback() {
                                 @Override
                                 public void onSuccess() {
                                     Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
@@ -245,7 +240,7 @@ public class SettleUp extends AppCompatActivity {
                     }
                 });
             } else if (expense.getExpensePaidBy().equals(friendId)) {
-                itemAdapter.getTotalAmountOwedByUser(myId, expense.getExpenseId(), new BaseDatabase.ValueCallback<Double>() {
+                itemAdapter.getTotalAmountOwedByUser(myId, expense.getExpenseId(), new OperationCallbacks.ValueCallback<Double>() {
                     @Override
                     public void onValueLoaded(Double value) {
                         if (value > 0) {
@@ -253,7 +248,7 @@ public class SettleUp extends AppCompatActivity {
                                 expensesToSettle.add(expense);
                             }
 
-                            itemAdapter.updateSettledUser(friendId, myId, expense.getExpenseId(), new BaseDatabase.OperationCallback() {
+                            itemAdapter.updateSettledUser(friendId, myId, expense.getExpenseId(), new OperationCallbacks.OperationCallback() {
                                 @Override
                                 public void onSuccess() {
                                     Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());

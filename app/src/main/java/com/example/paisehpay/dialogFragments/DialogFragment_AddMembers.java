@@ -19,9 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_UserSelect;
@@ -30,10 +29,8 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -110,7 +107,8 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Create callback for handling the friend list data
-        BaseDatabase.ListCallback friendsCallback = new BaseDatabase.ListCallback<User>() {
+        // Call the database function to get real friend data
+        friendAdapter.getFriendsForUser(currentUserId, new OperationCallbacks.ListCallback<User>() {
             @Override
             public void onListLoaded(List<User> friends) {
                 // Add all friends to your array
@@ -134,10 +132,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
                 // You might want to show the dummy data as fallback
                 // showDummyDataAsFallback();
             }
-        };
-
-        // Call the database function to get real friend data
-        friendAdapter.getFriendsForUser(currentUserId, friendsCallback);
+        });
 
     }
 
@@ -196,7 +191,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         Log.d("test",groupId + user.toString());
 
         if (user== null) throw new NullPointerException("Current User is null");
-        grpAdapter.addMemberToGroup(groupId,user.getId(),user.getUsername(),new GroupAdapter.OperationCallback(){
+        grpAdapter.addMemberToGroup(groupId,user.getId(),user.getUsername(),new OperationCallbacks.OperationCallback(){
             @Override
             public void onSuccess() {
                 //Toast.makeText(getContext(), "Group created successfully", Toast.LENGTH_SHORT).show();

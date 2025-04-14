@@ -7,10 +7,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-public abstract class BaseDatabase {
+public abstract class OperationCallbacks {
     private final DatabaseReference databaseRef;
 
-    public BaseDatabase(String reference) {
+    public OperationCallbacks(String reference) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         databaseRef = database.getReference(reference);
     }

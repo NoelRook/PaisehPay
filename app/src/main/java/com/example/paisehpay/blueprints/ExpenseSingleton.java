@@ -1,8 +1,6 @@
 package com.example.paisehpay.blueprints;
 
-import android.util.Log;
-
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.google.firebase.database.DatabaseError;
 
@@ -33,9 +31,9 @@ public class ExpenseSingleton {
         this.expenseArrayList.addAll(expenses);
     }
 
-    public void getExpensesByGroupId(String groupId, BaseDatabase.ListCallback<Expense> callback) {
+    public void getExpensesByGroupId(String groupId, OperationCallbacks.ListCallback<Expense> callback) {
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
-        expenseAdapter.getByGroupId(groupId, new BaseDatabase.ListCallback<Expense>() {
+        expenseAdapter.getByGroupId(groupId, new OperationCallbacks.ListCallback<Expense>() {
             @Override
             public void onListLoaded(List<Expense> expenses) {
                 setExpenses(expenses);
