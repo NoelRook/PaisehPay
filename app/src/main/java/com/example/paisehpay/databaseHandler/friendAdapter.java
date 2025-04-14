@@ -19,14 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class friendAdapter{
-    private final DatabaseReference usersRef;
-    private final UserAdapter userAdapter;
-    private  static final String FRIENDS_TABLE = "Users";
+public class friendAdapter extends UserAdapter{
     public friendAdapter() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        this.usersRef = database.getReference("Users");
-        this.userAdapter = new UserAdapter();
+
     }
 
 
@@ -34,7 +29,7 @@ public class friendAdapter{
         String userId= user.getId();
         String username = user.getUsername();
         // First find the user who owns this friendKey
-        usersRef.orderByChild("friendKey").equalTo(friendKey)
+        databaseRef.orderByChild("friendKey").equalTo(friendKey)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -50,8 +45,8 @@ public class friendAdapter{
                         String friendUsername = friendSnapshot.child("username").getValue(String.class);
 
                         // Now update both users' friend lists
-                        DatabaseReference currentUserRef = usersRef.child(userId).child("friends");
-                        DatabaseReference friendUserRef = usersRef.child(friendId).child("friends");
+                        DatabaseReference currentUserRef = databaseRef.child(userId).child("friends");
+                        DatabaseReference friendUserRef = databaseRef.child(friendId).child("friends");
 
                         // Create update map for atomic operation
                         Map<String, Object> updates = new HashMap<>();
@@ -65,7 +60,7 @@ public class friendAdapter{
                         Log.d("adding user to friend",friendId + "/friends/" + userId);
 
                         // Perform atomic update
-                        usersRef.updateChildren(updates)
+                        databaseRef.updateChildren(updates)
                                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                                 .addOnFailureListener(e -> callback.onError(DatabaseError.fromException(e)));
                     }
@@ -79,7 +74,7 @@ public class friendAdapter{
 
     public boolean ifAlreadyfriends(String userId, String friendId){
         final boolean[] alreadyFriends = {false};
-        usersRef.child(userId).child("friends").child(friendId)
+        databaseRef.child(userId).child("friends").child(friendId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot friendCheckSnapshot) {
@@ -88,7 +83,7 @@ public class friendAdapter{
                         }
 
                         // Check the reverse relationship too (optional but thorough)
-                        usersRef.child(friendId).child("friends").child(userId)
+                        databaseRef.child(friendId).child("friends").child(userId)
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot reverseCheckSnapshot) {
@@ -148,7 +143,7 @@ public class friendAdapter{
 
     //remove friend
     private void removeFriends(String curUserId, String friendId, final com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks.OperationCallback callback){
-        usersRef.child(curUserId).child("friends").child(friendId).removeValue()
+        databaseRef.child(curUserId).child("friends").child(friendId).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(Task<Void> task) {
@@ -163,7 +158,7 @@ public class friendAdapter{
 
     //get all friends
     public void getFriendsForUser(String curUserId, OperationCallbacks.ListCallback<User> callback) {
-        usersRef.child(curUserId).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRef.child(curUserId).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot friendsSnapshot) {
                 if (!friendsSnapshot.exists()) {
@@ -187,7 +182,7 @@ public class friendAdapter{
 
                 for (String friendId : friendIds.keySet()) {
                     // Get each friend's full user data
-                    usersRef.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    databaseRef.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                             User friend = userSnapshot.getValue(User.class);
@@ -225,7 +220,7 @@ public class friendAdapter{
     }
 
     public void getSingleUser(String userId, final OperationCallbacks.SingleObjectCallback callback) {
-        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
