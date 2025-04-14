@@ -132,6 +132,8 @@
     <string name="expense_status">XXX paid $YYY</string>
     <string name="expense_amount">$xx.yy</string>
     <string name="you_paid">Group Members</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="gallery">Choose from Gallery</string>
 
     //group settings
     <string name="group_members">Group Members</string>
