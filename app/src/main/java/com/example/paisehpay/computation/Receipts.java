@@ -52,6 +52,13 @@ public class Receipts {
     }
 
 
+    public void addToItemArray(String itemName){
+        array_of_items.add(itemName);
+    }
+    public void addToItemPrice(Double itemPrice){
+        array_of_item_prices.add(itemPrice);
+    }
+
     //ADD FUNCTION
     public void addToReceipt(Item item){
         String itemName = item.getItemName();
@@ -167,7 +174,5 @@ public class Receipts {
     public void set_sctamt(Types_Of_SVC amt){
         this.sct_amt = amt;
     }
-
-
 
 }

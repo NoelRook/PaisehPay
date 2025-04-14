@@ -63,15 +63,9 @@ public class ExpenseDescription extends AppCompatActivity {
         expenseId = intent.getStringExtra("EXPENSE_ID");
         Log.d("test",expenseId);
 
-
-
-
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.expense_description);
-
-
-
 
         //adapter
         expAdapter = new ExpenseAdapter();

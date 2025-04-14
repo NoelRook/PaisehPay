@@ -218,6 +218,9 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         Log.d("users to be added", selectedUser.toString());
         for (User user : selectedUser){
             addPerson(user,GROUP_ID);
+            if (listener != null){
+                listener.onDataSelected(0,user);
+            }
         }
     }
 

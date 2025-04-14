@@ -68,10 +68,22 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
             return insets;
         });
 
+        //Instantiate the ReceiptInstance Singleton Class
+        Receipts instance = ReceiptInstance.getInstance();
+        instance.clearAll();
+        Nine_GST gst = new Nine_GST();
+        Ten_SVC svc = new Ten_SVC();
+        instance.set_gstamt(gst);
+        instance.set_sctamt(svc);
+
+
         Intent intent = getIntent();
         if (intent.hasExtra("Items")){
             itemArray = intent.getParcelableArrayListExtra("Items");
-            //Log.d("items",itemArray.toString());
+            for (Item item: itemArray){
+                instance.addToItemArray(item.getItemName());
+                instance.addToItemPrice(item.getItemPrice());
+            }
         }
 
 
@@ -94,6 +106,7 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
 
             }
         });
+
 
 
         //press back arrow lead back to home fragment
@@ -128,16 +141,6 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         itemView.setLayoutManager(new LinearLayoutManager(this));
         adapter_items.notifyDataSetChanged();
 
-
-
-
-
-        //Instantiate the ReceiptInstance Singleton Class
-        Receipts instance = ReceiptInstance.getInstance();
-        Nine_GST gst = new Nine_GST();
-        Ten_SVC svc = new Ten_SVC();
-        instance.set_gstamt(gst);
-        instance.set_sctamt(svc);
 
 
         //allow user to toggle on and off for GST
