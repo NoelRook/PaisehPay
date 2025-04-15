@@ -46,7 +46,7 @@
         style="@style/textViewSmallDarkMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/group"
+        android:text=""
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@id/person"
         app:layout_constraintEnd_toStartOf="@id/amount"

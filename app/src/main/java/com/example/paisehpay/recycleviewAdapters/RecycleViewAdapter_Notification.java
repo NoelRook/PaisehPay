@@ -5,21 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Notification;
-
 import java.util.ArrayList;
 
 public class RecycleViewAdapter_Notification extends RecyclerView.Adapter<RecycleViewAdapter_Notification.MyViewHolder> {
+    //RecycleView adapter to display notifications in NotificationFragment
+    private Context context;
+    private ArrayList<Notification> notificationArray;
 
-    Context context;
-    ArrayList<Notification> notificationArray;
-
-
+    //default initialization
     public RecycleViewAdapter_Notification(Context context, ArrayList<Notification> notificationArray){
         this.context = context;
         this.notificationArray = notificationArray;
@@ -31,7 +28,6 @@ public class RecycleViewAdapter_Notification extends RecyclerView.Adapter<Recycl
         //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.notification_recycler_view_row,parent,false);
-
         return new RecycleViewAdapter_Notification.MyViewHolder(view);
     }
 

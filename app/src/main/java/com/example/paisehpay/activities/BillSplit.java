@@ -12,26 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Expense;
-import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Summary;
-import com.example.paisehpay.blueprints.Summary;
-
-import java.util.ArrayList;
 
 public class BillSplit extends AppCompatActivity {
     //page seen after u split the bill
 
     TextView toolbarTitleText;
     ImageView backArrow;
-    RecyclerView summaryView;
-    ArrayList<Summary> summaryArray = new ArrayList<>();
     Button homeButton;
-    ArrayList<Item> itemArray = new ArrayList<>();
     TextView expenseName;
     Expense expense;
 
@@ -86,26 +76,6 @@ public class BillSplit extends AppCompatActivity {
                 finish();
             }
         });
-
-        //show the RecycleView of all who owe u
-        summaryView = findViewById(R.id.summary_recycle_view);
-        showSummaryList();
-        RecycleViewAdapter_Summary adapter = new RecycleViewAdapter_Summary(this,summaryArray);
-        summaryView.setAdapter(adapter);
-        summaryView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    //will be changed later
-    private void showSummaryList() {
-
-
-        //get item array here by database call
-
-        //for (Item item: itemArray){
-         //   for (String user: item.getItemPeopleArray()){
-         //       summaryArray.add(new Summary(String.format("%s owes you %s for %s",user,item.getItemIndividualPrice(),item.getItemName())));
-         //   }
-        //}
-
-    }
 }

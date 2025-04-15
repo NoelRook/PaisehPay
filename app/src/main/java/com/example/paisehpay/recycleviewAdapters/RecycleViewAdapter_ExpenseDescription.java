@@ -5,26 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.DebtPersonHelper;
-import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class RecycleViewAdapter_ExpenseDescription extends RecyclerView.Adapter<RecycleViewAdapter_ExpenseDescription.MyViewHolder> {
+    //RecycleView adapter for all ExpenseDescription page, displays out all users involved in all item
+    private final Context context;
+    private ArrayList<Item> itemArray;
 
-    Context context;
-    ArrayList<Item> itemArray;
-
-
+    //default initialization
     public RecycleViewAdapter_ExpenseDescription(Context context, ArrayList<Item> itemArray){
         this.context = context;
         this.itemArray = itemArray;
@@ -42,19 +38,20 @@ public class RecycleViewAdapter_ExpenseDescription extends RecyclerView.Adapter<
 
     public void onBindViewHolder(@NonNull RecycleViewAdapter_ExpenseDescription.MyViewHolder holder, int position) {
         Item item = itemArray.get(position);
-
         holder.nameText.setText(item.getItemName());
         holder.priceText.setText(item.getItemPriceString());
 
+        //helps to show all users involved in that item
         ArrayList<DebtPersonHelper> localDebtList = new ArrayList<>();
         if (item.getDebtPeople() != null) {
             for (Map.Entry<String, Double> entry : item.getDebtPeople().entrySet()) {
-                String username = entry.getKey(); //need replace with username, current user id
+                String username = entry.getKey();
                 Double individualPrice = BigDecimal.valueOf(entry.getValue()).setScale(3,BigDecimal.ROUND_UP).doubleValue();
                 localDebtList.add(new DebtPersonHelper(username,individualPrice));
             }
         }
 
+        //connects RecycleView and adapter
         RecycleViewAdapter_ExpenseItems adapterSettleUser = new RecycleViewAdapter_ExpenseItems(context, localDebtList);
         holder.peopleView.setLayoutManager(new LinearLayoutManager(context));
         holder.peopleView.setAdapter(adapterSettleUser);
