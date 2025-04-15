@@ -218,7 +218,7 @@ public class SettleUp extends AppCompatActivity {
                                 expensesToSettle.add(expense);
                             }
 
-                            itemAdapter.updateSettledUser(myId, friendId, expense.getExpenseId(), new OperationCallbacks.OperationCallback() {
+                            itemAdapter.updateSettledUser(friendId, expense.getExpenseId(), new OperationCallbacks.OperationCallback() {
                                 @Override
                                 public void onSuccess() {
                                     Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());
@@ -248,7 +248,7 @@ public class SettleUp extends AppCompatActivity {
                                 expensesToSettle.add(expense);
                             }
 
-                            itemAdapter.updateSettledUser(friendId, myId, expense.getExpenseId(), new OperationCallbacks.OperationCallback() {
+                            itemAdapter.updateSettledUser(myId, expense.getExpenseId(), new OperationCallbacks.OperationCallback() {
                                 @Override
                                 public void onSuccess() {
                                     Log.d("SettleAll", "Settled expense: " + expense.getExpenseId());

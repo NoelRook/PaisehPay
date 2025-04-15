@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.CRC32;
 
 public class UserAdapter extends FirebaseDatabaseAdapter<User> {
@@ -26,7 +27,7 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
         super("Users");
     }
 
-
+    // save user object in the database
     @Override
     public void create(User object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
 
@@ -43,7 +44,9 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
         }
 
         user.setFriendKey(genFriendKey(user.getEmail()));
-        databaseRef.child(userId).setValue(user.toMap())
+        databaseRef
+                .child(userId)
+                .setValue(user.toMap())
                 .addOnCompleteListener(new OnCompleteListener<Void>(){
                     @Override
                     public void onComplete(Task<Void> task) {
@@ -56,6 +59,7 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
                 });
     }
 
+    // get all users from the database
     @Override
     public void get(OperationCallbacks.ListCallback<User> callback) {
         databaseRef.addValueEventListener(new ValueEventListener() {
@@ -79,6 +83,7 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
         });
     }
 
+    // update user based on given id and user Object
     @Override
     public void update(String id, User object, OperationCallbacks.OperationCallback callback) {
         validateObjectType(object, User.class, callback);
@@ -86,21 +91,23 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;
         }
-        User user = (User) object;
-        databaseRef.child(id).setValue(user.toMap())
+        databaseRef
+                .child(id)
+                .setValue(((User) object).toMap())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override @NonNull
+                    @Override
                     public void onComplete(Task<Void> task) {
                         if (task.isSuccessful()) {
                             callback.onSuccess();
                         } else {
-                            callback.onError(DatabaseError.fromException(task.getException()));
+                            callback.onError(DatabaseError.fromException(Objects.requireNonNull(task.getException())));
                         }
                     }
                 });
     }
 
 
+    //delete user based on string id given
     @Override
     public void delete(String id, OperationCallbacks.OperationCallback callback) {
         if (id == null || id.isEmpty()) {
@@ -108,7 +115,9 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
             return;
         }
 
-        databaseRef.child(id).removeValue()
+        databaseRef
+                .child(id)
+                .removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(Task<Void> task) {
@@ -121,13 +130,14 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
                 });
     }
 
+    // generate friendkey upon account creation
     public String genFriendKey(String email){
-        Date now = Calendar.getInstance().getTime();
-        String key = now.getTime() + email;
+        Date now = Calendar.getInstance().getTime(); // get the current time
+        String key = now.getTime() + email; // concat with user's email
 
-        CRC32 crc = new CRC32();
-        crc.update(key.getBytes());
-        long hash = crc.getValue();
+        CRC32 crc = new CRC32(); // instantiate a new CRC32 object
+        crc.update(key.getBytes()); // update the key from string to bytes and feeds it into the crc algo
+        long hash = crc.getValue(); // computes and returns the final crc value as a long
 
         // Convert to base36 (0-9, a-z) to make it alphanumeric
         String base36 = Long.toString(hash, 36);
@@ -143,7 +153,4 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
         }
     }
 
-
-
-    //get single user
 }

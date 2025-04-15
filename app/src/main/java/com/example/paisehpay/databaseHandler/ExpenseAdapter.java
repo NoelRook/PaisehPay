@@ -21,39 +21,39 @@ import java.util.List;
 import java.util.Objects;
 
 public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
-    ItemAdapter itmAdapter;
+    ItemAdapter itmAdapter; // item adapter instance
 
     public ExpenseAdapter() {
-        super("expenses");
-        this.itmAdapter = new ItemAdapter();
+        super("expenses"); // set the table name to "expenses"
+        this.itmAdapter = new ItemAdapter(); // initialize the item adapter
     }
 
     @Override
-    public void create(Expense expense, OperationCallbacks.OperationCallback callback) {
-        if (expense == null) {
+    public void create(Expense expense, OperationCallbacks.OperationCallback callback) { // create a new expense in the database
+        if (expense == null) { // the expense item cannot be null
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("Expense cannot be null")));
             return;
         }
 
         String expenseId = databaseRef.push().getKey();
-        if (expenseId == null) {
+        if (expenseId == null) {// the expense id cannot be, means something went wrong with the generate key from firebase
             callback.onError(DatabaseError.fromException(new Exception("Failed to generate expense ID")));
             return;
         }
 
-        expense.setExpenseId(expenseId);
+        expense.setExpenseId(expenseId); // set the expense id into the expense object
         databaseRef.child(expenseId).setValue(expense.toMap())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
                     } else {
-                        callback.onError(DatabaseError.fromException(task.getException()));
+                        callback.onError(DatabaseError.fromException(Objects.requireNonNull(task.getException())));
                     }
                 });
     }
 
     @Override
-    public void get(OperationCallbacks.ListCallback<Expense> callback) {
+    public void get(OperationCallbacks.ListCallback<Expense> callback) { // get all expenses from database
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -73,6 +73,7 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
             }
         });
     }
+    // get all expenses related to a single group
     public void getByGroupId(String groupId, OperationCallbacks.ListCallback<Expense> callback) {
         if (databaseRef == null) {
             Log.e("ExpenseAdapter", "Database reference is null");
@@ -100,51 +101,27 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
                     }
                 });
     }
-    public void getByExpenseId(String expenseId, OperationCallbacks.ListCallback<Expense> callback){ // used on update
-        databaseRef.equalTo(expenseId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        List<Expense> expenses = new ArrayList<>();
-                        for (DataSnapshot expenseSnapshot : dataSnapshot.getChildren()) {
-                            Expense expense = expenseSnapshot.getValue(Expense.class);
-                            if (expense != null) {
-                                expense.setExpenseId(expenseSnapshot.getKey());
-                                expenses.add(expense);
-                            }
-                        }
-                        callback.onListLoaded(expenses);
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        callback.onError(databaseError);
-                    }
-                });
-    }
-
+    //update expense based on expense id
     @Override
     public void update(String id, Expense object, OperationCallbacks.OperationCallback callback) {
         validateObjectType(object, Expense.class, callback);
-
-        Expense expense = (Expense) object;
-        databaseRef.child(id).setValue(expense.toMap())
+        databaseRef.child(id).setValue(((Expense) object).toMap())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
                     } else {
-                        callback.onError(DatabaseError.fromException(task.getException()));
+                        callback.onError(DatabaseError.fromException(Objects.requireNonNull(task.getException())));
                     }
                 });
     }
-
+    //delete expense based on expense id
     @Override
     public void delete(String id, OperationCallbacks.OperationCallback callback) {
         databaseRef.child(id).removeValue()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Update the singleton so future loads are correct
-                        ExpenseSingleton singleton = ExpenseSingleton.getInstance();
+                        ExpenseSingleton singleton = ExpenseSingleton.getInstance(); // Update the singleton so future loads are correct
                         List<Expense> currentList = singleton.getExpenseArrayList();
 
                         Iterator<Expense> iterator = currentList.iterator();
@@ -162,11 +139,11 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
                     }
                 });
     }
-
+    //When a group is deleted, all expesenses associated to the group would be deleted as well
     public void deleteExpenseByGroupID(String groupId, OperationCallbacks.OperationCallback callback){
         databaseRef.orderByChild("group_id").equalTo(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) { // get all the expenses associated with the group
                 for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                     String ExpenseId = itemSnapshot.getKey();
                     itmAdapter.deleteByExpenseId(ExpenseId, new OperationCallbacks.OperationCallback() {
@@ -195,6 +172,7 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
             }
         });
     }
+    // to support getter functions to map the data snapshot variables to the variables in expense object
     private Expense mapSnapshotToExpense(DataSnapshot snapshot) {
         try {
             Expense expense = new Expense();
@@ -215,11 +193,5 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
         }
         return null;
     }
-
-
-
-
-
-
 
 }

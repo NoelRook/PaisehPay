@@ -10,7 +10,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 
@@ -18,18 +17,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class friendAdapter extends UserAdapter{
     public friendAdapter() {
-
     }
 
 
+    // add friend for the user based on the friendkey entered into friend page
     public void addFriendBasedOnKey(User user, String friendKey, OperationCallbacks.OperationCallback callback) {
         String userId= user.getId();
         String username = user.getUsername();
         // First find the user who owns this friendKey
-        databaseRef.orderByChild("friendKey").equalTo(friendKey)
+        databaseRef
+                .orderByChild("friendKey")
+                .equalTo(friendKey)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -44,15 +46,16 @@ public class friendAdapter extends UserAdapter{
                         String friendId = friendSnapshot.getKey();
                         String friendUsername = friendSnapshot.child("username").getValue(String.class);
 
-                        // Now update both users' friend lists
-                        DatabaseReference currentUserRef = databaseRef.child(userId).child("friends");
-                        DatabaseReference friendUserRef = databaseRef.child(friendId).child("friends");
+                        if (ifAlreadyfriends(user.getId(), friendId)){
+                            callback.onError(DatabaseError.fromException(
+                                    new Exception("You are already friends with this user")));
+                            return;
+                        }
 
                         // Create update map for atomic operation
                         Map<String, Object> updates = new HashMap<>();
 
                         // Add friend to current user's list
-
                         updates.put(userId + "/friends/" + friendId, friendUsername);
                         Log.d("adding friend to user",userId + "/friends/" + friendId);
                         // Add current user to friend's list
@@ -72,9 +75,13 @@ public class friendAdapter extends UserAdapter{
                 });
     }
 
+    // check if two users are already friends
     public boolean ifAlreadyfriends(String userId, String friendId){
         final boolean[] alreadyFriends = {false};
-        databaseRef.child(userId).child("friends").child(friendId)
+        databaseRef
+                .child(userId)
+                .child("friends")
+                .child(friendId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot friendCheckSnapshot) {
@@ -108,7 +115,7 @@ public class friendAdapter extends UserAdapter{
         return alreadyFriends[0];
     }
 
-
+    // remove both users from each other's friends list
     public void twoWayfriendRemoval(String curUserId, String friendId){
         removeFriends(curUserId,friendId, new com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks.OperationCallback() {
             @Override
@@ -141,22 +148,25 @@ public class friendAdapter extends UserAdapter{
     }
 
 
-    //remove friend
-    private void removeFriends(String curUserId, String friendId, final com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks.OperationCallback callback){
-        databaseRef.child(curUserId).child("friends").child(friendId).removeValue()
+    //remove friend from one user
+    private void removeFriends(String curUserId, String friendId, OperationCallbacks.OperationCallback callback){
+        databaseRef
+                .child(curUserId)
+                .child("friends")
+                .child(friendId).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(Task<Void> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             callback.onSuccess();
                         } else {
-                            callback.onError(DatabaseError.fromException(task.getException()));
+                            callback.onError(DatabaseError.fromException(Objects.requireNonNull(task.getException())));
                         }
                     }
                 });
     }
 
-    //get all friends
+    //get a list of friends for the user
     public void getFriendsForUser(String curUserId, OperationCallbacks.ListCallback<User> callback) {
         databaseRef.child(curUserId).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -167,8 +177,9 @@ public class friendAdapter extends UserAdapter{
                     return;
                 }
                 // Get all friend IDs
-                Map<String, String> friendIds = (Map<String, String>) friendsSnapshot.getValue();
-                if (friendIds == null || friendIds.isEmpty()) {
+                Map<String, String> friendIds = (Map<String, String>) friendsSnapshot.getValue(); // map the friendId to username
+                Log.d("String Friend ID",friendIds.toString());
+                if (friendIds.isEmpty()) {
                     callback.onListLoaded(new ArrayList<>());
                     return;
                 }
@@ -180,7 +191,7 @@ public class friendAdapter extends UserAdapter{
                 final int[] friendsFetched = {0};
                 final int totalFriends = friendIds.size();
 
-                for (String friendId : friendIds.keySet()) {
+                for (String friendId : friendIds.keySet()) { // for all friendIds mapped into the hashmap keyset
                     // Get each friend's full user data
                     databaseRef.child(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -215,30 +226,6 @@ public class friendAdapter extends UserAdapter{
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callback.onError(error);
-            }
-        });
-    }
-
-    public void getSingleUser(String userId, final OperationCallbacks.SingleObjectCallback callback) {
-        databaseRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    User user = dataSnapshot.getValue(User.class);
-                    if (user != null) {
-                        user.setUserId(dataSnapshot.getKey()); // Set the Firebase-generated ID
-                        callback.onObjectLoaded(user);
-                    } else {
-                        callback.onError(DatabaseError.fromException(new Exception("User data corrupted")));
-                    }
-                } else {
-                    callback.onError(DatabaseError.fromException(new Exception("User not found")));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                callback.onError(databaseError);
             }
         });
     }

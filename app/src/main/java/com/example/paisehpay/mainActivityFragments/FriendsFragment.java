@@ -35,7 +35,7 @@ import java.util.concurrent.Executors;
 public class FriendsFragment extends Fragment {
 
     RecyclerView friendsView;
-    Button addFriendButton;
+    Button addFriendButton, removeFriendsButton;
     EditText friendEmail;
     ArrayList<User> friendsArray = new ArrayList<>();
     RecycleViewAdapter_GroupMember adapter;
@@ -71,6 +71,8 @@ public class FriendsFragment extends Fragment {
         adapter = new RecycleViewAdapter_GroupMember(getActivity(),friendsArray,"FriendsFragment",null);
         friendsView.setAdapter(adapter);
         friendsView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // put remove friend button here
 
         addFriendButton = rootView.findViewById(R.id.add_friend);
         friendEmail = rootView.findViewById(R.id.search_friend);

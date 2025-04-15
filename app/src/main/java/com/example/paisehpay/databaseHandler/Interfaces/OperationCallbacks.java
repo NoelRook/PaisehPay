@@ -7,18 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface OperationCallbacks {
-    interface ListCallback<T> {
+    interface ListCallback<T> { // for getter functions
         void onListLoaded(List<T> object);
         void onError(DatabaseError error);
     }
 
-    interface OperationCallback {
+    interface OperationCallback { // for update/create/delete functions
         void onSuccess();
-        void onError(DatabaseError error);
-    }
-
-    interface SingleObjectCallback<T> {
-        void onObjectLoaded(T object);
         void onError(DatabaseError error);
     }
 
@@ -27,27 +22,22 @@ public interface OperationCallbacks {
         void onError(DatabaseError error);
     }
 
-    public interface DateCallback {
+    interface DateCallback {
         void onDateLoaded(HashMap<String, Date> userIdToDateMap);
         void onError(DatabaseError error);
     }
 
-    public interface OwedCallback {
+    interface OwedCallback {
         void onOwedCalculated(HashMap<String, Double> owedHashmap);
         void onError(DatabaseError error);
     }
 
-    public interface DebtCallback {
+    interface DebtCallback {
         void onDebtCalculated(HashMap<String, Double> debtHashmap);
         void onError(DatabaseError error);
     }
 
-    public interface CheckCallback {
-        void onCheckLoaded(boolean check);
-        void onError(DatabaseError error);
-    }
-
-    public interface OperationComplete {
+    interface OperationComplete {
         void onComplete();
     }
 }

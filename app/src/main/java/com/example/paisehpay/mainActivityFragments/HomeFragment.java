@@ -178,7 +178,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 
         double finalTotalDebt = totalDebt;
         Log.d("summary page", String.valueOf(finalTotalDebt));
-        requireActivity().runOnUiThread(() -> {
+        getActivity().runOnUiThread(() -> {
             TextView moneyOweTextView = rootView.findViewById(R.id.money_owe);
             moneyOweTextView.setText(String.format(Locale.getDefault(),"$%.2f", finalTotalDebt));
         });

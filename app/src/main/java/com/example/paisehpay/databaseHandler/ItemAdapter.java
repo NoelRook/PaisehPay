@@ -15,6 +15,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
 
@@ -26,7 +28,6 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
     public void create(Item object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
         validateObjectType(object, Item.class, callback);
 
-        Item item = (Item) object;
         String itemId = databaseRef.push().getKey();
 
         if (itemId == null) {
@@ -34,10 +35,12 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
             return;
         }
 
-        item.setItemId(itemId);
+        ((Item) object).setItemId(itemId);
 
         // Convert the Item to a Map and store it
-        databaseRef.child(itemId).setValue(item.ToMap())
+        databaseRef
+                .child(itemId)
+                .setValue(((Item) object).ToMap())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
@@ -52,20 +55,18 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
     }
 
     @Override
-    public void get(OperationCallbacks.ListCallback<Item> callback) {
-
-    }
+    public void get(OperationCallbacks.ListCallback<Item> callback) {}
 
     @Override
     public void update(String id, Item object, OperationCallbacks.OperationCallback callback) {
-
         validateObjectType(object, Item.class, callback);
         if (id == null || id.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;
         }
-        Item item = (Item) object;
-        databaseRef.child(id).setValue(item.ToMap())
+        databaseRef
+                .child(id)
+                .setValue(((Item) object).ToMap())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     @NonNull
@@ -80,12 +81,13 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
     }
 
     @Override
-    public void delete(String id, OperationCallbacks.OperationCallback callback) {}
-
-
+    public void delete(String id, OperationCallbacks.OperationCallback callback) {
+    }
     // get based on groupid
     public void getItemByExpense(String expenseId, OperationCallbacks.ListCallback<Item> callback) {
-        databaseRef.orderByChild("expenseId").equalTo(expenseId)
+        databaseRef
+                .orderByChild("expenseId")
+                .equalTo(expenseId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -105,98 +107,31 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
     }
 
 
-    public void addMultipleItems(ArrayList<Item> items, OperationCallbacks.OperationCallback callback) {
-        // call the create for the number of items in arraylist
+    public void storeExpenseItems(ArrayList<Item> items, String expenseId,OperationCallbacks.OperationCallback callback) {
+        int length = items.size();
+        ExecutorService itemExecutorService = Executors.newFixedThreadPool(length);// creates a new thread for each create button for the database
         for (Item item : items) {
-            // loop through the item list here,
-            create( item, new OperationCallbacks.OperationCallback() {
-                @Override
-                public void onSuccess() {
-                    Log.d("item updated", item.getItemId() + "was updated");
-                    callback.onSuccess();
-                }
+            item.calculateDebts();
+            item.setExpenseId(expenseId); // Set the expense ID for each item
+            item.setSettled(false);
 
-                @Override
-                public void onError(DatabaseError error) {
-                    callback.onError(error);
-                }
-            });
-        }
-    }
-
-    public void UpdateItemList(String expenseId, List<Item> itemList) {
-        for (Item item : itemList) {
-            update(expenseId, item, new OperationCallbacks.OperationCallback() {
-                @Override
-                public void onSuccess() {
-                    Log.d("update items", "items successfully updated");
-                }
-
-                @Override
-                public void onError(DatabaseError error) {
-                    Log.d("update items", "error with updating items" + error.toString());
-                }
-            });
-        }
-    }
-
-    public void updateSettledUser(String userid, String expenseId, OperationCallbacks.OperationCallback callback) {
-        if (userid == null || userid.isEmpty() || expenseId == null || expenseId.isEmpty()) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID or Expense ID cannot be null or empty")));
-            return;
-        }
-
-        //get all items with the specified expenseId
-        databaseRef.orderByChild("expenseId").equalTo(expenseId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+            itemExecutorService.submit(() -> {
+                create(item, new OperationCallbacks.OperationCallback() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean anyUpdates = false;
-
-                        for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                            // Get the debtpeople map for each item
-                            DataSnapshot debtPeopleSnapshot = itemSnapshot.child("debtpeople");
-                            if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) {
-                                // Update the user's debt to 0
-                                databaseRef.child(itemSnapshot.getKey())
-                                        .child("debtpeople")
-                                        .child(userid)
-                                        .setValue(0)
-                                        .addOnCompleteListener(task -> {
-                                            if (!task.isSuccessful()) {
-                                                Log.e("updateSettledUser", "Failed to update user debt for item: " + itemSnapshot.getKey());
-                                            }
-                                        });
-                                anyUpdates = true;
-                            }
-                        }
-
-                        if (anyUpdates) {
-                            callback.onSuccess();
-                        } else {
-                            callback.onError(DatabaseError.fromException(new Exception("No items found with specified expenseId or user not in debtpeople")));
-                        }
+                    public void onSuccess() {
+                        Log.d("Saved item", item.getItemName() + " for expense " + expenseId);
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callback.onError(error);
+                    public void onError(DatabaseError error) {
+                        Log.e("Save item error", error.getMessage());
                     }
                 });
+            });
+        }
     }
-    // how to use
-//    itemAdapter.updateSettledUser("haW03Hy3PYRPQgsg5BUddghbzx22", "ONZsSMuU6yFOC_9kdWu", new OperationCallback() {
-//        @Override
-//        public void onSuccess() {
-//            Log.d("UpdateSettled", "User debt updated successfully");
-//        }
-//
-//        @Override
-//        public void onError(DatabaseError error) {
-//            Log.e("UpdateSettled", "Error updating user debt: " + error.getMessage());
-//        }
-//    });
 
+    // get the total amount owed by the user in an expense where they are paying
     public void getTotalAmountOwedByUser(String userid, String expenseId, OperationCallbacks.ValueCallback<Double> callback) {
         if (userid == null || userid.isEmpty() || expenseId == null || expenseId.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID or Expense ID cannot be null or empty")));
@@ -205,17 +140,17 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                double totalOwed = 0.0;
+                double totalOwed = 0.0; // instantiate the total variable
 
                 for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                     String thisExpenseId = itemSnapshot.child("expenseId").getValue(String.class);
-                    if (!expenseId.equals(thisExpenseId)) continue;
+                    if (!expenseId.equals(thisExpenseId)) continue; // if not part of the expense
 
                     DataSnapshot debtPeopleSnapshot = itemSnapshot.child("debtpeople");
-                    if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) {
+                    if (debtPeopleSnapshot.exists() && debtPeopleSnapshot.hasChild(userid)) { // if the user is part of debtPeople, means they owe money
                         Double amount = debtPeopleSnapshot.child(userid).getValue(Double.class);
                         if (amount != null) {
-                            totalOwed += amount;
+                            totalOwed += amount; // add the money to the total
                         }
                     }
                 }
@@ -230,23 +165,8 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
         });
     }
 
-    // how to use
-//    itemAdapter.getTotalAmountOwedByUser("haW03Hy3PYRPQgsg5BUddghbzx22", "ONZsSMuU6yFOC_9kdWu", new ValueCallback<Double>() {
-//        @Override
-//        public void onValueLoaded(Double total) {
-//            Log.d("TotalOwed", "User owes: " + total);
-//            // Update UI with the total amount
-//        }
-//
-//        @Override
-//        public void onError(DatabaseError error) {
-//            Log.e("TotalOwed", "Error getting total: " + error.getMessage());
-//        }
-//    });
-
-
-
-    public void updateSettledUser(String payerId, String userid, String expenseId, OperationCallbacks.OperationCallback callback) {
+    // if you have settled payment with the payer, set all the debt that you owe to the payer to 0
+    public void updateSettledUser(String userid, String expenseId, OperationCallbacks.OperationCallback callback) {
         if (userid == null || userid.isEmpty() || expenseId == null || expenseId.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID or Expense ID cannot be null or empty")));
             return;
@@ -296,6 +216,7 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
         });
     }
 
+    //delete all items that contain the given expenseId
     public void deleteByExpenseId(String expenseId, OperationCallbacks.OperationCallback callback){
         databaseRef.orderByChild("expenseId").equalTo(expenseId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

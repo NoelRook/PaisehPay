@@ -15,6 +15,7 @@ public abstract class FirebaseDatabaseAdapter<T> implements BaseDatabaseOperatio
         this.databaseRef = database.getReference(tableName); // set the database reference to the table name
     }
 
+    // function to validate if object type that the function receives is the type that it wants
     protected void validateObjectType(Object object, Class<T> expectedClass, OperationCallbacks.OperationCallback callback) {
         if (!expectedClass.isInstance(object)) {
             callback.onError(DatabaseError.fromException(

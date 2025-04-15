@@ -1,6 +1,7 @@
 package com.example.paisehpay.activities;
 
 import static android.util.Log.d;
+import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -74,9 +75,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     RecycleViewAdapter_Item adapter_items;
     Receipts instance;
     EditText expenseNameText;
-    String expenseName;
-    String expenseGroup;
-    String expenseDate;
+    String expenseName, expenseGroup, expenseDate; // all expense variables
     String expenseCategory;
     String expenseAmount;
     PreferenceManager preferenceManager;
@@ -369,7 +368,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     runOnUiThread(() ->
                             Toast.makeText(AddPeople.this,
                                     "Failed to save expense: " + error.getMessage(),
-                                    Toast.LENGTH_SHORT).show());
+                                    LENGTH_SHORT).show());
                 }
             });
         });
@@ -378,25 +377,18 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     // Modified storeExpenseItems method
     private void storeExpenseItems(ArrayList<Item> items, String expenseId) {
         ItemAdapter itemadapter = new ItemAdapter();
-        for (Item item : items) {
-            item.calculateDebts();
-            item.setExpenseId(expenseId); // Set the expense ID for each item
-            item.setSettled(false);
+        itemadapter.storeExpenseItems(items, expenseId, new OperationCallbacks.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(AddPeople.this, "Expense Has been successfully created", LENGTH_SHORT).show();
+                Log.d("StoreExpenseItems","Successfully executed");
+            }
 
-            executorService.execute(() -> {
-                itemadapter.create(item, new OperationCallbacks.OperationCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d("Saved item", item.getItemName() + " for expense " + expenseId);
-                    }
-
-                    @Override
-                    public void onError(DatabaseError error) {
-                        Log.e("Save item error", error.getMessage());
-                    }
-                });
-            });
-        }
+            @Override
+            public void onError(DatabaseError error) {
+                Log.d("StoreExpenseItems","Error msg: "+error.toString());
+            }
+        });
     }
 
 

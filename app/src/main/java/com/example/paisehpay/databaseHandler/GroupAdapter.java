@@ -16,26 +16,27 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
     public GroupAdapter() {
-        super("Groups");
+        super("Groups"); // instatiate group table
     }
 
+    // save a group object on the database
     @Override
     public void create(Group object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
-
         validateObjectType(object, Group.class, callback);
-
-        Group group = (Group) object;
         String groupId = databaseRef.push().getKey();
         if (groupId == null) {
             callback.onError(DatabaseError.fromException(new Exception("Failed to generate group ID")));
             return;
         }
 
-        group.setGroupId(groupId);
-        databaseRef.child(groupId).setValue(group.toMap())
+        ((Group) object).setGroupId(groupId);
+        databaseRef
+                .child(groupId)
+                .setValue(((Group) object).toMap())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
@@ -45,9 +46,11 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
                 });
     }
 
+    // get all the groups from the table
     @Override
     public void get(OperationCallbacks.ListCallback<Group> callback) {
-        databaseRef.addValueEventListener(new ValueEventListener() {
+        databaseRef
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Group> groups = new ArrayList<>();
@@ -68,36 +71,42 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
         });
     }
 
+    // update a group
     @Override
     public void update(String id, Group object, OperationCallbacks.OperationCallback callback) {
         validateObjectType(object, Group.class, callback);
 
-        Group group = (Group) object;
-        databaseRef.child(id).setValue(group.toMap())
+        databaseRef
+                .child(id)
+                .setValue(((Group) object).toMap())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
                     } else {
-                        callback.onError(DatabaseError.fromException(task.getException()));
+                        callback.onError(DatabaseError.fromException(Objects.requireNonNull(task.getException())));
                     }
                 });
     }
 
+    // delete a group
     @Override
     public void delete(String id, OperationCallbacks.OperationCallback callback) {
-        databaseRef.child(id).removeValue()
+        databaseRef
+                .child(id)
+                .removeValue()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
                     } else {
-                        callback.onError(DatabaseError.fromException(task.getException()));
+                        callback.onError(DatabaseError.fromException(Objects.requireNonNull(task.getException())));
                     }
                 });
     }
 
     // get groups for the current user
-    public void getGroupsForUser(String userId, OperationCallbacks.ListCallback callback) {
-        databaseRef.addValueEventListener(new ValueEventListener() {
+    public void getGroupsForUser(String userId, OperationCallbacks.ListCallback<Group> callback) {
+        databaseRef
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Group> userGroups = new ArrayList<>();
@@ -107,7 +116,8 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
                         boolean isCreatedByUser = group.getCreatedBy() != null && group.getCreatedBy().equals(userId);
                         boolean isMember = group.getMembers() != null && group.getMembers().containsKey(userId);
 
-                        if (isCreatedByUser || isMember) {
+                        // for the edge case in case the user pays but does not buy anything
+                        if (isCreatedByUser || isMember) {  // if the group is created by the user, or is a member of a group
                             group.setGroupId(groupSnapshot.getKey());
                             userGroups.add(group);
                         }
@@ -124,7 +134,7 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
         });
     }
 
-    // adding specific members to group
+    // adding another user to a group (will be a friend)
     public void addMemberToGroup(String groupId, String userId, String userName, OperationCallbacks.OperationCallback callback) {
         Log.d("databaseside", groupId+" "+userId+" "+userName);
         databaseRef.child(groupId).child("members").child(userId).setValue(userName)
@@ -138,19 +148,25 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
     }
     // remove member from group based on the userid and groupid
     public void removeMemberFromGroup(String groupId, String userId, OperationCallbacks.OperationCallback callback) {
-        databaseRef.child(groupId).child("members").child(userId).removeValue()
+        databaseRef
+                .child(groupId)
+                .child("members")
+                .child(userId)
+                .removeValue()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
                     } else {
-                        callback.onError(DatabaseError.fromException(task.getException()));
+                        callback.onError(DatabaseError.fromException(Objects.requireNonNull(task.getException())));
                     }
                 });
     }
 
     // Get groups created by a specific user (may not need)
-    public void getGroupsCreatedByUser(String userId, OperationCallbacks.ListCallback callback) {
-        databaseRef.orderByChild("createdBy").equalTo(userId)
+    public void getGroupsCreatedByUser(String userId, OperationCallbacks.ListCallback<Group> callback) {
+        databaseRef
+                .orderByChild("createdBy")
+                .equalTo(userId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
