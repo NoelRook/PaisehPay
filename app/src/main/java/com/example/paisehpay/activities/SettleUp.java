@@ -103,6 +103,7 @@ public class SettleUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 settleAllExpensesForFriend(friendId);
+                showExpenseList();
             }
         });
 

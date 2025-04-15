@@ -94,6 +94,7 @@
     <string name="to_friend">To Friend </string>
 
 
+
     //toolbar
     <string name="back_arrow">Back</string>
     <string name="toolbar_title">Toolbar title</string>
@@ -123,9 +124,7 @@
     <string name="you_lent">You lent</string>
     <string name="you_borrowed">You borrowed</string>
     <string name="not_involved">Not involved</string>
-    <string name="people_owe">Sean $12.50 \nJing Kang $15.80</string>
-    <string name="people_owed">Kushi $100.00 \nFaustina $12.70</string>
-    <string name="people_settled">Megan $0.00 \nWen Kai $0.00</string>
+    <string name="add_members_text">Add members to group</string>
 
     //expense
     <string name="expense_title">Expense Title</string>

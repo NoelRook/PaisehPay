@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +38,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
     private GroupAdapter grpAdapter;
     private static final String GROUP_ID =  "group_id";
     private String groupId;
+    private TextView titleText;
     private DialogFragmentListener<User> dialogFragmentListener;
 
 
@@ -63,6 +65,8 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
             groupId = getArguments().getString(GROUP_ID);
         }
         grpAdapter = new GroupAdapter();
+        titleText = rootView.findViewById(R.id.select_group);
+        titleText.setText(R.string.add_members_text);
         userView = rootView.findViewById(R.id.select_group_recycle);
         showPersonList();
         adapter = new RecycleViewAdapter_UserSelect(getActivity(),userArray,this);
