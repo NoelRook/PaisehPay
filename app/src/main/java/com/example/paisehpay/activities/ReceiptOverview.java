@@ -20,21 +20,21 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.computation.Nine_GST;
 import com.example.paisehpay.computation.ReceiptInstance;
 import com.example.paisehpay.computation.Receipts;
 import com.example.paisehpay.computation.Ten_SVC;
-import com.example.paisehpay.computation.Types_Of_GST;
-import com.example.paisehpay.computation.Types_Of_SVC;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddItem;
-import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ReceiptOverview extends AppCompatActivity implements DialogFragmentListener<Item> {
     //shows receipt details after camera ocr
@@ -43,10 +43,17 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
     TextView toolbarTitleText;
     RecyclerView itemView;
     ArrayList<Item> itemArray = new ArrayList<>();
+    double[] itemPrice;
+    String[] itemName;
+    String expenseId;
+    String expenseDate;
+    String expenseGroup;
+    String expensePaidBy;
+    String queryFrom = "ReceiptOverview";
     Button addItemButton;
     DialogFragment_AddItem addItemFragment;
     private RecycleViewAdapter_Item adapter_items;
-
+    ItemAdapter ItemAdapter;
     SwitchCompat gstToggle;
     SwitchCompat svcToggle;
     ConstraintLayout subTotalLayout;
@@ -76,21 +83,63 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
         instance.set_gstamt(gst);
         instance.set_sctamt(svc);
 
-
-        Intent intent = getIntent();
-        if (intent.hasExtra("Items")){
-            itemArray = intent.getParcelableArrayListExtra("Items");
-            for (Item item: itemArray){
-                instance.addToItemArray(item.getItemName());
-                instance.addToItemPrice(item.getItemPrice());
-            }
-        }
-
-
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.receipt_details);
 
+        //used to assign values to the dynamic textViews which we would edit in updateReceiptComputation
+        subTotalLayout = findViewById(R.id.total_layout);
+        subTotalText = subTotalLayout.findViewById(R.id.sub_total_amount);
+        gstText = subTotalLayout.findViewById(R.id.gst_total_amount);
+        svcText = subTotalLayout.findViewById(R.id.svc_total_amount);
+        finalTotalLayout = findViewById(R.id.final_total);
+        finalTotalText = finalTotalLayout.findViewById(R.id.grand_total_amount);
+        backArrow = findViewById(R.id.back_arrow);
+        ItemAdapter =  new ItemAdapter();
+
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("Items")){
+            backArrow.setVisibility(View.GONE);
+            itemArray = intent.getParcelableArrayListExtra("Items");
+            Log.d("itemarray",itemArray.toString());
+            expenseId = intent.getStringExtra("ExpenseId");
+            expenseGroup = intent.getStringExtra("ExpenseGroup");
+            expensePaidBy = intent.getStringExtra("ExpensePaidBy");
+            expenseDate = intent.getStringExtra("ExpenseDate");
+            queryFrom = intent.getStringExtra("QueryFrom");
+            for (Item item: itemArray){
+                instance.addToItemArray(item.getItemName());
+                instance.addToItemPrice(item.getItemPrice());
+            }
+            ItemAdapter.deleteByExpenseId(expenseId, new OperationCallbacks.OperationCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.d("abc", "expense deleted");
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    Log.e("abc", error.getMessage());
+                }
+            });
+            updateReceiptComputation();
+        }
+
+        if (intent.hasExtra("itemName")) {
+            itemName = intent.getStringArrayExtra("itemName");
+            itemPrice = intent.getDoubleArrayExtra("itemPrice");
+            Log.d("fss", Arrays.toString(itemName) + Arrays.toString(itemPrice));
+            for (int i = 0; i < itemName.length; i++) {
+                itemArray.add(new Item(null, itemName[i], itemPrice[i],null,null,null));
+                instance.addToItemArray(itemName[i]);
+                instance.addToItemPrice(itemPrice[i]);
+            }
+            Log.d("dfa",itemArray.toString());
+            updateReceiptComputation();
+        }
+
+        Log.d("QueryFromRECEIPTOVERVIEW",queryFrom);
         //press add button to addPeople page
         //user needs to key in at least one item in order to proceed
         addPeopleButton = findViewById(R.id.add_to_split);
@@ -101,6 +150,11 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
                     Toast.makeText(ReceiptOverview.this, "U never input any items bro",Toast.LENGTH_LONG).show();
                 } else{
                     Intent intent = new Intent(ReceiptOverview.this, AddPeople.class);
+                    intent.putExtra("ExpenseId",expenseId);
+                    intent.putExtra("ExpenseGroup",expenseGroup);
+                    intent.putExtra("ExpensePaidBy",expensePaidBy);
+                    intent.putExtra("ExpenseDate",expenseDate);
+                    intent.putExtra("QueryFrom",queryFrom);
                     startActivity(intent);
                 }
 
@@ -110,7 +164,6 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
 
 
         //press back arrow lead back to home fragment
-        backArrow = findViewById(R.id.back_arrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,14 +231,6 @@ public class ReceiptOverview extends AppCompatActivity implements DialogFragment
             }
         });
 
-
-        //used to assign values to the dynamic textViews which we would edit in updateReceiptComputation
-        subTotalLayout = findViewById(R.id.total_layout);
-        subTotalText = subTotalLayout.findViewById(R.id.sub_total_amount);
-        gstText = subTotalLayout.findViewById(R.id.gst_total_amount);
-        svcText = subTotalLayout.findViewById(R.id.svc_total_amount);
-        finalTotalLayout = findViewById(R.id.final_total);
-        finalTotalText = finalTotalLayout.findViewById(R.id.grand_total_amount);
 
     }
 

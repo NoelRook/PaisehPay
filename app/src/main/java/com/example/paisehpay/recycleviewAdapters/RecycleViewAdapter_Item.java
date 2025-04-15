@@ -16,6 +16,7 @@ import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.computation.ReceiptInstance;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAdapter_Item.MyViewHolder> {
 
@@ -119,6 +120,13 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
 
         }
     }
+    // Call this method to update the list
+    public void setItems(List<Item> newItems) {
+        this.itemArray.clear();
+        this.itemArray.addAll(newItems);
+        notifyDataSetChanged();  // Notify that data has changed
+    }
+
 
 
 }

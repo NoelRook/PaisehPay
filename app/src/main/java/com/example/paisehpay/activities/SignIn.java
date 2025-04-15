@@ -27,7 +27,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +40,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class SignIn extends AppCompatActivity {
@@ -74,7 +76,7 @@ public class SignIn extends AppCompatActivity {
         });
 
         // Initialize firebase
-         // get preference manager to save the user preferenace
+        // get preference manager to save the user preferenace
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         preferenceManager = new PreferenceManager(this);
@@ -180,7 +182,7 @@ public class SignIn extends AppCompatActivity {
         // the reason this is here is because i have not figured out how to start unit testing for database yet. to do in future build
         // pls do not @ me
         UserAdapter adapter = new UserAdapter();
-        adapter.get(new BaseDatabase.ListCallback<User>() {
+        adapter.get(new OperationCallbacks.ListCallback<User>() {
             @Override
             public void onListLoaded(List<User> users) {
                 // Handle the list of users

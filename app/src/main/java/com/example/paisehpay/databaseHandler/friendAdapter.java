@@ -1,79 +1,31 @@
 package com.example.paisehpay.databaseHandler;
 
-import android.provider.ContactsContract;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class friendAdapter extends UserAdapter {
-    private final DatabaseReference databaseRef;
-    private  static final String FRIENDS_TABLE = "Users";
+public class friendAdapter extends UserAdapter{
     public friendAdapter() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        databaseRef = database.getReference(FRIENDS_TABLE);
-    }
 
-    @Override
-    public <T> void create(T object, BaseDatabase.OperationCallback callback) {
-        //todo 1. add in create group
-        if (!(object instanceof User)){
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
-            return;
-        }
-        if (object == null) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot empty")));
-            return;
-        }
-    }
-
-    @Override
-    public void get(BaseDatabase.ListCallback callback) {
-        //todo 1. add in get group based on user
-    }
-
-    @Override
-    public <T> void update(String Id, T object, BaseDatabase.OperationCallback callback) {
-        //todo 1. add in update group based on user friend ID
-        // find friend based on other person friend id
-        databaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    @Override
-    public void delete(String Id, BaseDatabase.OperationCallback callback) {
-        //todo 1. add in delete group
     }
 
 
-    public void addFriendBasedOnKey(User user, String friendKey, BaseDatabase.OperationCallback callback) {
+    public void addFriendBasedOnKey(User user, String friendKey, OperationCallbacks.OperationCallback callback) {
         String userId= user.getId();
         String username = user.getUsername();
         // First find the user who owns this friendKey
@@ -158,7 +110,7 @@ public class friendAdapter extends UserAdapter {
 
 
     public void twoWayfriendRemoval(String curUserId, String friendId){
-        removeFriends(curUserId,friendId, new BaseDatabase.OperationCallback() {
+        removeFriends(curUserId,friendId, new com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks.OperationCallback() {
             @Override
             public void onSuccess() {
                 // User deleted successfully
@@ -171,7 +123,7 @@ public class friendAdapter extends UserAdapter {
                 Log.e("FirebaseError", error.getMessage());
             }
         });
-        removeFriends(friendId,curUserId, new BaseDatabase.OperationCallback() {
+        removeFriends(friendId,curUserId, new com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks.OperationCallback() {
             @Override
             public void onSuccess() {
                 // User deleted successfully
@@ -184,10 +136,13 @@ public class friendAdapter extends UserAdapter {
                 Log.e("FirebaseError", error.getMessage());
             }
         });
+
+
     }
 
+
     //remove friend
-    private void removeFriends(String curUserId, String friendId, final OperationCallback callback){
+    private void removeFriends(String curUserId, String friendId, final com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks.OperationCallback callback){
         databaseRef.child(curUserId).child("friends").child(friendId).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -202,7 +157,7 @@ public class friendAdapter extends UserAdapter {
     }
 
     //get all friends
-    public void getFriendsForUser(String curUserId, BaseDatabase.ListCallback<User> callback) {
+    public void getFriendsForUser(String curUserId, OperationCallbacks.ListCallback<User> callback) {
         databaseRef.child(curUserId).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot friendsSnapshot) {
@@ -264,7 +219,7 @@ public class friendAdapter extends UserAdapter {
         });
     }
 
-    public void getSingleUser(String userId, final SingleUserCallback callback) {
+    public void getSingleUser(String userId, final OperationCallbacks.SingleObjectCallback callback) {
         databaseRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -272,7 +227,7 @@ public class friendAdapter extends UserAdapter {
                     User user = dataSnapshot.getValue(User.class);
                     if (user != null) {
                         user.setUserId(dataSnapshot.getKey()); // Set the Firebase-generated ID
-                        callback.onUserLoaded(user);
+                        callback.onObjectLoaded(user);
                     } else {
                         callback.onError(DatabaseError.fromException(new Exception("User data corrupted")));
                     }

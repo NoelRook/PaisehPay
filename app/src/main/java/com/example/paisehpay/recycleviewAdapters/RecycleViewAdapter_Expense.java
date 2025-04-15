@@ -110,6 +110,11 @@ public class RecycleViewAdapter_Expense extends RecyclerView.Adapter<RecycleView
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ExpenseDescription.class);
                 intent.putExtra("EXPENSE_ID", currentExpense.getExpenseId());
+                intent.putExtra("EXPENSE_NAME",currentExpense.getDescription());
+                intent.putExtra("EXPENSE_DATE",currentExpense.getExpenseDate());
+                intent.putExtra("EXPENSE_GROUP",currentExpense.getAssociatedGroup());
+                intent.putExtra("EXPENSE_CATEGORY",currentExpense.getExpenseCategory());
+                intent.putExtra("EXPENSE_PAID_BY",currentExpense.getExpensePaidBy());
                 launcher.launch(intent);
 
                 if (context instanceof GroupHomepage) {

@@ -26,13 +26,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.blueprints.Category;
 import com.example.paisehpay.blueprints.Expense;
+import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.computation.EqualSplit;
 import com.example.paisehpay.computation.ReceiptInstance;
 import com.example.paisehpay.computation.Receipts;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddPeople;
 import com.example.paisehpay.dialogFragments.DialogFragment_SelectGroup;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
@@ -46,13 +48,12 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -60,7 +61,6 @@ import java.util.concurrent.Executors;
 public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener<Item>, RecycleViewListener {
     RecyclerView categoryView;
     ArrayList<Category> categoryArray = new ArrayList<>();
-
     RecyclerView itemView;
     ArrayList<Item> itemArray = new ArrayList<>();
     TextView toolbarTitleText;
@@ -83,11 +83,12 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     String Username;
     String Email;
     String id;
-
+    String expenseId;
+    String expensePaidBy;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     ExpenseAdapter expAdapter;
-    private String expenseId;
+    ItemAdapter itemAdapter;
+    ExpenseSingleton singleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,14 +104,34 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
         toolbarTitleText.setText(R.string.expense_details);
+        selectedGroupText = findViewById(R.id.group_selected);
+        selectGroupButton = findViewById(R.id.select_group_button);
+
+        Intent intent = getIntent();
+        String queryFrom = intent.getStringExtra("QueryFrom");
+        if (Objects.equals(intent.getStringExtra("QueryFrom"), "ExpenseDescription")){
+            expenseId = intent.getStringExtra("ExpenseId");
+            expenseGroup = intent.getStringExtra("ExpenseGroup");
+            expensePaidBy = intent.getStringExtra("ExpensePaidBy");
+            expenseDate = intent.getStringExtra("ExpenseDate");
+
+            selectedGroupText.setText(expenseGroup);
+            selectGroupButton.setVisibility(View.INVISIBLE);
+        }
+        Log.d("QueryFromADDPEOPLE",queryFrom);
+
 
         //get current user
+        singleton = ExpenseSingleton.getInstance();
         preferenceManager = new PreferenceManager(AddPeople.this);
         expAdapter = new ExpenseAdapter();
+        itemAdapter = new ItemAdapter();
         User user = preferenceManager.getUser();
         Email = user.getEmail();
         Username = user.getUsername();
         id = user.getId();
+        Log.d("ID",id);
+
 
         //press back arrow lead back to receipt overview page
         backArrow = findViewById(R.id.back_arrow);
@@ -129,7 +150,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
         //select group button instantiates popup, which opens a DialogFragment_SelectGroup
         //since we are reusing it multiple times and populating with different data depending on where we open it,
         //we pass the query_from = 0(meaning selectGroupButton) and selectGroupButton is not in a recycleview, pos = null
-        selectGroupButton = findViewById(R.id.select_group_button);
         selectGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,39 +159,71 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             }
         });
 
-        expenseNameText = findViewById(R.id.add_expense_name);
 
-
-
-
-
-
-
-
+        //Log.d("queryFrom",queryFrom);
         //click confirm button to finalise bill and lead to split bill page
+        expenseNameText = findViewById(R.id.add_expense_name);
         splitBillButton = findViewById(R.id.confirm_button);
         // In your splitBillButton onClick listener:
         splitBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                expenseName = expenseNameText.getText().toString();
-                Date today = Calendar.getInstance().getTime();
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                String formattedDate = formatter.format(today);
-                expenseDate = formattedDate;
+                if (queryFrom.equals("ReceiptOverview")) {
 
-                Receipts instance = ReceiptInstance.getInstance();
-                expenseAmount = instance.getTotal();
+                    Date today = Calendar.getInstance().getTime();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    String formattedDate = formatter.format(today);
+                    expenseDate = formattedDate;
+                    Receipts instance = ReceiptInstance.getInstance();
+                    expenseAmount = instance.getTotal();
+                    expenseName = expenseNameText.getText().toString();
 
-                if (expenseNameText == null) {
-                    Toast.makeText(AddPeople.this, "Please enter expense name", Toast.LENGTH_LONG).show();
-                } else if (!(checkItemHasUsers())) {
-                    Toast.makeText(AddPeople.this, "Please add people to your items", Toast.LENGTH_LONG).show();
-                } else {
-                    Expense expense = new Expense(expenseId,expenseName,expenseDate,id,expenseGroup,null,expenseAmount,expenseCategory);
+                    if (expenseNameText == null) {
+                        Toast.makeText(AddPeople.this, "Please enter expense name", Toast.LENGTH_LONG).show();
+                    } else if (!(checkItemHasUsers())) {
+                        Toast.makeText(AddPeople.this, "Please add people to your items", Toast.LENGTH_LONG).show();
+                    } else {
+                        Expense expense = new Expense(expenseId, expenseName, expenseDate, id, expenseGroup, null, expenseAmount, expenseCategory);
+                        // Store expense first
+                        StoreExpenseAndItems(expense, itemArray);
+                    }
+                } else if (queryFrom.equals("ExpenseDescription")){
+                    expenseName = expenseNameText.getText().toString();
+                    Receipts instance = ReceiptInstance.getInstance();
+                    expenseAmount = instance.getTotal();
+                    Expense expense = new Expense(expenseId, expenseName, expenseDate, id, expenseGroup, null, expenseAmount, expenseCategory);
+                    storeExpenseItems(itemArray,expenseId);
+                    expAdapter.update(expenseId, expense, new OperationCallbacks.OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d("editexpense","yurr");
+                        }
 
-                    // Store expense first
-                    StoreExpenseAndItems(expense, itemArray);
+                        @Override
+                        public void onError(DatabaseError error) {
+                            Log.d("editexpense", error.getMessage());
+                        }
+                    });
+                    singleton.getExpensesByGroupId(expenseGroup, new OperationCallbacks.ListCallback<Expense>() {
+                        @Override
+                        public void onListLoaded(List<Expense> object) {
+                            Log.d("getexpense","done");
+                        }
+
+                        @Override
+                        public void onError(DatabaseError error) {
+                            Log.d("getexpense",error.getMessage());
+                        }
+                    });
+
+                    Intent intent = new Intent(AddPeople.this, BillSplit.class);
+                    intent.putExtra("Items", itemArray);
+                    intent.putExtra("Expense",expense);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+
+
                 }
             }
         });
@@ -248,7 +300,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             addPeopleFragment = DialogFragment_AddPeople.newInstance(1,expenseGroup,position,item);
             addPeopleFragment.show(getSupportFragmentManager(), "DialogFragment_AddPeople");
         }
-
     }
 
     //used to populate RecycleView Items peopleSelected, where selectedNames is the names chosen in the DialogFragment
@@ -266,7 +317,6 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
     //after user selects group in DialogFragment, our textView will display out the user's selected group
     public void selectGroup(Group groupName){
-        selectedGroupText = findViewById(R.id.group_selected);
         selectedGroupText.setText(groupName.getGroupName());
         expenseGroup = groupName.getGroupId();
     }
@@ -294,7 +344,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
     // New method to handle the sequential operations
     private void StoreExpenseAndItems(Expense expense, ArrayList<Item> items) {
         executorService.execute(() -> {
-            expAdapter.create(expense, new ExpenseAdapter.OperationCallback() {
+            expAdapter.create(expense, new OperationCallbacks.OperationCallback() {
                 @Override
                 public void onSuccess() {
                     String expenseId = expense.getExpenseId(); // Make sure this gets the generated ID
@@ -306,7 +356,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
                     // Only navigate after all items are stored
                     runOnUiThread(() -> {
                         Intent intent = new Intent(AddPeople.this, BillSplit.class);
-                       // intent.putExtra("Items", items);
+                        intent.putExtra("Items", items);
                         intent.putExtra("Expense",expense);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -327,14 +377,14 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
 
     // Modified storeExpenseItems method
     private void storeExpenseItems(ArrayList<Item> items, String expenseId) {
-        itemAdapter itemadapter = new itemAdapter();
+        ItemAdapter itemadapter = new ItemAdapter();
         for (Item item : items) {
             item.calculateDebts();
             item.setExpenseId(expenseId); // Set the expense ID for each item
             item.setSettled(false);
 
             executorService.execute(() -> {
-                itemadapter.create(item, new ExpenseAdapter.OperationCallback() {
+                itemadapter.create(item, new OperationCallbacks.OperationCallback() {
                     @Override
                     public void onSuccess() {
                         Log.d("Saved item", item.getItemName() + " for expense " + expenseId);
@@ -348,6 +398,7 @@ public class AddPeople extends AppCompatActivity implements RecycleViewInterface
             });
         }
     }
+
 
 
 }

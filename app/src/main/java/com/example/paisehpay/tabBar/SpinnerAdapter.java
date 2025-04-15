@@ -29,12 +29,15 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
     TextView spinnerText;
     RadioButton spinnerButton;
 
+    //private String debt_owe_id; // string to identify whether this is for debt or owe
+
     public SpinnerAdapter(Context context, List<String> items, Spinner spinner, FilterListener listener) {
         super(context, R.layout.spinner_items, items);
         this.context = context;
         this.items = items;
         this.spinner = spinner;
         this.listener = listener;
+        //this.debt_owe_id = debt_owe_id;
     }
 
 

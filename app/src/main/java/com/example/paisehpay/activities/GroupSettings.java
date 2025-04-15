@@ -19,21 +19,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -51,7 +51,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     RecycleViewAdapter_GroupMember adapter;
     GroupAdapter groupAdapter;
     ExpenseAdapter expAdapter;
-    itemAdapter itmAdapter;
+    ItemAdapter itmAdapter;
     String groupId;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -70,7 +70,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         groupId = intent.getStringExtra("GROUP_ID");
         groupAdapter = new GroupAdapter();
         expAdapter = new ExpenseAdapter();
-        itmAdapter = new itemAdapter();
+        itmAdapter = new ItemAdapter();
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -125,11 +125,11 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     private void deleteGroup(String groupId) {
         executorService.execute(()->{
 
-            groupAdapter.delete(groupId, new BaseDatabase.OperationCallback(){
+            groupAdapter.delete(groupId, new OperationCallbacks.OperationCallback(){
                 @Override
                 public void onSuccess() {
                     // User deleted successfully
-                    expAdapter.deleteExpenseByGroupID(groupId, new BaseDatabase.OperationCallback() {
+                    expAdapter.deleteExpenseByGroupID(groupId, new com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks.OperationCallback() {
                         @Override
                         public void onSuccess() {
                             Log.d("Success", "expense deleted");
@@ -162,9 +162,9 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
 
     private void showGroupMemberList() {
         executorService.execute(()->{
-            groupAdapter.getGroupMates(groupId, new BaseDatabase.ListCallback<Map<String, String>>() {
+            groupAdapter.getGroupMates(groupId, new OperationCallbacks.ListCallback<Map<String, String>>() {
                 @Override
-                public void onListLoaded(List<Map<String, String>> membersList) {
+                public HashMap<String, Date> onListLoaded(List<Map<String, String>> membersList) {
                     if (membersList != null && !membersList.isEmpty()) {
                         Map<String, String> members = membersList.get(0);
                         groupMemberArray.clear(); // Clear again in case dummy data was added
@@ -184,6 +184,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
                     }
+                    return null;
                 }
 
                 @Override

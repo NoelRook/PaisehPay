@@ -17,18 +17,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Group;
-import com.example.paisehpay.blueprints.Notification;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
-import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_CreateGroup;
 import com.example.paisehpay.dialogFragments.DialogFragment_Owe;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -100,7 +98,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         oweDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                oweDialogFragment = new DialogFragment_Owe();
+                oweDialogFragment = DialogFragment_Owe.newInstance("Who do you owe?");
                 oweDialogFragment.show(getChildFragmentManager(), "DialogFragment");
             }
         });
@@ -109,7 +107,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         owedDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                owedDialogFragment = new DialogFragment_Owe();
+                owedDialogFragment = DialogFragment_Owe.newInstance("Who owes you?");
                 owedDialogFragment.show(getChildFragmentManager(), "DialogFragment");
             }
         });
@@ -158,7 +156,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
             GroupAdapter grpAdapter = new GroupAdapter();
 
             // Get groups where user is either creator or member
-            grpAdapter.getGroupsForUser(currentUser.getId(), new BaseDatabase.ListCallback<Group>() {
+            grpAdapter.getGroupsForUser(currentUser.getId(), new OperationCallbacks.ListCallback<Group>() {
                 @Override
                 public void onListLoaded(List<Group> groups) {
                     ArrayList<Group> tempList = new ArrayList<>();
@@ -230,7 +228,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Create callback for handling the friend list data
-        BaseDatabase.ListCallback friendsCallback = new BaseDatabase.ListCallback<User>() {
+        OperationCallbacks.ListCallback friendsCallback = new OperationCallbacks.ListCallback<User>() {
             @Override
             public void onListLoaded(List<User> friends) {
                 // Add all friends to your array

@@ -18,6 +18,8 @@ firebase-bom = "32.7.0"
 google-services = "4.4.2"
 firebaseDatabase = "21.0.0"
 lifecycleProcess = "2.8.7"
+firebaseCrashlyticsBuildtools = "3.0.3"
+okhttp = "5.0.0-alpha.14"
 
 [libraries]
 androidx-xcamera-extensions = { module = "androidx. camera: camera-extensions", version.ref = "xcameraExtensions" }
@@ -43,6 +45,8 @@ firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

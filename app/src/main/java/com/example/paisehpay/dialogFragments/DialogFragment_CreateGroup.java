@@ -19,17 +19,15 @@ import androidx.annotation.Nullable;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -118,7 +116,7 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
         //todo 1. add in create group
         executorService.execute(() ->{
             GroupAdapter adapter = new GroupAdapter();
-            adapter.create(group, new GroupAdapter.OperationCallback() {
+            adapter.create(group, new OperationCallbacks.OperationCallback() {
                 @Override
                 public void onSuccess() {
                     // User created successfully
@@ -172,7 +170,7 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
 
         // Save to database
         GroupAdapter groupAdapter = new GroupAdapter();
-        groupAdapter.create(newGroup, new BaseDatabase.OperationCallback() {
+        groupAdapter.create(newGroup, new OperationCallbacks.OperationCallback() {
             @Override
             public void onSuccess() {
                 // Show success message

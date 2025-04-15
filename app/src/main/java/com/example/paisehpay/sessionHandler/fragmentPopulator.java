@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.paisehpay.blueprints.Notification;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.UserAdapter;
 import com.google.firebase.database.DatabaseError;
 import android.os.Handler;
@@ -12,6 +12,8 @@ import android.os.Handler;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -20,9 +22,9 @@ public class fragmentPopulator {
     public void showList(Executor executorService, Handler mainHandler, ArrayList notificationArray, RecyclerView notificationView) {
         executorService.execute(() -> {
             UserAdapter adapter = new UserAdapter();
-            adapter.get(new BaseDatabase.ListCallback<User>() {
+            adapter.get(new OperationCallbacks.ListCallback<User>() {
                 @Override
-                public void onListLoaded(List<User> users) {
+                public HashMap<String, Date> onListLoaded(List<User> users) {
                     ArrayList<Notification> tempList = new ArrayList<>();
 
                     for (User user : users) {
@@ -38,6 +40,7 @@ public class fragmentPopulator {
                     });
 
                     Log.d("notification", notificationArray.toString());
+                    return null;
                 }
 
                 @Override

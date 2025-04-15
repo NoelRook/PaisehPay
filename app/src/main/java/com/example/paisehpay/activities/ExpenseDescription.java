@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,16 +17,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_ExpenseDescription;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,8 +43,13 @@ public class ExpenseDescription extends AppCompatActivity {
 
     RecycleViewAdapter_ExpenseDescription adapter;
     String expenseId;
+    String expenseName;
+    String expenseDate;
+    String expenseCategory;
+    String expenseGroup;
+    String expensePaidBy;
     ExpenseAdapter expAdapter;
-    itemAdapter itmAdapter;
+    ItemAdapter itmAdapter;
 
     PreferenceManager preferenceManager;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -62,7 +67,12 @@ public class ExpenseDescription extends AppCompatActivity {
 
         Intent intent = getIntent();
         expenseId = intent.getStringExtra("EXPENSE_ID");
-        Log.d("test",expenseId);
+        expenseDate = intent.getStringExtra("EXPENSE_DATE");
+        expenseName = intent.getStringExtra("EXPENSE_NAME");
+        expenseCategory = intent.getStringExtra("EXPENSE_CATEGORY");
+        expenseGroup = intent.getStringExtra("EXPENSE_GROUP");
+        expensePaidBy = intent.getStringExtra("EXPENSE_PAID_BY");
+
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -70,7 +80,7 @@ public class ExpenseDescription extends AppCompatActivity {
 
         //adapter
         expAdapter = new ExpenseAdapter();
-        itmAdapter = new itemAdapter();
+        itmAdapter = new ItemAdapter();
 
 
         //press back arrow lead back to home fragment
@@ -90,6 +100,13 @@ public class ExpenseDescription extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ExpenseDescription.this, ReceiptOverview.class);
                 intent.putExtra("Items",itemArray);
+                intent.putExtra("ExpenseId",expenseId);
+                intent.putExtra("ExpenseCategory",expenseCategory);
+                intent.putExtra("ExpenseName",expenseName);
+                intent.putExtra("ExpenseGroup",expenseGroup);
+                intent.putExtra("ExpensePaidBy",expensePaidBy);
+                intent.putExtra("ExpenseDate",expenseDate);
+                intent.putExtra("QueryFrom","ExpenseDescription");
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
@@ -108,11 +125,11 @@ public class ExpenseDescription extends AppCompatActivity {
         deleteExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                expAdapter.delete(expenseId, new BaseDatabase.OperationCallback(){
+                expAdapter.delete(expenseId, new OperationCallbacks.OperationCallback(){
                     @Override
                     public void onSuccess() {
                         // User deleted successfully
-                        itmAdapter.deleteByExpenseId(expenseId, new BaseDatabase.OperationCallback() {
+                        itmAdapter.deleteByExpenseId(expenseId, new OperationCallbacks.OperationCallback() {
                             @Override
                             public void onSuccess() {
                                 Log.d("Success", "expense deleted");
@@ -155,17 +172,18 @@ public class ExpenseDescription extends AppCompatActivity {
 
 
     private void showItemList(String expenseId) {
-        itemAdapter itemadapter = new itemAdapter();
+        ItemAdapter itemadapter = new ItemAdapter();
 
         executorService.execute(()->{
-            itemadapter.getItemByExpense(expenseId, new BaseDatabase.ListCallback<Item>() {
+            itemadapter.getItemByExpense(expenseId, new OperationCallbacks.ListCallback<Item>() {
                 @Override
-                public void onListLoaded(List<Item> object) {
+                public HashMap<String, Date> onListLoaded(List<Item> object) {
                     runOnUiThread(() ->{
                         itemArray.clear();
                         itemArray.addAll(object);
                         adapter.notifyDataSetChanged();
                     });
+                    return null;
                 }
 
                 @Override

@@ -5,17 +5,18 @@ import java.util.Date;
 public class Owe {
     //used in recycleview owe/owed in homefragment after pressing view details buttons
     String groupName;
-    String person;
-    String amount;
+    String person; //is this id or username?
+    Double amount;
 
-    private Date date;
-    public Owe(String groupName,String person, String amount){
+    Date date;
+    public Owe(String groupName,String person, Double amount, Date date){
         this.groupName = groupName;
         this.person = person;
         this.amount = amount;
+        this.date = date;
     }
 
-    public String getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
@@ -29,7 +30,12 @@ public class Owe {
 
     public Date getDate(){ return this.date;}
 
-    public Double getDoubleAmount(){
-        return Double.parseDouble(getAmount().replace("$", ""));
+
+    public String formatAsDollars() {
+        return String.format("$%.2f", this.amount);
     }
+
+    /*public Double getDoubleAmount(){
+        return Double.parseDouble(getAmount().replace("$", ""));
+    }*/
 }

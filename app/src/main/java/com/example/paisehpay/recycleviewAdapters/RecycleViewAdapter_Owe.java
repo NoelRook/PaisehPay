@@ -47,7 +47,7 @@ public class RecycleViewAdapter_Owe extends RecyclerView.Adapter<RecycleViewAdap
         //assign values to the views
         holder.groupText.setText(oweArray.get(position).getGroupName());
         holder.personText.setText(oweArray.get(position).getPerson());
-        holder.amountText.setText(oweArray.get(position).getAmount());
+        holder.amountText.setText(oweArray.get(position).formatAsDollars());
     }
 
     @Override

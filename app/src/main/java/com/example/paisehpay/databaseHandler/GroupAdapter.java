@@ -5,11 +5,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.Group;
-import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.databaseHandler.Interfaces.FirebaseDatabaseAdapter;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -18,19 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GroupAdapter extends BaseDatabase {
-
-    private final DatabaseReference databaseRef;
-    private static final String GROUP_TABLE = "Groups";
-
+public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
     public GroupAdapter() {
-        super(GROUP_TABLE);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        databaseRef = database.getReference(GROUP_TABLE);
+        super("Groups");
     }
 
     @Override
-    public <T> void create(T object, OperationCallback callback) {
+    public void create(Group object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
         if (!(object instanceof Group)) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
             return;
@@ -55,7 +48,7 @@ public class GroupAdapter extends BaseDatabase {
     }
 
     @Override
-    public void get(ListCallback callback) {
+    public void get(OperationCallbacks.ListCallback<Group> callback) {
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -78,14 +71,14 @@ public class GroupAdapter extends BaseDatabase {
     }
 
     @Override
-    public <T> void update(String Id, T object, OperationCallback callback) {
+    public void update(String id, Group object, OperationCallbacks.OperationCallback callback) {
         if (!(object instanceof Group)) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
             return;
         }
 
         Group group = (Group) object;
-        databaseRef.child(Id).setValue(group.toMap())
+        databaseRef.child(id).setValue(group.toMap())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
@@ -96,8 +89,8 @@ public class GroupAdapter extends BaseDatabase {
     }
 
     @Override
-    public void delete(String Id, OperationCallback callback) {
-        databaseRef.child(Id).removeValue()
+    public void delete(String id, OperationCallbacks.OperationCallback callback) {
+        databaseRef.child(id).removeValue()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess();
@@ -108,7 +101,7 @@ public class GroupAdapter extends BaseDatabase {
     }
 
     // get groups for the current user
-    public void getGroupsForUser(String userId, ListCallback callback) {
+    public void getGroupsForUser(String userId, OperationCallbacks.ListCallback callback) {
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -124,6 +117,7 @@ public class GroupAdapter extends BaseDatabase {
                             userGroups.add(group);
                         }
                     }
+
                 }
                 callback.onListLoaded(userGroups);
             }
@@ -136,7 +130,7 @@ public class GroupAdapter extends BaseDatabase {
     }
 
     // adding specific members to group
-    public void addMemberToGroup(String groupId, String userId, String userName, OperationCallback callback) {
+    public void addMemberToGroup(String groupId, String userId, String userName, OperationCallbacks.OperationCallback callback) {
         Log.d("databaseside", groupId+" "+userId+" "+userName);
         databaseRef.child(groupId).child("members").child(userId).setValue(userName)
                 .addOnCompleteListener(task -> {
@@ -148,7 +142,7 @@ public class GroupAdapter extends BaseDatabase {
                 });
     }
     // remove member from group based on the userid and groupid
-    public void removeMemberFromGroup(String groupId, String userId, OperationCallback callback) {
+    public void removeMemberFromGroup(String groupId, String userId, OperationCallbacks.OperationCallback callback) {
         databaseRef.child(groupId).child("members").child(userId).removeValue()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -160,7 +154,7 @@ public class GroupAdapter extends BaseDatabase {
     }
 
     // Get groups created by a specific user (may not need)
-    public void getGroupsCreatedByUser(String userId, ListCallback callback) {
+    public void getGroupsCreatedByUser(String userId, OperationCallbacks.ListCallback callback) {
         databaseRef.orderByChild("createdBy").equalTo(userId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -183,7 +177,7 @@ public class GroupAdapter extends BaseDatabase {
                 });
     }
     // return all members in the group
-    public void getGroupMates(String groupId , ListCallback<Map<String, String>> callback){
+    public void getGroupMates(String groupId , OperationCallbacks.ListCallback<Map<String, String>> callback){
         databaseRef
                 .child(groupId)
                 .child("members")
@@ -205,5 +199,6 @@ public class GroupAdapter extends BaseDatabase {
             }
         });
     }
+
 
 }

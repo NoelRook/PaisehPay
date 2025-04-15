@@ -4,7 +4,6 @@ package com.example.paisehpay.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,10 +23,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.User;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Item;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.example.paisehpay.tabBar.ExpenseFragment;
 import com.example.paisehpay.R;
@@ -37,6 +35,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -107,8 +107,9 @@ public class GroupHomepage extends AppCompatActivity {
         tabLayout = findViewById(R.id.expense_tab_layout);
 
         // Load expenses first
-        loadExpenses();
         groupAdapter = new GroupAdapter();
+        loadExpenses();
+
 
 
         //get rv for settle
@@ -123,12 +124,16 @@ public class GroupHomepage extends AppCompatActivity {
 
 
     private void loadExpenses() {
-        singleExpense.getExpensesByGroupId(groupID, new BaseDatabase.ListCallback<Expense>() {
+//        executorService.execute(()->{
+//
+//        });
+        singleExpense.getExpensesByGroupId(groupID, new OperationCallbacks.ListCallback<Expense>() {
             @Override
-            public void onListLoaded(List<Expense> expenses) {
+            public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
                 // Data loaded, now setup the ViewPager and fragments
                 setupViewPager();
                 setupClickListeners();
+                return null;
             }
 
             @Override
@@ -187,9 +192,9 @@ public class GroupHomepage extends AppCompatActivity {
 
     private void showGroupMemberList() {
         executorService.execute(()->{
-            groupAdapter.getGroupMates(groupID, new BaseDatabase.ListCallback<Map<String, String>>() {
+            groupAdapter.getGroupMates(groupID, new OperationCallbacks.ListCallback<Map<String, String>>() {
                 @Override
-                public void onListLoaded(List<Map<String, String>> membersList) {
+                public HashMap<String, Date> onListLoaded(List<Map<String, String>> membersList) {
                     if (membersList != null && !membersList.isEmpty()) {
                         Map<String, String> members = membersList.get(0);
                         userArray.clear(); // Clear again in case dummy data was added
@@ -211,6 +216,7 @@ public class GroupHomepage extends AppCompatActivity {
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
                     }
+                    return null;
                 }
 
                 @Override
