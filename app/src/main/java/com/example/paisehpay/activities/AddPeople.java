@@ -58,7 +58,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//add people is the expense overview page
+// add people is the expense overview page
 public class AddPeople extends AppCompatActivity implements RecycleViewInterface, DialogFragmentListener<Item>, RecycleViewListener {
     RecyclerView categoryView;
     ArrayList<Category> categoryArray = new ArrayList<>();

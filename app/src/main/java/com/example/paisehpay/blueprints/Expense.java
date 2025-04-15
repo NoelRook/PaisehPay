@@ -1,12 +1,8 @@
 package com.example.paisehpay.blueprints;
-
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
 import com.google.firebase.database.PropertyName;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +18,6 @@ public class Expense implements Parcelable {
     @PropertyName("group_id")
     private String associatedGroup;
     private String expenseAction; // Optional field
-
     private String expenseAmount;
     @PropertyName("category")
     private String expenseCategory;
@@ -33,6 +28,7 @@ public class Expense implements Parcelable {
         // Default constructor required for Firebase
     }
 
+    // constructor
     public Expense(String expenseId, String description, String expenseDate,
                    String expensePaidBy, String associatedGroup, String expenseAction,
                    String expenseAmount, String expenseCategory) {
@@ -46,6 +42,7 @@ public class Expense implements Parcelable {
         this.expenseCategory = expenseCategory;
     }
 
+    // parcelable constructor
     protected Expense(Parcel in) {
         expenseId = in.readString();
         description = in.readString();
@@ -57,17 +54,6 @@ public class Expense implements Parcelable {
         expenseCategory = in.readString();
     }
 
-    public static final Creator<Expense> CREATOR = new Creator<Expense>() {
-        @Override
-        public Expense createFromParcel(Parcel in) {
-            return new Expense(in);
-        }
-
-        @Override
-        public Expense[] newArray(int size) {
-            return new Expense[size];
-        }
-    };
 
     // Getters
     public String getExpenseId() {
@@ -86,24 +72,14 @@ public class Expense implements Parcelable {
         return expensePaidBy;
     }
 
-    public String getAssociatedGroup() {
-        return associatedGroup;
-    }
+    public String getAssociatedGroup() {return associatedGroup;}
 
-    public String getExpenseAction() {
-        return expenseAction;
-    }
+    public String getExpenseAmount() {return expenseAmount;}
 
-    public String getExpenseAmount() {
-        return expenseAmount;
-    }
+    public double getExpenseOwed() {return expenseOwed;}
 
     public String getExpenseCategory() {
         return expenseCategory != null ? expenseCategory : "Uncategorized";
-    }
-
-    public double getExpenseOwed() {
-        return expenseOwed;
     }
 
     // Setters
@@ -127,11 +103,6 @@ public class Expense implements Parcelable {
         this.associatedGroup = associatedGroup;
     }
 
-
-    public void setExpenseAction(String expenseAction) {
-        this.expenseAction = expenseAction;
-    }
-
     public void setExpenseAmount(String expenseAmount) {
         this.expenseAmount = expenseAmount;
     }
@@ -144,7 +115,9 @@ public class Expense implements Parcelable {
         this.expenseOwed = expenseOwed;
     }
 
-    public Map<String, Object> toMap() {
+
+    // functions
+    public Map<String, Object> toMap() { // convert object data to map, useful to pass data to database
         HashMap<String, Object> result = new HashMap<>();
         result.put("description", description);
         result.put("created_at", expenseDate);
@@ -156,13 +129,26 @@ public class Expense implements Parcelable {
         return result;
     }
 
+    // parcelable functions
     @Override
     public int describeContents() {
         return 0;
     }
 
+    public static final Creator<Expense> CREATOR = new Creator<>() {
+        @Override
+        public Expense createFromParcel(Parcel in) {
+            return new Expense(in);
+        }
+
+        @Override
+        public Expense[] newArray(int size) {
+            return new Expense[size];
+        }
+    };
+
     @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) { // write expense data into a parcel
         dest.writeString(expenseId);
         dest.writeString(description);
         dest.writeString(expenseDate);
@@ -173,6 +159,7 @@ public class Expense implements Parcelable {
         dest.writeString(expenseCategory);
     }
 
+    // string of all details of an expense object
     @Override
     public String toString() {
         return "Expense{" +

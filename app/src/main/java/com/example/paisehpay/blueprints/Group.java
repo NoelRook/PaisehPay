@@ -1,11 +1,9 @@
 package com.example.paisehpay.blueprints;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class Group {
-    //expense object used in recycleview of grouphomepage
-
+    // group object used in recycler view of group homepage
     private String groupId;
     private String groupName;
     private String groupCreatedDate;
@@ -13,7 +11,12 @@ public class Group {
     private String createdBy;
     private HashMap<String, String> members;
     private boolean isSelected;
-    public Group() {}
+
+    // constructors
+    public Group() {
+        //default constructor required for firebase
+    }
+
     public Group(String id,
                  String groupName,
                  String groupCreatedDate,
@@ -28,50 +31,35 @@ public class Group {
         this.members = members;
         this.isSelected = false;
     }
-    //todo implement builder for this in the future
 
+    // getters
     public String getGroupId() {
         return groupId;
     }
-
     public String getGroupName() {
         return groupName;
     }
-
     public String getGroupCreatedDate() {
         return groupCreatedDate;
     }
-
     public String getGroupAmount() {
         return groupAmount;
     }
-
-    public void setGroupAmount(String groupAmount){
-        this.groupAmount = groupAmount;
+    public HashMap<String, String> getMembers() {return members;}
+    public String getCreatedBy() {
+        return createdBy;
     }
 
+    // setters
     public void setGroupId(String key) {
         this.groupId = key;
     }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
+    public boolean isSelected() {return isSelected;}
     public void setSelected(boolean selected) {
         this.isSelected = selected;
     }
 
-    public HashMap<String, String> getMembers() {
-        return members;
-    }
-
-    public void setMembers(HashMap<String, String> members) {
-        this.members = members;
-    }
-    public boolean containsUser(String userId) {
-        return members != null && members.containsValue(userId);
-    }
+    // string of all details of an group object
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("groupName", groupName);
@@ -82,11 +70,4 @@ public class Group {
         return result;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
 }

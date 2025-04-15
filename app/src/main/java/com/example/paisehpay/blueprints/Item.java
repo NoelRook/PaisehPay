@@ -1,33 +1,29 @@
 package com.example.paisehpay.blueprints;
-
-
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
 import com.google.firebase.database.DataSnapshot;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class Item implements Parcelable {
-    //used in recycleview of item in each expense (add people pg)
+    //used in recycler view of item in each expense (add people and receipt overview page)
     private String itemId;
     private String itemName;
     private double itemPrice;
-    private String itemPeopleString = ""; // not stored in DB
-    private double itemIndividualPrice = 0.0; // remove this later on
     private String expenseId;
-    private ArrayList<User> itemPeopleArray = new ArrayList<>(); // not stored in DB
     private boolean settled = false;
     private HashMap<String, Double> debtPeople ;// {userid: settled or not settled}, not paid
     // if for all items in totalOwed == 0, user is settled
+    private String itemPeopleString = ""; // not stored in DB
+    private double itemIndividualPrice = 0.0; // not stored in DB
+    private ArrayList<User> itemPeopleArray = new ArrayList<>(); // not stored in DB
 
-
-    public Item(){}
+    // constructors
+    public Item(){
+        //default constructor required for firebase
+    }
 
     public Item(String itemId,
                 String itemName,
@@ -42,8 +38,7 @@ public class Item implements Parcelable {
         this.debtPeople = debtpeople;
     }
 
-
-    protected Item(Parcel in) {
+    protected Item(Parcel in) { // constructor to create item from parcel
         itemId = in.readString();
         itemName = in.readString();
         itemPrice = in.readDouble();
@@ -64,7 +59,73 @@ public class Item implements Parcelable {
         }
     }
 
-    public static final Creator<Item> CREATOR = new Creator<Item>() {
+    // getters
+    public String getItemName() {
+        return itemName;
+    }
+    public String getItemPeopleString() {
+        return itemPeopleString;
+    }
+    public ArrayList<User> getItemPeopleArray() {
+        return itemPeopleArray;
+    }
+    public String getItemPriceString() {
+        return "$" + itemPrice;
+    }
+    public double getItemPrice() {
+        return itemPrice;
+    }
+    public String getItemId() {
+        return itemId;
+    }
+
+    public String getExpenseId() {
+        return expenseId;
+    }
+    public HashMap<String, Double> getDebtPeople() {
+        return debtPeople;
+    }
+
+
+    // setters
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+    public void setExpenseId(String expenseId) {
+        this.expenseId = expenseId;
+    }
+    public void setSettled(boolean settled) {
+        this.settled = settled;
+    }
+    public void setDebtPeople(HashMap<String, Double> debtPeople) {this.debtPeople = debtPeople;}
+
+    // functions
+    public void setItemPeopleString(ArrayList<User> itemPeopleArray) { //take array of users and convert to string
+        StringBuilder sb = new StringBuilder();
+        for (User user:itemPeopleArray){
+            sb.append(user.getUsername());
+            sb.append(", ");
+        }
+        itemPeopleString = sb.substring(0,sb.length()-2);
+    }
+
+    public void setItemPeopleArray(ArrayList<User> arrayList){ // outputs the string of users
+        itemPeopleArray = arrayList;
+        setItemPeopleString(itemPeopleArray);
+    }
+
+    public void calculateDebts() { // calculate debts for each user
+        if (itemPeopleArray != null && !itemPeopleArray.isEmpty()) {
+            double splitAmount = itemPrice / itemPeopleArray.size();
+            for (int i = 0; i<itemPeopleArray.size(); i++) {
+                String userId = itemPeopleArray.get(i).getId();
+                debtPeople.put(userId, splitAmount);
+            }
+        }
+    }
+
+    // parcelable functions
+    public static final Creator<Item> CREATOR = new Creator<>() {
         @Override
         public Item createFromParcel(Parcel in) {
             return new Item(in);
@@ -76,80 +137,13 @@ public class Item implements Parcelable {
         }
     };
 
-    public String getItemName() {
-        return itemName;
-    }
-
-
-    public String getItemPeopleString() {
-        return itemPeopleString;
-    }
-
-    public void setItemPeopleString(ArrayList<User> itemPeopleArray) {
-        StringBuilder sb = new StringBuilder();
-        for (User user:itemPeopleArray){
-            sb.append(user.getUsername());
-            sb.append(", ");
-        }
-        itemPeopleString = sb.substring(0,sb.length()-2);
-
-    }
-
-    public void setItemPeopleArray(ArrayList<User> arrayList){
-        itemPeopleArray = arrayList;
-        setItemPeopleString(itemPeopleArray);
-    }
-
-    public ArrayList<User> getItemPeopleArray() {
-        return itemPeopleArray;
-    }
-    public boolean hasPeople(){
-        return getItemPeopleArray() != null && getItemPeopleArray().isEmpty();
-    }
-
-    public String getItemPriceString() {
-        return "$" + itemPrice;
-    }
-
-    public double getItemPrice() {
-        return itemPrice;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public double getItemIndividualPrice() {
-        return itemIndividualPrice;
-    }
-
-    public String getExpenseId() {
-        return expenseId;
-    }
-
-    public void setExpenseId(String expenseId) {
-        this.expenseId = expenseId;
-    }
-
-    public boolean isSettled() {
-        return settled;
-    }
-
-    public void setSettled(boolean settled) {
-        this.settled = settled;
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
+    public void writeToParcel(@NonNull Parcel parcel, int i) { // write item data into a parcel
         parcel.writeString(itemId);
         parcel.writeString(itemName);
         parcel.writeDouble(itemPrice);
@@ -170,18 +164,8 @@ public class Item implements Parcelable {
         }
     }
 
-    // users array needs to be a hashmap, not an arraylist
-    public HashMap<String, Double> getDebtPeople() {
-        return debtPeople;
-    }
-
-    public void setDebtPeople(HashMap<String, Double> debtPeople) {
-        this.debtPeople = debtPeople;
-    }
-
-
-
-    public Map<String, Object> ToMap() {
+    // database functions
+    public Map<String, Object> ToMap() { // convert object data to map, useful to pass data to database
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", itemId);
         result.put("itemName", itemName);
@@ -195,46 +179,11 @@ public class Item implements Parcelable {
         } else {
             result.put("debtpeople", new HashMap<>());
         }
-
         return result;
     }
 
-    public void calculateDebts() {
-        if (itemPeopleArray != null && !itemPeopleArray.isEmpty()) {
-            double splitAmount = itemPrice / itemPeopleArray.size();
-            for (int i = 0; i<itemPeopleArray.size(); i++) {
-                String userId = itemPeopleArray.get(i).getId();
-                debtPeople.put(userId, splitAmount);
-            }
-        }
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setItemPrice(double itemPrice) {
-        this.itemPrice = itemPrice;
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "itemId='" + itemId + '\'' +
-                ", itemName='" + itemName + '\'' +
-                ", itemPrice=" + itemPrice +
-                ", itemPeopleString='" + itemPeopleString + '\'' +
-                ", itemIndividualPrice=" + itemIndividualPrice +
-                ", expenseId='" + expenseId + '\'' +
-                ", itemPeopleArray=" + itemPeopleArray +
-                ", settled=" + settled +
-                ", debtPeople=" + debtPeople +
-                '}';
-    }
-
-
     @NonNull
-    public static Item fromDataSnapshot(@NonNull DataSnapshot snapshot) {
+    public static Item fromDataSnapshot(@NonNull DataSnapshot snapshot) { // rebuilt an item object from database
         Item item = new Item();
         item.itemId = snapshot.getKey();
         item.itemName = snapshot.child("itemName").getValue(String.class);
@@ -253,7 +202,22 @@ public class Item implements Parcelable {
                 }
             }
         }
-
         return item;
+    }
+
+    // string of all details of an item object
+    @Override
+    public String toString() {
+        return "Item{" +
+                "itemId='" + itemId + '\'' +
+                ", itemName='" + itemName + '\'' +
+                ", itemPrice=" + itemPrice +
+                ", itemPeopleString='" + itemPeopleString + '\'' +
+                ", itemIndividualPrice=" + itemIndividualPrice +
+                ", expenseId='" + expenseId + '\'' +
+                ", itemPeopleArray=" + itemPeopleArray +
+                ", settled=" + settled +
+                ", debtPeople=" + debtPeople +
+                '}';
     }
 }

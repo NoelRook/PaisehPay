@@ -1,14 +1,10 @@
 package com.example.paisehpay.blueprints;
 
+// class used to populate summary recycler view and for recycler view adapter summary
 public class Summary {
-    //used in summary recycle view
-    String avatar;
     String summaryText;
 
-    public Summary(String summaryText){
-        this.summaryText = summaryText;
-    }
-
+    // getters
     public String getSummaryText() {
         return summaryText;
     }

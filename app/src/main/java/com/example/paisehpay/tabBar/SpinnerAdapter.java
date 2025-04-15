@@ -1,6 +1,4 @@
 package com.example.paisehpay.tabBar;
-
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,27 +7,19 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.computation.FilterListener;
-
 import java.util.List;
 
-public class SpinnerAdapter extends ArrayAdapter<String> {
-    //adapter for spinner
+public class SpinnerAdapter extends ArrayAdapter<String> { // adapter for spinner for owe and owed's more details
     private Context context;
     private List<String> items;
     private int selectedPosition = -1; // Store selected item
-
     private Spinner spinner;
     private FilterListener listener;
-
     TextView spinnerText;
     RadioButton spinnerButton;
-
-    //private String debt_owe_id; // string to identify whether this is for debt or owe
 
     public SpinnerAdapter(Context context, List<String> items, Spinner spinner, FilterListener listener) {
         super(context, R.layout.spinner_items, items);
@@ -37,7 +27,6 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
         this.items = items;
         this.spinner = spinner;
         this.listener = listener;
-        //this.debt_owe_id = debt_owe_id;
     }
 
 
@@ -92,7 +81,6 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
         if (textView != null) {
             textView.setText(items.get(position));  // Set the text of the selected item
         }
-
         return convertView;
     }
 

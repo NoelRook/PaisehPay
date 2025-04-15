@@ -1,11 +1,9 @@
 package com.example.paisehpay.blueprints;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.HashMap;
 import java.util.Map;
 
+// class used to populate users in other pages
 public class User  {
     private String id;
     private String email;
@@ -14,7 +12,12 @@ public class User  {
     private HashMap<String, String> friends;
     private boolean isSelected;
 
-    public User(){}
+
+    public User(){
+        // Default constructor required for Firebase
+    }
+
+    // constructor
     public User(String id,
                 String email,
                 String username,
@@ -28,54 +31,47 @@ public class User  {
         this.isSelected = false;
     }
 
+    // setters
     public void setUserId(String key) {
         id = key;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getFriendKey() {return friendKey;}
-
     public void setFriendKey(String friendKey) {this.friendKey = friendKey;}
 
     public void setId(String key) {
         this.id = key;
     }
-    public boolean isSelected() {
-        return isSelected;
-    }
-
     public void setSelected(boolean selected) {
         this.isSelected = selected;
     }
 
-    public HashMap<String, String> getFriends() {
-        return friends;
+
+    // getters
+    public String getEmail() {
+        return email;
     }
 
-    public void setFriends(HashMap<String, String> friends) {
-        this.friends = friends;
+    public String getUsername() {
+        return username;
     }
 
-    public Map<String, Object> toMap() {
+    public String getId() {
+        return id;
+    }
+    public String getFriendKey() {return friendKey;}
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    // functions
+    public Map<String, Object> toMap() { // convert object data to map, useful to pass data to database
         HashMap<String, Object> result = new HashMap<>();
         result.put("email", email);
         result.put("username", username);

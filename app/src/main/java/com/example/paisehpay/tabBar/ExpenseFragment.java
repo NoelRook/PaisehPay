@@ -1,33 +1,26 @@
 // ExpenseFragment.java - Modified to handle data better
 package com.example.paisehpay.tabBar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Expense;
-
 import java.util.ArrayList;
 
 public class ExpenseFragment extends Fragment {
     private static final String CATEGORY = "category";
     private static final String GROUP_ID = "group_id";
-
     private String categoryToLoad;
     private String groupId;
     private RecyclerView expenseView;
@@ -36,7 +29,7 @@ public class ExpenseFragment extends Fragment {
     private ActivityResultLauncher<Intent> expenseActivityLauncher;
 
 
-    public static ExpenseFragment newInstance(String category, String groupId) {
+    public static ExpenseFragment newInstance(String category, String groupId) { // create new instance of expense fragment
         ExpenseFragment fragment = new ExpenseFragment();
         Bundle args = new Bundle();
         args.putString(CATEGORY, category);
@@ -95,7 +88,7 @@ public class ExpenseFragment extends Fragment {
         Log.d("expense",allExpenses.toString());
 
         if (allExpenses == null) {
-            allExpenses = new ArrayList<>(); // Ensure we don't get NPE
+            allExpenses = new ArrayList<>(); // ensure that fragment still loads even if no expenses
         }
 
         if (categoryToLoad.equals("Overall")) {

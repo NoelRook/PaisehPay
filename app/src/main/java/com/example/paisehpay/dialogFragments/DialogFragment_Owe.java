@@ -86,7 +86,6 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment imp
         oweFilterList.add(getString(R.string.earliest));
         oweFilterList.add(getString(R.string.latest));
         oweFilterList.add(getString(R.string.amount));
-        oweFilterList.add(getString(R.string.home));
 
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), oweFilterList,oweFilterSpinner, this);
         oweFilterSpinner.setAdapter(spinnerAdapter);
