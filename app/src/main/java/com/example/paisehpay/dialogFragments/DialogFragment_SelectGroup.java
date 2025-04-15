@@ -26,8 +26,6 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -82,7 +80,7 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
             // Get groups where user is either creator or member
             grpAdapter.getGroupsForUser(CurUser.getId(), new OperationCallbacks.ListCallback<Group>() {
                 @Override
-                public HashMap<String, Date> onListLoaded(List<Group> groups) {
+                public void onListLoaded(List<Group> groups) {
                     ArrayList<Group> tempList = new ArrayList<>();
 
                     for (Group group : groups) {
@@ -115,7 +113,6 @@ public class DialogFragment_SelectGroup extends androidx.fragment.app.DialogFrag
                         }
                         adapter.notifyDataSetChanged();
                     });
-                    return null;
                 }
 
                 @Override

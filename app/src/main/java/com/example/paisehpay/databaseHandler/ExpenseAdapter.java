@@ -214,8 +214,9 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
             return expense;
         } catch (Exception e) {
             Log.e("ExpenseMapping", "Error mapping expense", e);
-            return null;
+            
         }
+        return null;
     }
 
 

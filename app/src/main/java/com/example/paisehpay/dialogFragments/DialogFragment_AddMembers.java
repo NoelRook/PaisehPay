@@ -112,7 +112,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         // Call the database function to get real friend data
         friendAdapter.getFriendsForUser(currentUserId, new OperationCallbacks.ListCallback<User>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<User> friends) {
+            public void onListLoaded(List<User> friends) {
                 // Add all friends to your array
                 userArray.addAll(friends);
                 Log.d("friends", friends.toString());
@@ -122,7 +122,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
                     adapter.notifyDataSetChanged();
                 }
 
-                return null;
+                
             }
 
             @Override

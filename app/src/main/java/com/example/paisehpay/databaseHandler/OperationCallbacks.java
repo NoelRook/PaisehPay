@@ -26,7 +26,7 @@ public abstract class OperationCallbacks {
     public abstract void delete(String Id, final OperationCallback callback);
 
     public interface ListCallback<T> {
-        HashMap<String, Date> onListLoaded(List<T> object);
+        void onListLoaded(List<T> object);
         void onError(DatabaseError error);
     }
 

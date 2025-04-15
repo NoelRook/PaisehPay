@@ -97,7 +97,7 @@ public class FriendsFragment extends Fragment {
         // Create callback for handling the friend list data
         OperationCallbacks.ListCallback friendsCallback = new OperationCallbacks.ListCallback<User>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<User> friends) {
+            public void onListLoaded(List<User> friends) {
                 // Add all friends to your array
                 friendsArray.addAll(friends);
                 Log.d("friends", friends.toString());
@@ -107,7 +107,7 @@ public class FriendsFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
 
-                return null;
+                
             }
 
             @Override

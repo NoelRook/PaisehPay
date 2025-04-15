@@ -212,17 +212,18 @@ public class AddFragment extends Fragment {
                         return responseBody;
                     } else {
                         Log.e("OCR", "Response failed: Code = " + response.code() + ", Message = " + response.message());
-                        return null;
+                        
                     }
                 }
 
             } catch (IOException e) {
                 Log.e("OCR", "IOException occurred: " + e.getMessage(), e);
-                return null;
+                
             } catch (Exception e) {
                 Log.e("OCR", "Unexpected exception: " + e.getMessage(), e);
-                return null;
+                
             }
+            return null;
         }
 
 

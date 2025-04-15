@@ -24,7 +24,7 @@ public class fragmentPopulator {
             UserAdapter adapter = new UserAdapter();
             adapter.get(new OperationCallbacks.ListCallback<User>() {
                 @Override
-                public HashMap<String, Date> onListLoaded(List<User> users) {
+                public void onListLoaded(List<User> users) {
                     ArrayList<Notification> tempList = new ArrayList<>();
 
                     for (User user : users) {
@@ -40,7 +40,7 @@ public class fragmentPopulator {
                     });
 
                     Log.d("notification", notificationArray.toString());
-                    return null;
+                    
                 }
 
                 @Override

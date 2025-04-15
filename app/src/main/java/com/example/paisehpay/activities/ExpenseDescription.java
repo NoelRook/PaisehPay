@@ -177,13 +177,13 @@ public class ExpenseDescription extends AppCompatActivity {
         executorService.execute(()->{
             itemadapter.getItemByExpense(expenseId, new OperationCallbacks.ListCallback<Item>() {
                 @Override
-                public HashMap<String, Date> onListLoaded(List<Item> object) {
+                public void onListLoaded(List<Item> object) {
                     runOnUiThread(() ->{
                         itemArray.clear();
                         itemArray.addAll(object);
                         adapter.notifyDataSetChanged();
                     });
-                    return null;
+                    
                 }
 
                 @Override

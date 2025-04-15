@@ -129,11 +129,11 @@ public class GroupHomepage extends AppCompatActivity {
 //        });
         singleExpense.getExpensesByGroupId(groupID, new OperationCallbacks.ListCallback<Expense>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+            public void onListLoaded(List<Expense> expenses) {
                 // Data loaded, now setup the ViewPager and fragments
                 setupViewPager();
                 setupClickListeners();
-                return null;
+                
             }
 
             @Override
@@ -194,7 +194,7 @@ public class GroupHomepage extends AppCompatActivity {
         executorService.execute(()->{
             groupAdapter.getGroupMates(groupID, new OperationCallbacks.ListCallback<Map<String, String>>() {
                 @Override
-                public HashMap<String, Date> onListLoaded(List<Map<String, String>> membersList) {
+                public void onListLoaded(List<Map<String, String>> membersList) {
                     if (membersList != null && !membersList.isEmpty()) {
                         Map<String, String> members = membersList.get(0);
                         userArray.clear(); // Clear again in case dummy data was added
@@ -216,7 +216,7 @@ public class GroupHomepage extends AppCompatActivity {
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
                     }
-                    return null;
+                    
                 }
 
                 @Override
