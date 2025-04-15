@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Group;
+import com.example.paisehpay.computation.DebtCalculator;
+import com.example.paisehpay.computation.OwedCalculator;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.databaseHandler.friendAdapter;
@@ -24,10 +26,14 @@ import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_CreateGroup;
 import com.example.paisehpay.dialogFragments.DialogFragment_Owe;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Group;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -76,11 +82,19 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        TextView todayDateText = rootView.findViewById(R.id.today);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("'Today, 'dd MMMM yyyy", Locale.getDefault());
+        String currentDate = dateFormat.format(new Date());
+
+
+        todayDateText.setText(currentDate);
         preferenceManager = new PreferenceManager(getContext());
 
         friendAdapter friendadapter = new friendAdapter();
 
         User savedUser = preferenceManager.getUser();
+        getUserDebt(savedUser, rootView);
+        getOwedToUser(savedUser, rootView);
         if (savedUser != null) {
             getFriendsList();
             id = savedUser.getId();
@@ -91,6 +105,10 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 
         welcomeMessage = rootView.findViewById(R.id.welcome_message);
         welcomeMessage.setText("Hello "+ Username+"!");
+
+        //get today's date
+        //money_owe and money_owed-> call
+
 
         //view owe details lead to owe details page
         oweLayout = rootView.findViewById(R.id.owe_layout);
@@ -107,7 +125,8 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         owedDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                owedDialogFragment = DialogFragment_Owe.newInstance("Who owes you?");
+                Log.d("Reached here","onClick's good");
+                owedDialogFragment=DialogFragment_Owe.newInstance("Who owes you?");
                 owedDialogFragment.show(getChildFragmentManager(), "DialogFragment");
             }
         });
@@ -132,6 +151,70 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         showGroupList();
         return rootView;
     }
+
+    public void getUserDebt(User currentUser, View rootView){
+        DebtCalculator debtCalc = new DebtCalculator(currentUser.getId());
+        debtCalc.calculateTotalDebt(new OperationCallbacks.DebtCallback() {
+            @Override
+            public void onDebtCalculated(HashMap<String, Double> debtHashmap) {
+                calculateDebt(debtHashmap, currentUser, rootView);
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+                Log.d("errorrrr","summary");
+
+            }
+        });
+    }
+
+    private void calculateDebt(HashMap<String, Double> debtMap, User currentUser, View rootView){
+        double totalDebt = 0.0;
+        for (Map.Entry<String, Double> entry: debtMap.entrySet()){
+            if (!entry.getKey().equals(currentUser.getId())){
+                totalDebt+=entry.getValue();
+            }
+        }
+
+        double finalTotalDebt = totalDebt;
+        Log.d("summary page", String.valueOf(finalTotalDebt));
+        requireActivity().runOnUiThread(() -> {
+            TextView moneyOweTextView = rootView.findViewById(R.id.money_owe);
+            moneyOweTextView.setText(String.format(Locale.getDefault(),"$%.2f", finalTotalDebt));
+        });
+    }
+
+    public void getOwedToUser(User currentUser, View rootView){
+        OwedCalculator oweCalc = new OwedCalculator(currentUser.getId());
+        oweCalc.calculateTotalOwed(new OperationCallbacks.OwedCallback(){
+            @Override
+            public void onOwedCalculated(HashMap<String, Double> owedHashmap) {
+                calculateOwed(owedHashmap, currentUser, rootView);
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+                Log.d("error","summary you are owed");
+            }
+        });
+    }
+
+    private void calculateOwed(HashMap<String, Double> oweMap, User currentUser, View rootView){
+        double totalOwed = 0.0;
+        for (Map.Entry<String, Double> entry : oweMap.entrySet()) {
+            if (!entry.getKey().equals(currentUser.getId())) {
+                totalOwed += entry.getValue();
+            }
+        }
+        double finalTotalOwed = totalOwed;
+
+        requireActivity().runOnUiThread(()-> {
+            TextView moneyOwedTextView = rootView.findViewById(R.id.money_owed);
+            moneyOwedTextView.setText(String.format(Locale.getDefault(), "$%.2f", finalTotalOwed));
+        });
+    }
+
+
 
     private void showGroupList() {
         // Clear existing data and show loading state
