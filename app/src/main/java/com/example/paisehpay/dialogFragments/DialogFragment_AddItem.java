@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.ReceiptOverview;
 import com.example.paisehpay.blueprints.Item;

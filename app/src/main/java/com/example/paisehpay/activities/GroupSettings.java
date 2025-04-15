@@ -26,6 +26,7 @@ import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewListener;
 import com.google.firebase.database.DatabaseError;
 
 
@@ -37,7 +38,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GroupSettings extends AppCompatActivity implements DialogFragmentListener<User> {
+public class GroupSettings extends AppCompatActivity implements DialogFragmentListener<User>, RecycleViewListener {
 
     //ur group settings page accessible by group_homepage
 
@@ -203,6 +204,10 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
 
 
         adapter.notifyDataSetChanged();
+    }
+    @Override
+    public void onSelected(String name) {
+        //wtv u want to do with friendid
     }
 
 }

@@ -44,7 +44,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GroupHomepage extends AppCompatActivity implements RecycleViewListener {
+public class GroupHomepage extends AppCompatActivity{
     TextView toolbarTitleText;
     ImageView backArrow;
     Button groupSettingButton;
@@ -231,8 +231,4 @@ public class GroupHomepage extends AppCompatActivity implements RecycleViewListe
     }
 
 
-    @Override
-    public void onSelected(String name) {
-        //wtv u want to do with friendid
-    }
 }
