@@ -6,26 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.ReceiptOverview;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.computation.ReceiptInstance;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAdapter_Item.MyViewHolder> {
-
-    Context context;
-    ArrayList<Item> itemArray;
+    //RecycleView Adapter used to display items in ReceiptOverview
+    private Context context;
+    private ArrayList<Item> itemArray;
     private final RecycleViewInterface recycleViewInterface;
     private String queryFrom;
 
 
+    //default initialization
     public RecycleViewAdapter_Item(Context context, ArrayList<Item> itemArray, RecycleViewInterface recycleViewInterface, String queryFrom){
         this.context = context;
         this.itemArray = itemArray;
@@ -39,7 +37,6 @@ public class RecycleViewAdapter_Item extends RecyclerView.Adapter<RecycleViewAda
         //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.items_recycle_view_row,parent,false);
-
         return new RecycleViewAdapter_Item.MyViewHolder(view, recycleViewInterface);
     }
 

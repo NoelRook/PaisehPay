@@ -21,6 +21,7 @@ import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewListener;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements RecycleViewListener {
 
     RecyclerView friendsView;
     Button addFriendButton;
@@ -68,7 +69,7 @@ public class FriendsFragment extends Fragment {
         //show notification
         friendsView = rootView.findViewById(R.id.recycle_view_friends);
         showFriendList();
-        adapter = new RecycleViewAdapter_GroupMember(getActivity(),friendsArray,"FriendsFragment",null);
+        adapter = new RecycleViewAdapter_GroupMember(getActivity(),friendsArray,"FriendsFragment",null,this);
         friendsView.setAdapter(adapter);
         friendsView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -144,5 +145,11 @@ public class FriendsFragment extends Fragment {
             });
 
         });
+    }
+
+    @Override
+    public void onSelected(String name) {
+        //name is the friend id
+        //do wtv u want to do with friend id
     }
 }

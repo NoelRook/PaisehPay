@@ -26,6 +26,7 @@ import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
+import com.example.paisehpay.recycleviewAdapters.RecycleViewListener;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.example.paisehpay.tabBar.ExpenseFragment;
 import com.example.paisehpay.R;
@@ -43,7 +44,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GroupHomepage extends AppCompatActivity {
+public class GroupHomepage extends AppCompatActivity implements RecycleViewListener {
     TextView toolbarTitleText;
     ImageView backArrow;
     Button groupSettingButton;
@@ -114,7 +115,7 @@ public class GroupHomepage extends AppCompatActivity {
 
         //get rv for settle
         userView = findViewById(R.id.recycle_view_users);
-        adapter = new RecycleViewAdapter_GroupMember(this,userArray,"GroupHomepage",groupID);
+        adapter = new RecycleViewAdapter_GroupMember(this,userArray,"GroupHomepage",groupID,null);
         showGroupMemberList();
         userView.setAdapter(adapter);
         userView.setLayoutManager(new LinearLayoutManager(this));
@@ -230,4 +231,8 @@ public class GroupHomepage extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onSelected(String name) {
+        //wtv u want to do with friendid
+    }
 }

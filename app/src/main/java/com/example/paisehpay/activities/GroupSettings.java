@@ -115,7 +115,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         //show groupMember list
         groupMemberView = findViewById(R.id.recycle_view_members);
         showGroupMemberList();
-        adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray,"GroupSettings",groupId);
+        adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray,"GroupSettings",groupId,null);
         groupMemberView.setAdapter(adapter);
         groupMemberView.setLayoutManager(new LinearLayoutManager(this));
 

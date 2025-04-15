@@ -6,56 +6,54 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Category;
-import com.example.paisehpay.blueprints.Expense;
 
 import java.util.ArrayList;
 
 public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleViewAdapter_Category.MyViewHolder> {
-     //adapter for category recycle view
-
-    Context context;
-    ArrayList<Category> categoryArray;
+     //RecycleView adapter for category.
+    private Context context;
+    private ArrayList<Category> categoryArray; //used to store the RecycleView objects
     private int selectedPosition = RecyclerView.NO_POSITION; // Stores the selected button index
-    private String selectedCategoryName = null;
+    private String selectedCategoryName = null; //default value
     private RecycleViewListener listener;
 
+
+    //default initialization
     public RecycleViewAdapter_Category(Context context, ArrayList<Category> categoryArray,RecycleViewListener listener){
         this.context = context;
         this.categoryArray = categoryArray;
         this.listener = listener;
     }
 
+
+    //inflate the layout
     @NonNull
     @Override
     public RecycleViewAdapter_Category.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.category_recycle_view_row,parent,false);
 
         return new RecycleViewAdapter_Category.MyViewHolder(view);
     }
 
+    //used to assign values to the items
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapter_Category.MyViewHolder holder, int position) {
         Category category = categoryArray.get(position);
         holder.nameText.setText(category.getCategoryName());
 
-
-
         // Set the image for the current item based on selection
         if (holder.getAdapterPosition() == selectedPosition) {
             holder.categoryButton.setImageResource(R.drawable.added_icon);  // Image for selected state
         } else {
-            holder.categoryButton.setImageResource(category.getCategoryIcon());  // Default image
+            holder.categoryButton.setImageResource(category.getCategoryIcon());  // Default image in category view
         }
 
-        // Set click listener for the ImageButton
+         //when user selects a category, it will reflect to show the category selected. the user can unselect and select
         holder.categoryButton.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
             // If the clicked item is already selected, unselect it
@@ -77,6 +75,7 @@ public class RecycleViewAdapter_Category extends RecyclerView.Adapter<RecycleVie
 
     }
 
+    //get item count to display in RecycleView
     @Override
     public int getItemCount() {
         //number of items want displayed

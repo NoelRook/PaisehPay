@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.activities.GroupHomepage;
 import com.example.paisehpay.blueprints.Group;
@@ -18,11 +16,11 @@ import com.example.paisehpay.blueprints.Group;
 import java.util.ArrayList;
 
 public class RecycleViewAdapter_Group extends RecyclerView.Adapter<RecycleViewAdapter_Group.MyViewHolder> {
-    Context context;
-    ArrayList<Group> groupArray;
+    //RecycleView adapter for Group displaying in HomeFragment
+    private Context context;
+    private ArrayList<Group> groupArray;
 
-
-
+    //default initialization
     public RecycleViewAdapter_Group(Context context, ArrayList<Group> groupArray){
         this.context = context;
         this.groupArray = groupArray;
@@ -44,7 +42,7 @@ public class RecycleViewAdapter_Group extends RecyclerView.Adapter<RecycleViewAd
         holder.groupNameText.setText(groupArray.get(position).getGroupName());
         holder.groupDateText.setText(groupArray.get(position).getGroupCreatedDate());
         holder.groupAmountText.setText(groupArray.get(position).getGroupAmount());
-
+        //pressing GroupHomepage button leads to groupHomepage.java
         holder.groupHomepageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

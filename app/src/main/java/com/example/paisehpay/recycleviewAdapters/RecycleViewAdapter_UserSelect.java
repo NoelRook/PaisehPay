@@ -6,23 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
 
 import java.util.ArrayList;
 
 public class RecycleViewAdapter_UserSelect extends RecyclerView.Adapter<RecycleViewAdapter_UserSelect.MyViewHolder> {
-
-    Context context;
-    ArrayList<User> userArray;
+    //RecycleView Adapter when selecting users to associate with certain items in AddPeople.java
+    private Context context;
+    private ArrayList<User> userArray;
     private final RecycleViewInterface recycleViewInterface;
 
-
+    //default initialization
     public RecycleViewAdapter_UserSelect(Context context, ArrayList<User> userArray, RecycleViewInterface recycleViewInterface){
         this.context = context;
         this.userArray = userArray;
@@ -43,6 +40,7 @@ public class RecycleViewAdapter_UserSelect extends RecyclerView.Adapter<RecycleV
     public void onBindViewHolder(@NonNull RecycleViewAdapter_UserSelect.MyViewHolder holder, int position) {
         //assign values to the views
         holder.nameText.setText(userArray.get(position).getUsername());
+        //this allows the user to select and deselect users and when doing so, user's icons would update accordingly
         if(userArray.get(position).isSelected()){
             holder.groupButton.setImageResource(R.drawable.added_icon);
             holder.groupButton.setSelected(false);
@@ -50,8 +48,6 @@ public class RecycleViewAdapter_UserSelect extends RecyclerView.Adapter<RecycleV
             holder.groupButton.setImageResource(R.drawable.add_icon);
         }
         holder.groupButton.requestLayout();;
-
-
     }
 
     @Override
@@ -62,7 +58,6 @@ public class RecycleViewAdapter_UserSelect extends RecyclerView.Adapter<RecycleV
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         //recycle view oncreate
-
         TextView nameText;
         ImageButton groupButton;
         public MyViewHolder(@NonNull View itemView, RecycleViewInterface recycleViewInterface) {
@@ -70,7 +65,6 @@ public class RecycleViewAdapter_UserSelect extends RecyclerView.Adapter<RecycleV
 
            nameText = itemView.findViewById(R.id.person_name);
            groupButton = itemView.findViewById(R.id.add_button);
-
            groupButton.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View view) {
@@ -86,9 +80,4 @@ public class RecycleViewAdapter_UserSelect extends RecyclerView.Adapter<RecycleV
 
         }
     }
-
-
-
-
-
 }

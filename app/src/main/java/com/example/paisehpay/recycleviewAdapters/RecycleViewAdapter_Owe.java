@@ -6,30 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Owe;
-
 import java.util.ArrayList;
 
 public class RecycleViewAdapter_Owe extends RecyclerView.Adapter<RecycleViewAdapter_Owe.MyViewHolder> {
+    //RecycleView adapter used to display Owed(expenses) in OweFragment
+    private Context context;
+    private ArrayList<Owe> oweArray;
 
-    Context context;
-    ArrayList<Owe> oweArray;
 
-
+    //default initialization
     public RecycleViewAdapter_Owe(Context context, ArrayList<Owe> oweArray){
         this.context = context;
         this.oweArray = oweArray;
-    }
-
-    public void updateOweArray(ArrayList<Owe> oweArray){
-        this.oweArray = oweArray;
-        notifyDataSetChanged();
-        Log.d("update adapter", "after sorting: "+ oweArray.toString());
     }
 
     @NonNull
@@ -38,7 +30,6 @@ public class RecycleViewAdapter_Owe extends RecyclerView.Adapter<RecycleViewAdap
         //where we inflate the layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.owe_recycler_view_row,parent,false);
-
         return new RecycleViewAdapter_Owe.MyViewHolder(view);
     }
 
@@ -69,6 +60,13 @@ public class RecycleViewAdapter_Owe extends RecyclerView.Adapter<RecycleViewAdap
             groupText = itemView.findViewById(R.id.group_text);
             amountText = itemView.findViewById(R.id.amount_text);
         }
+    }
+
+    //function to update oweArray with a entirely new arraylist
+    public void updateOweArray(ArrayList<Owe> oweArray){
+        this.oweArray = oweArray;
+        notifyDataSetChanged();
+        Log.d("update adapter", "after sorting: "+ oweArray.toString());
     }
 
 }
