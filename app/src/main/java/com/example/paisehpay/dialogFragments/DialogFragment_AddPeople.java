@@ -27,6 +27,8 @@ import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -113,7 +115,7 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
         executorService.execute(()->{
             grpAdapter.getGroupMates(groupId, new OperationCallbacks.ListCallback<Map<String, String>>() {
                 @Override
-                public void onListLoaded(List<Map<String, String>> membersList) {
+                public HashMap<String, Date> onListLoaded(List<Map<String, String>> membersList) {
                     if (membersList != null && !membersList.isEmpty()) {
                         Map<String, String> members = membersList.get(0);
                         userArray.clear(); // Clear again in case dummy data was added
@@ -133,6 +135,7 @@ public class DialogFragment_AddPeople extends androidx.fragment.app.DialogFragme
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
                     }
+                    return null;
                 }
 
                 @Override

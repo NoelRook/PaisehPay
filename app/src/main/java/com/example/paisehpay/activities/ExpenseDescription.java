@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.paisehpay.R;
-import com.example.paisehpay.blueprints.ExpenseSingleton;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
@@ -28,6 +26,8 @@ import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -177,12 +177,13 @@ public class ExpenseDescription extends AppCompatActivity {
         executorService.execute(()->{
             itemadapter.getItemByExpense(expenseId, new OperationCallbacks.ListCallback<Item>() {
                 @Override
-                public void onListLoaded(List<Item> object) {
+                public HashMap<String, Date> onListLoaded(List<Item> object) {
                     runOnUiThread(() ->{
                         itemArray.clear();
                         itemArray.addAll(object);
                         adapter.notifyDataSetChanged();
                     });
+                    return null;
                 }
 
                 @Override

@@ -117,6 +117,7 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
                             userGroups.add(group);
                         }
                     }
+
                 }
                 callback.onListLoaded(userGroups);
             }

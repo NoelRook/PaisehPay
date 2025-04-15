@@ -101,6 +101,7 @@
 
     //money owe
     <string name="you_owe_who">Who do you owe?</string>
+    <string name="who_owe_you">Who owes you?</string>
     <string name="latest">Latest</string>
     <string name="earliest">Earliest</string>
     <string name="amount">Amount</string>

@@ -59,7 +59,9 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Expense> expenses = new ArrayList<>();
                 for (DataSnapshot expenseSnapshot : dataSnapshot.getChildren()) {
-                    Expense expense = expenseSnapshot.getValue(Expense.class);
+
+                    Expense expense = mapSnapshotToExpense(expenseSnapshot);
+                    Log.d("expenses get",expense.toString());
                     if (expense != null) {
                         expense.setExpenseId(expenseSnapshot.getKey());
                         expenses.add(expense);

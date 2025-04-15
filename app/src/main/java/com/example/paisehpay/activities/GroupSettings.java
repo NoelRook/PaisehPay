@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseError;
 
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -162,7 +164,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         executorService.execute(()->{
             groupAdapter.getGroupMates(groupId, new OperationCallbacks.ListCallback<Map<String, String>>() {
                 @Override
-                public void onListLoaded(List<Map<String, String>> membersList) {
+                public HashMap<String, Date> onListLoaded(List<Map<String, String>> membersList) {
                     if (membersList != null && !membersList.isEmpty()) {
                         Map<String, String> members = membersList.get(0);
                         groupMemberArray.clear(); // Clear again in case dummy data was added
@@ -182,6 +184,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
                         // Update UI on main thread
                         adapter.notifyDataSetChanged();
                     }
+                    return null;
                 }
 
                 @Override
