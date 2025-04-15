@@ -150,8 +150,10 @@ public class FriendsFragment extends Fragment implements RecycleViewListener {
     }
 
     @Override
-    public void onSelected(String name) {
+    public void onSelected(String friendId) {
         //name is the friend id
         //do wtv u want to do with friend id
+        friendAdapter.twoWayfriendRemoval(pref.getUser().getId(),friendId);
+
     }
 }

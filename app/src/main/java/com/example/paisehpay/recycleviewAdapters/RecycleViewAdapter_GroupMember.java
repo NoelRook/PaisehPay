@@ -2,6 +2,7 @@ package com.example.paisehpay.recycleviewAdapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,10 @@ public class RecycleViewAdapter_GroupMember extends RecyclerView.Adapter<Recycle
                     if (position >= 0 && position < groupMemberArray.size()) {
                         groupMemberArray.remove(position);
                         notifyItemRemoved(position);
-                        recycleViewListener.onSelected(user.getId());
+
+                        if(recycleViewListener != null){
+                            recycleViewListener.onSelected(user.getId());
+                        }
                         notifyItemRangeChanged(position, groupMemberArray.size());
                     }
                 }

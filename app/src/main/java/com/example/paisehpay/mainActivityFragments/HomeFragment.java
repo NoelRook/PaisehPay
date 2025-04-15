@@ -312,7 +312,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Create callback for handling the friend list data
-        OperationCallbacks.ListCallback friendsCallback = new OperationCallbacks.ListCallback<User>() {
+        OperationCallbacks.ListCallback<User> friendsCallback = new OperationCallbacks.ListCallback<User>() {
             @Override
             public void onListLoaded(List<User> friends) {
                 // Add all friends to your array

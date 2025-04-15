@@ -1,5 +1,7 @@
 package com.example.paisehpay.activities;
 
+import static android.icu.text.DisplayOptions.DisplayLength.LENGTH_SHORT;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,10 +25,14 @@ import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.databaseHandler.ItemAdapter;
+import com.example.paisehpay.databaseHandler.UserAdapter;
+import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.dialogFragments.DialogFragmentListener;
 import com.example.paisehpay.dialogFragments.DialogFragment_AddMembers;
+import com.example.paisehpay.mainActivityFragments.FriendsFragment;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewListener;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 
@@ -53,6 +59,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     GroupAdapter groupAdapter;
     ExpenseAdapter expAdapter;
     ItemAdapter itmAdapter;
+    friendAdapter frenAdapter;
     String groupId;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -72,6 +79,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         groupAdapter = new GroupAdapter();
         expAdapter = new ExpenseAdapter();
         itmAdapter = new ItemAdapter();
+        frenAdapter = new friendAdapter();
 
         //modify toolbar text based on page
         toolbarTitleText = findViewById(R.id.toolbar_title);
@@ -116,7 +124,7 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
         //show groupMember list
         groupMemberView = findViewById(R.id.recycle_view_members);
         showGroupMemberList();
-        adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray,"GroupSettings",groupId,null);
+        adapter = new RecycleViewAdapter_GroupMember(this,groupMemberArray,"GroupSettings",groupId,this);
         groupMemberView.setAdapter(adapter);
         groupMemberView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -201,13 +209,22 @@ public class GroupSettings extends AppCompatActivity implements DialogFragmentLi
     @Override
     public void onDataSelected(int position, User data) {
         groupMemberArray.add(new User(data.getId(),data.getEmail(), data.getUsername(),data.getFriendKey(),null));
-
-
         adapter.notifyDataSetChanged();
     }
     @Override
-    public void onSelected(String name) {
-        //wtv u want to do with friendid
+    public void onSelected(String friendId) {
+        Log.d("onselected", friendId);
+        groupAdapter.removeMemberFromGroup(groupId, friendId, new OperationCallbacks.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d("remove Member from group","friend removed");
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+                Log.d("remove Member from group","Error: "+error);
+            }
+        });
     }
 
 }
