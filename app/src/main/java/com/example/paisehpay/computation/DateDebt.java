@@ -4,9 +4,9 @@ import android.util.Log;
 
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.google.firebase.database.DatabaseError;
 
 import java.text.ParseException;
@@ -16,24 +16,23 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DateDebt {
-    public void peopleYouOwe(String userId, BaseDatabase.DateCallback callback) {
+    public void peopleYouOwe(String userId, OperationCallbacks.DateCallback callback) {
         Log.d("DateDebt", "Starting for user: " + userId);
 
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
-        expenseAdapter.get(new BaseDatabase.ListCallback<Expense>() {
+        expenseAdapter.get(new OperationCallbacks.ListCallback<Expense>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+            public void onListLoaded(List<Expense> expenses) {
                 HashMap<String, Date> useridDate = new HashMap<>();
                 final int[] pendingOperations = {0};
 
                 if (expenses.isEmpty()) {
                     callback.onDateLoaded(useridDate);
-                    return null;
                 }
 
                 for (Expense expense : expenses) {
                     pendingOperations[0]++;
-                    checkForDebtor(expense, userId, useridDate, new BaseDatabase.OperationComplete() {
+                    checkForDebtor(expense, userId, useridDate, new OperationCallbacks.OperationComplete() {
                         @Override
                         public void onComplete() {
                             pendingOperations[0]--;
@@ -43,7 +42,6 @@ public class DateDebt {
                         }
                     });
                 }
-                return null;
             }
 
             @Override
@@ -55,12 +53,13 @@ public class DateDebt {
     }
 
     private void checkForDebtor(Expense expense, String userId, HashMap<String, Date> useridDate,
-                                BaseDatabase.OperationComplete completeCallback) {
-        itemAdapter itemAdapter = new itemAdapter();
-        itemAdapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
+                                OperationCallbacks.OperationComplete completeCallback) {
+        ItemAdapter itemAdapter = new ItemAdapter();
+        itemAdapter.getItemByExpense(expense.getExpenseId(), new OperationCallbacks.ListCallback<Item>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<Item> items) {
+            public void onListLoaded(List<Item> items) {
                 boolean isDebtor = false;
+                Log.d("expensedate",expense.toString());
                 Date expenseDate = dateformatting(expense.getExpenseDate());
                 String payerId = expense.getExpensePaidBy();
 
@@ -80,7 +79,6 @@ public class DateDebt {
                 }
 
                 completeCallback.onComplete();
-                return null;
             }
 
             @Override

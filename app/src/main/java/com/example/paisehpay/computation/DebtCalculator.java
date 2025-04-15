@@ -4,9 +4,9 @@ import android.util.Log;
 
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.Date;
@@ -20,21 +20,20 @@ public class DebtCalculator {
         this.currentUserId = currentUserId;
     }
 
-    public void calculateTotalDebt(BaseDatabase.DebtCallback callback) {
+    public void calculateTotalDebt(OperationCallbacks.DebtCallback callback) {
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
-        expenseAdapter.get(new BaseDatabase.ListCallback<Expense>() {
+        expenseAdapter.get(new OperationCallbacks.ListCallback<Expense>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+            public void onListLoaded(List<Expense> expenses) {
                 HashMap<String, Double> debtMap = new HashMap<>();
                 final int[] pendingOperations = {expenses.size()};
 
                 if (expenses.isEmpty()) {
                     callback.onDebtCalculated(debtMap);
-                    return null;
                 }
 
                 for (Expense expense : expenses) {
-                    checkForDebtInExpense(expense, debtMap, new BaseDatabase.OperationComplete() {
+                    checkForDebtInExpense(expense, debtMap, new OperationCallbacks.OperationComplete() {
                         @Override
                         public void onComplete() {
                             pendingOperations[0]--;
@@ -44,7 +43,6 @@ public class DebtCalculator {
                         }
                     });
                 }
-                return null;
             }
 
             @Override
@@ -56,11 +54,11 @@ public class DebtCalculator {
     }
 
     private void checkForDebtInExpense(Expense expense, HashMap<String, Double> debtMap,
-                                       BaseDatabase.OperationComplete completeCallback) {
-        itemAdapter itemAdapter = new itemAdapter();
-        itemAdapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
+                                       OperationCallbacks.OperationComplete completeCallback) {
+        ItemAdapter itemAdapter = new ItemAdapter();
+        itemAdapter.getItemByExpense(expense.getExpenseId(), new OperationCallbacks.ListCallback<Item>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<Item> items) {
+            public void onListLoaded(List<Item> items) {
                 for (Item item : items) {
                     if (item.getDebtPeople().containsKey(currentUserId)) {
                         Double amount = item.getDebtPeople().get(currentUserId);
@@ -71,7 +69,6 @@ public class DebtCalculator {
                     }
                 }
                 completeCallback.onComplete();
-                return null;
             }
 
             @Override

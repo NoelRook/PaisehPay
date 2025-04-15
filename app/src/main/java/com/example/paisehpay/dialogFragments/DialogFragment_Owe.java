@@ -23,7 +23,7 @@ import com.example.paisehpay.computation.DebtCalculator;
 import com.example.paisehpay.computation.FilterListener;
 import com.example.paisehpay.computation.HeapSortHelper;
 import com.example.paisehpay.computation.OwedCalculator;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.mainActivityFragments.HomeFragment;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Owe;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
@@ -124,11 +124,11 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment imp
 
     private void loadDebtData(User currentUser) {
         DateDebt dateDebt = new DateDebt();
-        dateDebt.peopleYouOwe(currentUser.getId(), new BaseDatabase.DateCallback(){
+        dateDebt.peopleYouOwe(currentUser.getId(), new OperationCallbacks.DateCallback(){
             @Override
             public void onDateLoaded(HashMap<String, Date> dateMap) {
                 DebtCalculator debtCalc = new DebtCalculator(currentUser.getId());
-                debtCalc.calculateTotalDebt(new BaseDatabase.DebtCallback() {
+                debtCalc.calculateTotalDebt(new OperationCallbacks.DebtCallback() {
                     @Override
                     public void onDebtCalculated(HashMap<String, Double> debtMap) {
                         mergeAndDisplayData(dateMap, debtMap);
@@ -150,11 +150,11 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment imp
 
     private void loadOwedData(User currentUser) {
         DateOwed dateOwed = new DateOwed();
-        dateOwed.peopleOweYouLatest(currentUser.getId(), new BaseDatabase.DateCallback() {
+        dateOwed.peopleOweYouLatest(currentUser.getId(), new OperationCallbacks.DateCallback() {
             @Override
             public void onDateLoaded(HashMap<String, Date> dateMap) {
                 OwedCalculator oweCalc = new OwedCalculator(currentUser.getId());
-                oweCalc.calculateTotalOwed(new BaseDatabase.OwedCallback() {
+                oweCalc.calculateTotalOwed(new OperationCallbacks.OwedCallback() {
                     @Override
                     public void onOwedCalculated(HashMap<String, Double> owedMap) {
                         mergeAndDisplayData(dateMap, owedMap);

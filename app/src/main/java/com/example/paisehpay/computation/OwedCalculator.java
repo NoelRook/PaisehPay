@@ -4,9 +4,9 @@ import android.util.Log;
 
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.databaseHandler.BaseDatabase;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
-import com.example.paisehpay.databaseHandler.itemAdapter;
+import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.Date;
@@ -20,22 +20,21 @@ public class OwedCalculator {
         this.currentUserId = currentUserId;
     }
 
-    public void calculateTotalOwed(BaseDatabase.OwedCallback callback) {
+    public void calculateTotalOwed(OperationCallbacks.OwedCallback callback) {
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
-        expenseAdapter.get(new BaseDatabase.ListCallback<Expense>() {
+        expenseAdapter.get(new OperationCallbacks.ListCallback<Expense>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<Expense> expenses) {
+            public void onListLoaded(List<Expense> expenses) {
                 HashMap<String, Double> owedMap = new HashMap<>();
                 final int[] pendingOperations = {expenses.size()};
 
                 if (expenses.isEmpty()) {
                     callback.onOwedCalculated(owedMap);
-                    return null;
                 }
 
                 for (Expense expense : expenses) {
                     if (expense.getExpensePaidBy().equals(currentUserId)) {
-                        processItemsForExpense(expense, owedMap, new BaseDatabase.OperationComplete() {
+                        processItemsForExpense(expense, owedMap, new OperationCallbacks.OperationComplete() {
                             @Override
                             public void onComplete() {
                                 pendingOperations[0]--;
@@ -51,7 +50,6 @@ public class OwedCalculator {
                         }
                     }
                 }
-                return null;
             }
 
             @Override
@@ -63,11 +61,11 @@ public class OwedCalculator {
     }
 
     private void processItemsForExpense(Expense expense, HashMap<String, Double> owedMap,
-                                        BaseDatabase.OperationComplete completeCallback) {
-        itemAdapter itemAdapter = new itemAdapter();
-        itemAdapter.getItemByExpense(expense.getExpenseId(), new BaseDatabase.ListCallback<Item>() {
+                                        OperationCallbacks.OperationComplete completeCallback) {
+        ItemAdapter itemAdapter = new ItemAdapter();
+        itemAdapter.getItemByExpense(expense.getExpenseId(), new OperationCallbacks.ListCallback<Item>() {
             @Override
-            public HashMap<String, Date> onListLoaded(List<Item> items) {
+            public void onListLoaded(List<Item> items) {
                 for (Item item : items) {
                     for (HashMap.Entry<String, Double> entry : item.getDebtPeople().entrySet()) {
                         if (entry.getValue() != 0) {
@@ -78,7 +76,6 @@ public class OwedCalculator {
                     }
                 }
                 completeCallback.onComplete();
-                return null;
             }
 
             @Override
