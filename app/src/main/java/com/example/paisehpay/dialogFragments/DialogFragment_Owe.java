@@ -24,6 +24,7 @@ import com.example.paisehpay.computation.FilterListener;
 import com.example.paisehpay.computation.HeapSortHelper;
 import com.example.paisehpay.computation.OwedCalculator;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
+import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.mainActivityFragments.HomeFragment;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_Owe;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
@@ -36,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment implements FilterListener {
     private Spinner oweFilterSpinner;
@@ -44,7 +47,7 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment imp
     private ArrayList<Owe> oweArray = new ArrayList<>();
     private RecycleViewAdapter_Owe adapter;
     //private TextView loadingText;
-
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final String DATA_TO_QUERY = "data_to_query";
 
     public static DialogFragment_Owe newInstance(String query_from) {
@@ -175,7 +178,8 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment imp
 
     private void mergeAndDisplayData(HashMap<String, Date> dateMap, HashMap<String, Double> amountMap) {
         oweArray.clear();
-        PreferenceManager pref = new PreferenceManager(requireActivity());
+        friendAdapter friendAdapter = new friendAdapter();
+        PreferenceManager pref = new PreferenceManager(getActivity());
         // Merge data from both maps
         for (Map.Entry<String, Date> entry : dateMap.entrySet()) {
             String userId = entry.getKey();
@@ -184,21 +188,39 @@ public class DialogFragment_Owe extends androidx.fragment.app.DialogFragment imp
 
 
             if (amount != null && amount > 0 && !Objects.equals(userId, pref.getUser().getId())) {
-                oweArray.add(new Owe("", pref.getOneFriend(userId), amount, date));
+                if(pref.getOneFriend(userId) == null){
+                    executorService.execute(() -> {
+                        friendAdapter.mapUsernameFromFirebase(userId,getActivity() ,new OperationCallbacks.OperationCallback() {
+                            @Override
+                            public void onSuccess() {
+                                oweArray.add(new Owe("", pref.getOneFriend(userId), amount, date));
+                            }
+
+                            @Override
+                            public void onError(DatabaseError error) {
+
+                            }
+                        });
+                    });
+                }
+                else{
+                    oweArray.add(new Owe("", pref.getOneFriend(userId), amount, date));
+                }
             }
         }
 
         // Update UI on main thread
-        requireActivity().runOnUiThread(() -> {
+        getActivity().runOnUiThread(() -> {
             adapter.updateOweArray(oweArray);
             //loadingText.setVisibility(View.GONE);
             oweView.setVisibility(View.VISIBLE);
         });
     }
 
+
     private void handleError(DatabaseError error) {
         Log.e("DialogFragment_Owe", "Error: " + error.getMessage(), error.toException());
-        requireActivity().runOnUiThread(() -> {
+        getActivity().runOnUiThread(() -> {
             //loadingText.setText("Error loading data. Please try again.");
         });
     }

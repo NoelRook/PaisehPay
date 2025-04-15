@@ -1,5 +1,6 @@
 package com.example.paisehpay.mainActivityFragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -179,10 +180,17 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 
         double finalTotalDebt = totalDebt;
         Log.d("summary page", String.valueOf(finalTotalDebt));
-        requireActivity().runOnUiThread(() -> {
-            TextView moneyOweTextView = rootView.findViewById(R.id.money_owe);
-            moneyOweTextView.setText(String.format(Locale.getDefault(),"$%.2f", finalTotalDebt));
-        });
+        Activity activity = getActivity();
+        if (activity != null && isAdded()) {
+            activity.runOnUiThread(() -> {
+                TextView moneyOweTextView = rootView.findViewById(R.id.money_owe);
+                moneyOweTextView.setText(String.format(Locale.getDefault(),"$%.2f", finalTotalDebt));
+            });
+        } else {
+            Log.w("HomeFragment", "Fragment not attached — skipping UI update");
+        }
+
+
     }
 
     public void getOwedToUser(User currentUser, View rootView){
@@ -209,7 +217,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         }
         double finalTotalOwed = totalOwed;
 
-        requireActivity().runOnUiThread(()-> {
+        getActivity().runOnUiThread(()-> {
             TextView moneyOwedTextView = rootView.findViewById(R.id.money_owed);
             moneyOwedTextView.setText(String.format(Locale.getDefault(), "$%.2f", finalTotalOwed));
         });

@@ -113,11 +113,10 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
                 for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
                     Group group = groupSnapshot.getValue(Group.class);
                     if (group != null) {
-                        boolean isCreatedByUser = group.getCreatedBy() != null && group.getCreatedBy().equals(userId);
                         boolean isMember = group.getMembers() != null && group.getMembers().containsKey(userId);
 
                         // for the edge case in case the user pays but does not buy anything
-                        if (isCreatedByUser || isMember) {  // if the group is created by the user, or is a member of a group
+                        if (isMember) {  // if the group is created by the user, or is a member of a group
                             group.setGroupId(groupSnapshot.getKey());
                             userGroups.add(group);
                         }

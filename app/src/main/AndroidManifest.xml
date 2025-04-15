@@ -17,8 +17,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/paiseh_pay"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/Theme.PaisehPay_Iris"
         tools:targetApi="31">
+
         <activity
             android:name=".activities.SettleUp"
             android:exported="false" />

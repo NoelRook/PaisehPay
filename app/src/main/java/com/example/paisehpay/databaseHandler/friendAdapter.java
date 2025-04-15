@@ -1,10 +1,12 @@
 package com.example.paisehpay.databaseHandler;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.paisehpay.blueprints.User;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -229,6 +231,29 @@ public class friendAdapter extends UserAdapter{
             }
         });
     }
+    public void mapUsernameFromFirebase(String userID, Context context, OperationCallbacks.OperationCallback callback) {
+        PreferenceManager pref = new PreferenceManager(context);
+        databaseRef.child("users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (user != null && user.getUsername() != null) {
+                        // Save the fetched username to SharedPreferences
+                        Log.d("PreferenceManager", "Fetched username for userID: " + userID);
+                        pref.mapOneFriend(user.getUsername(), userID);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("PreferenceManager", "Failed to fetch username for userID: " + userID, databaseError.toException());
+            }
+        });
+    }
+
 
 
 }
