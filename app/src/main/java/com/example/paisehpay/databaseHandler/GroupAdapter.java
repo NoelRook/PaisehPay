@@ -24,10 +24,8 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
 
     @Override
     public void create(Group object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
-        if (!(object instanceof Group)) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
-            return;
-        }
+
+        validateObjectType(object, Group.class, callback);
 
         Group group = (Group) object;
         String groupId = databaseRef.push().getKey();
@@ -72,10 +70,7 @@ public class GroupAdapter extends FirebaseDatabaseAdapter<Group> {
 
     @Override
     public void update(String id, Group object, OperationCallbacks.OperationCallback callback) {
-        if (!(object instanceof Group)) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
-            return;
-        }
+        validateObjectType(object, Group.class, callback);
 
         Group group = (Group) object;
         databaseRef.child(id).setValue(group.toMap())
