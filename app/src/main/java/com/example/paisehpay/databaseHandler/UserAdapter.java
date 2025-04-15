@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.Interfaces.FirebaseDatabaseAdapter;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
@@ -28,10 +29,8 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
 
     @Override
     public void create(User object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
-        if (!(object instanceof User)){
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
-            return;
-        }
+
+        validateObjectType(object, User.class, callback);
         if (object == null) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot empty")));
             return;
@@ -82,10 +81,7 @@ public class UserAdapter extends FirebaseDatabaseAdapter<User> {
 
     @Override
     public void update(String id, User object, OperationCallbacks.OperationCallback callback) {
-        if (!(object instanceof User)){
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
-            return;
-        }
+        validateObjectType(object, User.class, callback);
         if (id == null || id.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;

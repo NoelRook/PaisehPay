@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.Interfaces.FirebaseDatabaseAdapter;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
@@ -23,10 +24,7 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
 
     @Override
     public void create(Item object, OperationCallbacks.OperationCallback callback) throws IllegalArgumentException {
-        if (!(object instanceof Item)) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Invalid data type - expected Item")));
-            return;
-        }
+        validateObjectType(object, Item.class, callback);
 
         Item item = (Item) object;
         String itemId = databaseRef.push().getKey();
@@ -60,10 +58,8 @@ public class ItemAdapter extends FirebaseDatabaseAdapter<Item> {
 
     @Override
     public void update(String id, Item object, OperationCallbacks.OperationCallback callback) {
-        if (!(object instanceof Item)) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
-            return;
-        }
+
+        validateObjectType(object, Item.class, callback);
         if (id == null || id.isEmpty()) {
             callback.onError(DatabaseError.fromException(new IllegalArgumentException("User ID cannot be null or empty")));
             return;

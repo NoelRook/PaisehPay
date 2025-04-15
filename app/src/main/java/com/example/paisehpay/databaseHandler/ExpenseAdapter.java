@@ -125,10 +125,7 @@ public class ExpenseAdapter extends FirebaseDatabaseAdapter<Expense> {
 
     @Override
     public void update(String id, Expense object, OperationCallbacks.OperationCallback callback) {
-        if (!(object instanceof Expense)) {
-            callback.onError(DatabaseError.fromException(new IllegalArgumentException("Unsupported object type")));
-            return;
-        }
+        validateObjectType(object, Expense.class, callback);
 
         Expense expense = (Expense) object;
         databaseRef.child(id).setValue(expense.toMap())
