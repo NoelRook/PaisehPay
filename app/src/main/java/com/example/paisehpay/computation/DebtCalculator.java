@@ -4,23 +4,25 @@ import android.util.Log;
 
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.google.firebase.database.DatabaseError;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class DebtCalculator {
     private String currentUserId;
 
+    //constructor, set currentUserId
     public DebtCalculator(String currentUserId) {
         this.currentUserId = currentUserId;
     }
 
+    //method to calculate total debt and returns hashmap userid:  total amount user owes them
     public void calculateTotalDebt(OperationCallbacks.DebtCallback callback) {
+        //initialise expense adapter to get all expenses (use get method)
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
         expenseAdapter.get(new OperationCallbacks.ListCallback<Expense>() {
             @Override
@@ -33,6 +35,7 @@ public class DebtCalculator {
                 }
 
                 for (Expense expense : expenses) {
+                    // check whether user has debt in the specific expense using checkForDebtInExpense method
                     checkForDebtInExpense(expense, debtMap, new OperationCallbacks.OperationComplete() {
                         @Override
                         public void onComplete() {
@@ -55,11 +58,15 @@ public class DebtCalculator {
 
     private void checkForDebtInExpense(Expense expense, HashMap<String, Double> debtMap,
                                        OperationCallbacks.OperationComplete completeCallback) {
+        //initialise item adapter to get all items (use getItemByExpense method)
         ItemAdapter itemAdapter = new ItemAdapter();
         itemAdapter.getItemByExpense(expense.getExpenseId(), new OperationCallbacks.ListCallback<Item>() {
             @Override
             public void onListLoaded(List<Item> items) {
                 for (Item item : items) {
+                    //if user is in debtPeople hashmap
+                    // if amount is not 0
+                    // add amount to debtMap with corresponding userid key
                     if (item.getDebtPeople().containsKey(currentUserId)) {
                         Double amount = item.getDebtPeople().get(currentUserId);
                         if (amount != null && amount != 0) {
@@ -68,6 +75,7 @@ public class DebtCalculator {
                         }
                     }
                 }
+                //check for pending operations and callback
                 completeCallback.onComplete();
             }
 

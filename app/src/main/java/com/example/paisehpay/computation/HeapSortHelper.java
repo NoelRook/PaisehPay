@@ -2,10 +2,10 @@ package com.example.paisehpay.computation;
 
 import android.util.Log;
 
+import com.example.paisehpay.blueprints.Owe;
+
 import java.util.Collections;
 import java.util.List;
-
-import com.example.paisehpay.blueprints.Owe;
 public class HeapSortHelper {
     //sort by date (ascending: Earliest)
     public static void sortByDateEarliest(List<Owe> owes){
@@ -16,6 +16,10 @@ public class HeapSortHelper {
         for (int i = n - 1; i > 0; i--){
             Collections.swap(owes, 0, i);
             heapifyDate(owes, i, 0, true);
+        }
+        Log.d("Heapsort", "earliest after sorting: "+ owes.toString());
+        for (Owe owe : owes) {
+            Log.d("Heapsort", "amount: " + owe.getDate().toString()+owe.getPerson());
         }
     }
 
@@ -29,11 +33,15 @@ public class HeapSortHelper {
             Collections.swap(owes, 0, i);
             heapifyDate(owes, i, 0, false);
         }
+        Log.d("Heapsort", "latest after sorting: "+ owes.toString());
+        for (Owe owe : owes) {
+            Log.d("Heapsort", "amount: " + owe.getDate().toString()+owe.getPerson());
+        }
     }
 
-    //sort by amount (descending: Highest first)
+    //sort by amount (ascending: lowest first)
     public static void sortByAmount(List<Owe> owes){
-        Log.d("Heapsort", "before sorting: "+ owes.toString());
+        Log.d("Heapsort", " amount before sorting: "+ owes.toString());
         int n = owes.size();
         for (int i = n / 2 - 1; i >= 0; i--){
             heapifyAmount(owes, n, i);
@@ -42,12 +50,14 @@ public class HeapSortHelper {
             Collections.swap(owes, 0, i);
             heapifyAmount(owes, i, 0);
         }
+
         //Log.d("Heapsort", "after sorting: "+ owes.toString());
     }
 
     //heapify for date (ascending/ descending)
     private static void heapifyDate(List<Owe> owes, int n, int i, boolean ascending){
-        int largest = i;
+        int current = i;
+        int largest = current;
         int left = 2 * i + 1;
         int right = 2 * i + 2;
 
@@ -63,9 +73,10 @@ public class HeapSortHelper {
                 largest = right;
             }
         }
-        if (largest != i){
-            Collections.swap(owes, i, largest);
-            heapifyDate(owes, n, largest, ascending);
+        if (largest != current){
+            Collections.swap(owes, current, largest);
+            current = largest;
+            //heapifyDate(owes, n, largest, ascending);
         }
     }
 

@@ -4,23 +4,24 @@ import android.util.Log;
 
 import com.example.paisehpay.blueprints.Expense;
 import com.example.paisehpay.blueprints.Item;
-import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
+import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ItemAdapter;
 import com.google.firebase.database.DatabaseError;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class OwedCalculator {
     private String currentUserId;
 
+    //constructor, set currentUserId
     public OwedCalculator(String currentUserId) {
         this.currentUserId = currentUserId;
     }
 
     public void calculateTotalOwed(OperationCallbacks.OwedCallback callback) {
+        //initialise expense adapter to get all expenses (use get method)
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
         expenseAdapter.get(new OperationCallbacks.ListCallback<Expense>() {
             @Override
@@ -33,6 +34,7 @@ public class OwedCalculator {
                 }
 
                 for (Expense expense : expenses) {
+                    //check whether expense is paid by current user
                     if (expense.getExpensePaidBy().equals(currentUserId)) {
                         processItemsForExpense(expense, owedMap, new OperationCallbacks.OperationComplete() {
                             @Override
@@ -62,11 +64,13 @@ public class OwedCalculator {
 
     private void processItemsForExpense(Expense expense, HashMap<String, Double> owedMap,
                                         OperationCallbacks.OperationComplete completeCallback) {
+        //initialise item adapter to get all items (use getItemByExpense method)
         ItemAdapter itemAdapter = new ItemAdapter();
         itemAdapter.getItemByExpense(expense.getExpenseId(), new OperationCallbacks.ListCallback<Item>() {
             @Override
             public void onListLoaded(List<Item> items) {
                 for (Item item : items) {
+                    //check for each user who owes you, whether amount is NOT 0 and put them into hashmap
                     for (HashMap.Entry<String, Double> entry : item.getDebtPeople().entrySet()) {
                         if (entry.getValue() != 0) {
                             String userId = entry.getKey();
@@ -75,6 +79,7 @@ public class OwedCalculator {
                         }
                     }
                 }
+                //check for pending operations and callback
                 completeCallback.onComplete();
             }
 
