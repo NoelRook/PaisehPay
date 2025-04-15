@@ -15,10 +15,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class DateDebt {
+public class DateDebt extends DateBase {
+    //callback to handle asynchronous calls
     public void peopleYouOwe(String userId, OperationCallbacks.DateCallback callback) {
         Log.d("DateDebt", "Starting for user: " + userId);
-
+        // initialise expense adapter to get all expenses (use get method)
         ExpenseAdapter expenseAdapter = new ExpenseAdapter();
         expenseAdapter.get(new OperationCallbacks.ListCallback<Expense>() {
             @Override
@@ -31,6 +32,7 @@ public class DateDebt {
                 }
 
                 for (Expense expense : expenses) {
+                    //increment pending operations and call method to check whether user is a debtor in this expense
                     pendingOperations[0]++;
                     checkForDebtor(expense, userId, useridDate, new OperationCallbacks.OperationComplete() {
                         @Override
@@ -54,6 +56,7 @@ public class DateDebt {
 
     private void checkForDebtor(Expense expense, String userId, HashMap<String, Date> useridDate,
                                 OperationCallbacks.OperationComplete completeCallback) {
+        //initialise item adapter to get all items (use getItemByExpense method)
         ItemAdapter itemAdapter = new ItemAdapter();
         itemAdapter.getItemByExpense(expense.getExpenseId(), new OperationCallbacks.ListCallback<Item>() {
             @Override
@@ -64,6 +67,7 @@ public class DateDebt {
                 String payerId = expense.getExpensePaidBy();
 
                 for (Item item : items) {
+                    //for all items in expense, check whether user is in debtPeople hashmap and change isDebtor appropriately
                     if (item.getDebtPeople().containsKey(userId) &&
                             item.getDebtPeople().get(userId) != 0) {
                         isDebtor = true;
@@ -72,6 +76,8 @@ public class DateDebt {
                 }
 
                 if (isDebtor) {
+                    //if isDebtor is true, check whether useridDate does not already contains payerId
+                    // as key or date in useridDate is earlier than expense date, put payerId: expense date in useridDate
                     if (!useridDate.containsKey(payerId) ||
                             useridDate.get(payerId).before(expenseDate)) {
                         useridDate.put(payerId, expenseDate);
@@ -89,13 +95,4 @@ public class DateDebt {
         });
     }
 
-    private Date dateformatting(String strdate) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            return formatter.parse(strdate);
-        } catch (ParseException e) {
-            Log.e("DateDebt", "Error parsing date: " + strdate, e);
-            return new Date(); // Return current date as fallback
-        }
-    }
 }
