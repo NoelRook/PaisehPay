@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -178,7 +179,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
 
         double finalTotalDebt = totalDebt;
         Log.d("summary page", String.valueOf(finalTotalDebt));
-        getActivity().runOnUiThread(() -> {
+        requireActivity().runOnUiThread(() -> {
             TextView moneyOweTextView = rootView.findViewById(R.id.money_owe);
             moneyOweTextView.setText(String.format(Locale.getDefault(),"$%.2f", finalTotalDebt));
         });
