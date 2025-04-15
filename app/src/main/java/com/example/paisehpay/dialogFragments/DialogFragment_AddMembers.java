@@ -1,23 +1,18 @@
 package com.example.paisehpay.dialogFragments;
 
 import static android.view.View.VISIBLE;
-
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
@@ -25,34 +20,24 @@ import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.databaseHandler.friendAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_UserSelect;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewInterface;
-import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
-
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragment implements RecycleViewInterface{
-    //popup when u select group during addpeople page
+    //DialogFragment that allows user to add members in GroupSettings.java
 
-    View rootView;
-    RecyclerView userView;
-    ArrayList<User> userArray = new ArrayList<>();
-    Button confirmButton;
-    private DialogFragmentListener listener;
-    RecycleViewAdapter_UserSelect adapter;
-
-    GroupAdapter grpAdapter;
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
-
-    PreferenceManager pref;
+    private View rootView;
+    private RecyclerView userView;
+    private ArrayList<User> userArray = new ArrayList<>();
+    private Button confirmButton;
+    private DialogFragmentListener<User> listener;
+    private RecycleViewAdapter_UserSelect adapter;
+    private GroupAdapter grpAdapter;
     private static final String GROUP_ID =  "group_id";
-    String groupId;
+    private String groupId;
+    private DialogFragmentListener<User> dialogFragmentListener;
 
 
     //since we are instantiating the fragment from different locations, we need to be able to differentiate where it is from
@@ -77,9 +62,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
             //we will need the pos argument as we are populating RecycleView
             groupId = getArguments().getString(GROUP_ID);
         }
-
         grpAdapter = new GroupAdapter();
-
         userView = rootView.findViewById(R.id.select_group_recycle);
         showPersonList();
         adapter = new RecycleViewAdapter_UserSelect(getActivity(),userArray,this);
@@ -98,18 +81,11 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         }
     }
 
-    //currently populating with fake data
     private void showPersonList() {
-        // Clear the existing list (if any)
         userArray.clear();
 
         friendAdapter friendAdapter = new friendAdapter();
-
-        // Get the current user's ID
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // Create callback for handling the friend list data
-        // Call the database function to get real friend data
         friendAdapter.getFriendsForUser(currentUserId, new OperationCallbacks.ListCallback<User>() {
             @Override
             public void onListLoaded(List<User> friends) {
@@ -118,44 +94,37 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
                 Log.d("friends", friends.toString());
 
                 // Notify your adapter that data has changed
-                if (friendAdapter != null) {
-                    adapter.notifyDataSetChanged();
-                }
-
-                
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onError(DatabaseError error) {
-                // Show error message
                 Toast.makeText(getContext(), "Failed to load friends: " + error.getMessage(),
                         Toast.LENGTH_SHORT).show();
                 Log.e("FriendsList", "Error loading friends", error.toException());
-
-                // You might want to show the dummy data as fallback
-                // showDummyDataAsFallback();
             }
         });
 
     }
 
 
-
-
     //we need to ensure that AddPeople implements the interface so that we can pass data over
+    @SuppressWarnings("unchecked")
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof DialogFragmentListener) {
-            listener = (DialogFragmentListener) context;
+            listener = (DialogFragmentListener<User>) context;
         } else {
             throw new RuntimeException(context + " must implement DialogFragmentListener");
         }
     }
 
+
+    //function to catch the users selected from RecycleViewAdapter_GroupMember
+    //this function allows us to add members to group
     @Override
     public void onButtonClick(int position) {
-
         userArray.get(position).setSelected(!userArray.get(position).isSelected());
         userView.getAdapter().notifyItemChanged(position);
         confirmButton = rootView.findViewById(R.id.confirm_button);
@@ -164,19 +133,15 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
             @Override
             public void onClick(View view) {
                 if (listener != null){
-                    //add person here
-
-                    //listener.onDataSelected(0,getSelectedPerson());
                     addMultiplePeople(groupId);
-                    // reload the user list here
                 }
-                // add person here
                 dismiss();
             }
         });
     }
 
 
+    //function to get all selected people
     private ArrayList<User> getSelectedPerson() {
         ArrayList<User> selectedUser = new ArrayList<>();
         for (User user : userArray) {
@@ -186,11 +151,9 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         }
         return selectedUser;
     }
-    private void addPerson(User user, String groupId) {
-        // add person to the group
-//        PreferenceManager pref = new PreferenceManager(requireContext());
-//        User curUser = pref.getUser();
 
+    //add selected person to group
+    private void addPerson(User user, String groupId) {
         Log.d("test",groupId + user.toString());
 
         if (user== null) throw new NullPointerException("Current User is null");
@@ -211,6 +174,7 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
         });
     }
 
+    //function to add multiple people to group
     private void addMultiplePeople(String GROUP_ID){
         ArrayList<User> selectedUser = getSelectedPerson();
         Log.d("users to be added", selectedUser.toString());
@@ -221,7 +185,5 @@ public class DialogFragment_AddMembers extends androidx.fragment.app.DialogFragm
             }
         }
     }
-
-
 
 }

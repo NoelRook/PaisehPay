@@ -26,7 +26,6 @@ import com.example.paisehpay.blueprints.User;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.recycleviewAdapters.RecycleViewAdapter_GroupMember;
-import com.example.paisehpay.recycleviewAdapters.RecycleViewListener;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.example.paisehpay.tabBar.ExpenseFragment;
 import com.example.paisehpay.R;

@@ -12,10 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.example.paisehpay.R;
 import com.example.paisehpay.blueprints.Group;
 import com.example.paisehpay.blueprints.User;
@@ -23,7 +21,6 @@ import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.GroupAdapter;
 import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -111,7 +108,6 @@ public class DialogFragment_CreateGroup extends androidx.fragment.app.DialogFrag
 
     }
 
-    // <!-- TODO: 1. need error checking, whether group alr exists in user's groups, or the group code doesn't exist so far  -->
     private void createGroup(Group group){
         //todo 1. add in create group
         executorService.execute(() ->{

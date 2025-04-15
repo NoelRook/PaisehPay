@@ -17,44 +17,43 @@ import com.example.paisehpay.activities.ReceiptOverview;
 import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.computation.ReceiptInstance;
 
+import java.util.Objects;
+
 
 public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment{
-    //popup class when u press create group
+    //DialogFragment that allows user to add items in ReceiptOverview.java
 
-    View rootView;
-    EditText itemNameText;
-    EditText itemPriceText;
-    Button confirmButton;
-    DialogFragmentListener<Item> listener;
-
-
-
+    private View rootView;
+    private EditText itemNameText;
+    private EditText itemPriceText;
+    private Button confirmButton;
+    private DialogFragmentListener<Item> listener;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         super.onCreateView(inflater,container,savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_add_item, container, false);
-
         itemNameText = rootView.findViewById(R.id.item_name_input);
         itemPriceText = rootView.findViewById(R.id.item_price_input);
 
 
+        //press confirm button to finalise item addition and add item to expense
         confirmButton = rootView.findViewById(R.id.confirm_button);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String itemName = itemNameText.getText().toString().trim(); //process textview
+                //process EditTexts
+                String itemName = itemNameText.getText().toString().trim();
                 String itemPrice = itemPriceText.getText().toString().trim();
-
 
                 //if user clicks confirm
                 if (itemPrice.isEmpty()){
-                    Toast.makeText(getActivity(),"never input price bro",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),"Please enter your item's name",Toast.LENGTH_LONG).show();
                 } else if (itemName.isEmpty()){
-                    Toast.makeText(getActivity(),"never input name bro", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),"Please enter your item's price", Toast.LENGTH_LONG).show();
                 } else if (listener != null){
                     //if the DialogFragmentListener is attached properly to ReceiptOverview
                     //we will add to the Item RecycleView
@@ -77,19 +76,20 @@ public class DialogFragment_AddItem extends androidx.fragment.app.DialogFragment
         return rootView;
     }
 
-    //set custom layout
+    //set custom DialogFragment layout
     @Override
     public void onStart() {
         super.onStart();
         if (getDialog() != null) {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            Objects.requireNonNull(getDialog().getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 
 
 
 
-    //check if we are able to pass data from DialogFragment back to RecieptOverview page
+    //check if we are able to pass data from DialogFragment back to ReceiptOverview page
+    @SuppressWarnings("unchecked")
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
