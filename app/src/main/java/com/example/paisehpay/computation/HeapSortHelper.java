@@ -75,10 +75,10 @@ public class HeapSortHelper {
         int left = 2 * i + 1;
         int right = 2 * i + 2;
 
-        if (left < n && owes.get(left).getDoubleAmount() > owes.get(largest).getDoubleAmount()){
+        if (left < n && owes.get(left).getAmount() > owes.get(largest).getAmount()){
             largest = left;
         }
-        if (right < n && owes.get(right).getDoubleAmount() > owes.get(largest).getDoubleAmount()){
+        if (right < n && owes.get(right).getAmount() > owes.get(largest).getAmount()){
             largest = right;
         }
         if (largest != i){

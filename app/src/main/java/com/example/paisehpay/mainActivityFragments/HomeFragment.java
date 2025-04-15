@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         oweDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                oweDialogFragment = new DialogFragment_Owe();
+                oweDialogFragment = DialogFragment_Owe.newInstance("Who do you owe?");
                 oweDialogFragment.show(getChildFragmentManager(), "DialogFragment");
             }
         });
@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         owedDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                owedDialogFragment = new DialogFragment_Owe();
+                owedDialogFragment = DialogFragment_Owe.newInstance("Who owes you?");
                 owedDialogFragment.show(getChildFragmentManager(), "DialogFragment");
             }
         });
