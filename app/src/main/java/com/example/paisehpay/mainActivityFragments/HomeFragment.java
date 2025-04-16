@@ -217,11 +217,17 @@ public class HomeFragment extends Fragment implements DialogFragmentListener<Gro
         }
         double finalTotalOwed = totalOwed;
 
-        getActivity().runOnUiThread(()-> {
-            TextView moneyOwedTextView = rootView.findViewById(R.id.money_owed);
-            moneyOwedTextView.setText(String.format(Locale.getDefault(), "$%.2f", finalTotalOwed));
-        });
+        Activity activity = getActivity();
+        if (activity != null && isAdded()) {
+            activity.runOnUiThread(() -> {
+                TextView moneyOwedTextView = rootView.findViewById(R.id.money_owed);
+                moneyOwedTextView.setText(String.format(Locale.getDefault(), "$%.2f", finalTotalOwed));
+            });
+        } else {
+            Log.w("HomeFragment", "Fragment not attached — skipping UI update (owed)");
+        }
     }
+
 
 
 

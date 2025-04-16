@@ -7,6 +7,7 @@ import com.example.paisehpay.blueprints.Item;
 import com.example.paisehpay.databaseHandler.ExpenseAdapter;
 import com.example.paisehpay.databaseHandler.Interfaces.OperationCallbacks;
 import com.example.paisehpay.databaseHandler.ItemAdapter;
+import com.example.paisehpay.sessionHandler.PreferenceManager;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.HashMap;
@@ -67,6 +68,8 @@ public class DebtCalculator {
                     //if user is in debtPeople hashmap
                     // if amount is not 0
                     // add amount to debtMap with corresponding userid key
+                    Log.d("hey",item.getDebtPeople().toString());
+
                     if (item.getDebtPeople().containsKey(currentUserId)) {
                         Double amount = item.getDebtPeople().get(currentUserId);
                         if (amount != null && amount != 0) {
