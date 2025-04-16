@@ -65,7 +65,7 @@
             android:id="@+id/money_owe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/owe_amount"
+            android:text="@string/zero"
             app:layout_constraintTop_toBottomOf="@id/owe"
             app:layout_constraintStart_toStartOf="@id/today"
             style="@style/textViewBigLightMode"/>
@@ -96,7 +96,7 @@
             android:id="@+id/money_owed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/owed_amount"
+            android:text="@string/zero"
             app:layout_constraintTop_toBottomOf="@id/owed"
             app:layout_constraintStart_toStartOf="@id/today"
             style="@style/textViewBigLightMode"/>
