@@ -100,7 +100,6 @@ git clone https://github.com/NoelRook/PaisehPay.git
 ---
 
 ## 📈 Future Roadmap  
-- [ ] **Receipt Scanning**: OCR integration for automatic expense logging.  
 - [ ] **Multi-Currency Support**: For international groups.  
 - [ ] **Push Notifications**: Remind users of pending debts.  
 
