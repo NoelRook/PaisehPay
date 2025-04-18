@@ -229,7 +229,10 @@ public class SignIn extends AppCompatActivity {
                         Log.d("cur user", user.getUid());
                         if (user != null) {
                             // Get additional user data from Realtime Database
-                            mDatabase.child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            mDatabase
+                                    .child("Users")
+                                    .child(user.getUid()).
+                                    addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 

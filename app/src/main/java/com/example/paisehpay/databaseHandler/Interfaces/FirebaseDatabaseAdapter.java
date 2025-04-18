@@ -13,6 +13,7 @@ public abstract class FirebaseDatabaseAdapter<T> implements BaseDatabaseOperatio
         this.tableName = tableName; // set the table name
         FirebaseDatabase database = FirebaseDatabase.getInstance(); // get the database instance
         this.databaseRef = database.getReference(tableName); // set the database reference to the table name
+        this.databaseRef.keepSynced(true);
     }
 
     // function to validate if object type that the function receives is the type that it wants

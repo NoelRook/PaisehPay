@@ -14,19 +14,17 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PreferenceManager {
+    // manage the shared pref for all apps so that shared pref does not need to be re instantiated every time
     private static final String PREF_NAME = "MyAppPreferences";
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_FRIENDKEY = "friendKey";
 
-    private static final String KEY_GROUP = "group_list";
-
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     public PreferenceManager(Context context) {
-
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
@@ -57,8 +55,6 @@ public class PreferenceManager {
         }
         return null;
     }
-
-
     public int savedFragmentId(){
         return sharedPreferences.getInt("selectedFragmentId", -1);
     }
@@ -68,6 +64,7 @@ public class PreferenceManager {
         sharedPreferences.edit().putBoolean("checkbox_state", isChecked).apply();
     }
 
+    // check if the user wants to be remember the next time they open the application
     public boolean getRememberMe(){
         return sharedPreferences.getBoolean("checkbox_state", false);
     }
@@ -77,23 +74,21 @@ public class PreferenceManager {
         sharedPreferences.edit().clear().apply();
     }
 
-//    public void saveGroups(ArrayList groupList){
-//        Gson gson = new Gson();
-//        String json = gson.toJson(groupList);
-//        sharedPreferences.edit().putString(KEY_GROUP, json).apply();
-//    }
+    // map all friends to shared pref when user logs in for the first time
     public void mapManyFriends(List<User> userList){
         for (User user : userList){
             mapOneFriend(user.getUsername(), user.getId());
         }
     }
 
+    // maps a singular friend
     public void mapOneFriend(String Username, String userID){
         // Store plain userID as key, encrypted username as value
         editor.putString(userID, Username);
         editor.apply();
     }
 
+    // gets friend's username based on the friend ID given.
     public String getOneFriend(String userID){
         // Retrieve encrypted value and decrypt it
         String encrypted = sharedPreferences.getString(userID, null);
@@ -102,14 +97,5 @@ public class PreferenceManager {
             return getUser().getUsername();
         }
         return encrypted;
-    }
-
-    // Clear user data (for logout)
-    public void clearUser() {
-        editor.remove(KEY_USER_ID);
-        editor.remove(KEY_USERNAME);
-        editor.remove(KEY_EMAIL);
-        editor.remove(KEY_FRIENDKEY);
-        editor.apply();
     }
 }
