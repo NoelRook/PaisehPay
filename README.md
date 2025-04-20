@@ -13,12 +13,12 @@
 
 ### **1. Clone the Repository**  
 ```bash  
-git clone https://github.com/NoelRook/PaisehPay.git  
+git clone https://github.com/NoelRook/SplitMate.git
 ```  
 
 ### **2. Connect to Your Firebase Project**  
 1. Go to the [Firebase Console](https://console.firebase.google.com/).  
-2. Create a new project (e.g., `PaisehPay`).  
+2. Create a new project (e.g., `SplitMate`).  
 3. **Enable Authentication**:  
    - Go to **Authentication → Sign-in Method** → Enable **Email/Password** and **Google Sign-In**.  
 4. **Set Up Realtime Database**:  
@@ -44,7 +44,7 @@ git clone https://github.com/NoelRook/PaisehPay.git
      ```  
 5. **Register Your Android App**:  
    - Click **Project Settings → Add App → Android**.  
-   - Package name: `com.example.paisehpay` (or update it in `build.gradle`).  
+   - Package name: `com.example.splitMate` (or update it in `build.gradle`).  
    - Download `google-services.json` and place it in `app/`.  
 
 ### **3. Build & Run**  
