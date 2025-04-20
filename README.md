@@ -1,6 +1,6 @@
-# 🚀 PaisehPay - Expense Splitting Made Easy  
+# 🚀 Split!! Mate - Expense Splitting Made Easy  
 
-**PaisehPay** is an Android app that simplifies splitting expenses among friends and groups, with real-time updates and automatic debt calculations. Built with **Java, Firebase Realtime Database, and Firebase Authentication**.  
+**Split!! Mate** is an Android app that simplifies splitting expenses among friends and groups, with real-time updates and automatic debt calculations. Built with **Java, Firebase Realtime Database, and Firebase Authentication**.  
 
 ---
 
